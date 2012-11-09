@@ -1,0 +1,14 @@
+Changelog:
+
+[0.1 Alpha]
+*Made Modular!
+
+[0.2 Alpha]
+*Added current damage module [WIP]
+
+[0.3 Alpha]
+*Updated to 5.0.4
+*New Layout
+*Enabled Heal module
+*Created Sync module
+

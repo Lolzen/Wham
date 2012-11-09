@@ -1,0 +1,16 @@
+## Interface: 50001
+## Title: Wham
+## Author: Lolzen
+## Notes: Lolzen's personal Dmg-Meter
+## Version: 0.4 Alpha
+
+
+absorb.lua
+config.lua
+core.lua
+curdata.lua
+damage.lua
+heal.lua
+layout.lua
+slashcommands.lua
+sync.lua
