@@ -33,7 +33,7 @@ ns.healData
 
 >>Layout<<
 ns.wham:UpdateLayout()
-This is the fuction to update everything like texts, values or statusbars
+This is the function to update everything like texts, values or statusbars
 Just put everything that needs to be uptated in there, look below for an example
 do not remove this or you will have errors
 ]]

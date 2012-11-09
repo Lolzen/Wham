@@ -11,7 +11,7 @@ ns.totalheal = 0
 ns.healData = {}
 
 function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
-	--if not string.find(arg2, "_HEAL") then return end
+	if not string.find(arg2, "_HEAL") then return end
 	
 	if ns.solo_hide == true then
 		if GetNumSubgroupMembers() == 0 or GetNumGroupMembers() == 0 and GetNumSubgroupMembers() == 0 then return end
@@ -35,8 +35,6 @@ function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, 
 				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name], "RAID")
 			elseif IsInGroup("player") and not IsInRaid("player") then
 				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name], "PARTY")
-			--else --DEBUGGING ONLY
-				--SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name], "GUILD")
 			end
 		
 		end

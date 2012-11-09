@@ -17,7 +17,6 @@ function ns.wham:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5,
 	
 	-- Dont gather data if we are Solo
 	if ns.solo_hide == true then
-		-- UNTESTET
 		if GetNumSubgroupMembers() == 0 or GetNumGroupMembers() == 0 and GetNumSubgroupMembers() == 0 then return end
 	end
 	
@@ -75,8 +74,6 @@ function ns.wham:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5,
 				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "RAID")
 			elseif IsInGroup("player") and not IsInRaid("player") then
 				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "PARTY")
-			--else --DEBUGGING ONLY
-				--SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "GUILD")
 			end
 		end
 	end

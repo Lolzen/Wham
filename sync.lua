@@ -18,7 +18,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
 	-- Everything Damage related
 	if prefix == "Wham_DMG" then
-		-- Gathering Messages sent and converting them so e can work with them
+		-- Gathering Messages sent and converting them so we can work with them
 		extDmgName, extDmg_raw = strsplit(" ", msg, 2)
 		-- We can't compare strings to numbers, so we have to convert that
 		extDmg = tonumber(extDmg_raw, A)
@@ -28,7 +28,6 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		for k, v in pairs(ns.dmgData) do
 			localDmgName = k
 			localDmg = v
-			--print(k.." "..v)
 		end
 		
 		-- Check if the names match, so we don't override somone else's data
@@ -36,16 +35,12 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			-- If the external DmgData is more up to date, sync it
 			if extDmg > localDmg then
 				localDmg = extDmg
-				print("Dmg: sync needed")
-			--else
-				--print("everything OK")
 			end
 		end
 	end
 	-- Everything Heal related
 	if prefix == "Wham_HEAL" then
-
-		-- Gathering Messages sent and converting them so e can work with them
+		-- Gathering Messages sent and converting them so we can work with them
 		extHealName, extHeal_raw = strsplit(" ", msg, 2)
 		-- We can't compare strings to numbers, so we have to convert that
 		extHeal = tonumber(extHeal_raw, A)
@@ -62,9 +57,6 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			-- If the external HealData is more up to date, sync it
 			if extHeal > localHeal then
 				localHeal = extHeal
-				print("Heal: sync needed")
-			--else
-				--print("everything OK")
 			end
 		end
 	end

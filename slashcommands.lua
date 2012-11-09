@@ -48,6 +48,5 @@ SlashCmdList["WHAM"] = function(cmd)
 		paste()
 	else
 		ChatFrame1:AddMessage("|cff88ffffWham:|r Valid: s/p/g/ra/w [name]")
-		--ChatFrame1:AddMessage("|cff88ffffWham:|r Valid: show/hide")
 	end
 end
