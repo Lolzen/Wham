@@ -12,3 +12,6 @@ Changelog:
 *Enabled Heal module
 *Created Sync module
 
+[0.4 Alpha]
+*[WiP] Add Absorb mechanics to heal module/layout
+*Add ability to drag wham around

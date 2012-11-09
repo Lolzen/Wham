@@ -40,9 +40,21 @@ do not remove this or you will have errors
 
 local addon, ns = ...
 
---ns.wham:EnableMouse(true)
---ns.wham:SetMovable(true)
---ns.wham:SetUserPlaced(true)
+-- Wham is movable ;>
+ns.wham:EnableMouse(true)
+ns.wham:SetMovable(true)
+ns.wham:SetUserPlaced(true)
+
+ns.wham:SetScript("OnMouseDown", function()
+	if IsAltKeyDown() then
+		ns.wham:ClearAllPoints()
+		ns.wham:StartMoving()
+	end
+end)
+
+ns.wham:SetScript("OnMouseUp", function()
+	ns.wham:StopMovingOrSizing()
+end)
 
 -- Background
 ns.bg = ns.wham:CreateTexture("Background")
