@@ -221,7 +221,7 @@ function ns.wham:UpdateStatusBars()
 		if i == 1 then
 			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -15)
 			-- Current Fight
-			if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 then
+			if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
 				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
@@ -260,7 +260,7 @@ function ns.wham:UpdateStatusBars()
 		else
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -15)
 			-- Current Fight
-			if ns.curData[ns.pos[i]] then
+			if ns.curData[ns.pos[i]] and ns.cfdGather == true then
 				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
