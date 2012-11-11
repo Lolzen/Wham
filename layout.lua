@@ -262,6 +262,7 @@ function ns.wham:UpdateStatusBars()
 			-- Current Fight
 			if ns.curData[ns.pos[i]] then
 				ns.resetbutton:SetAlpha(1)
+				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
 				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 				ns.sbdmg[i]:SetValue(ns.curData[ns.pos[i]] or 0)
@@ -269,6 +270,7 @@ function ns.wham:UpdateStatusBars()
 				-- Dmg
 				if ns.dmgData[ns.pos[i]] then
 					ns.resetbutton:SetAlpha(1)
+					ns.sbdmg[i]:SetAlpha(1)
 					ns.sbdmg[i]:SetMinMaxValues(0, ns.dmgData[ns.pos[1]] or 0)
 					ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 					ns.sbdmg[i]:SetValue(ns.dmgData[ns.pos[i]] or 0)
@@ -280,6 +282,7 @@ function ns.wham:UpdateStatusBars()
 			-- Heal
 			if ns.healData[ns.pos[i]] then
 				ns.resetbutton:SetAlpha(1)
+				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
 				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
 				ns.sbheal[i]:SetValue(ns.healData[ns.pos[1]] or 0)
