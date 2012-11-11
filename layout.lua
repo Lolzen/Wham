@@ -286,6 +286,9 @@ function ns.wham:UpdateStatusBars()
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
 				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
 				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
+			else
+				ns.resetbutton:SetAlpha(0)
+				ns.sbheal[i]:SetAlpha(0)
 			end
 			-- Absorb
 		--	if ns.absorbData[ns.pos[i]] then
