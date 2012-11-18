@@ -37,7 +37,6 @@ function ns.absorbFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 		ns.totalabsorb = 0
 		for _, name in pairs(ns.pos) do
 			ns.totalabsorb = (ns.totalabsorb or 0) + (ns.absorbData[name] or 0)
-			print(ns.totalabsorb)
 		end
 	end
 	
