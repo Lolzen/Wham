@@ -31,6 +31,11 @@ ns.healFrame
 ns.totalheal
 ns.healData
 
+>>Absorb Data<<
+ns.absorbFrame
+ns.totalabsorb
+ns.absorbData
+
 >>Layout<<
 ns.wham:UpdateLayout()
 This is the function to update everything like texts, values or statusbars
@@ -118,7 +123,7 @@ end)
 =======================]]--
 ns.sbdmg = {}
 ns.sbheal = {}
---ns.sbabsorb = {}
+ns.sbabsorb = {}
 ns.dps = {}
 ns.hps = {}
 ns.f = {}
@@ -151,7 +156,7 @@ for i=1, 5, 1 do
 	
 	-- Create the dmgStatusBars
 	ns.sbdmg[i] = CreateFrame("StatusBar", "dmgStatusBar"..i, ns.wham)
-	ns.sbdmg[i]:SetHeight(10)
+	ns.sbdmg[i]:SetHeight(8)
 	ns.sbdmg[i]:SetWidth(ns.wham:GetWidth() -8)
 	ns.sbdmg[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 	ns.sbdmg[i]:SetStatusBarColor(0.8, 0, 0)
@@ -166,7 +171,7 @@ for i=1, 5, 1 do
 	
 	-- Create the healStatusBars
 	ns.sbheal[i] = CreateFrame("StatusBar", "healStatusBar"..i, ns.wham)
-	ns.sbheal[i]:SetHeight(4)
+	ns.sbheal[i]:SetHeight(3)
 	ns.sbheal[i]:SetWidth(ns.wham:GetWidth() -8)
 	ns.sbheal[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 	ns.sbheal[i]:SetStatusBarColor(0, 0.8, 0.2)
@@ -179,12 +184,11 @@ for i=1, 5, 1 do
 	end
 	
 	-- Create the absorbStatusBars
-	--ns.sbabsorb[i] = CreateFrame("StatusBar", "absorbStatusBar"..i, ns.wham)
-	--ns.sbabsorb[i]:SetHeight(2)
-	--ns.sbabsorb[i]:SetWidth(ns.wham:GetWidth() -8)
-	--ns.sbabsorb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-	--ns.sbabsorb[i]:SetStatusBarColor(0.2, 0.8, 0)
-	--ns.sbabsorb[i]:SetAlpha(0.6)
+	ns.sbabsorb[i] = CreateFrame("StatusBar", "absorbStatusBar"..i, ns.wham)
+	ns.sbabsorb[i]:SetHeight(3)
+	ns.sbabsorb[i]:SetWidth(ns.wham:GetWidth() -8)
+	ns.sbabsorb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+	ns.sbabsorb[i]:SetStatusBarColor(1, 1, 0)
 	
 	-- Create the FontStrings
 	if not ns.sbdmg[i].sbtext then
@@ -205,6 +209,13 @@ for i=1, 5, 1 do
 		ns.sbheal[i].sbtext = ns.sbheal[i]:CreateFontString(nil, "OVERLAY")
 		ns.sbheal[i].sbtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 		ns.sbheal[i].sbtext:SetTextColor(0,1,0.2)
+	end
+	
+	-- Absorbvalues on the StatusBar
+	if not ns.sbabsorb[i].sbtext then
+		ns.sbabsorb[i].sbtext = ns.sbabsorb[i]:CreateFontString(nil, "OVERLAY")
+		ns.sbabsorb[i].sbtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.sbabsorb[i].sbtext:SetTextColor(0.8,0.8,0)
 	end
 	
 	-- Dps
@@ -245,18 +256,21 @@ function ns.wham:UpdateStatusBars()
 				ns.resetbutton:SetAlpha(1)
 				ns.sbheal[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
-				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
+				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
 				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
 			else
 				ns.resetbutton:SetAlpha(0)
 				ns.sbheal[i]:SetAlpha(0)
 			end
 			-- Absorb
-		--	if ns.absorbData[ns.pos[i]] then
-		--		ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
-		--		ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-		--		ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[1]] or 0)
-		--	end
+			if ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
+				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
+				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
+				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[1]] or 0)
+			else
+				ns.resetbutton:SetAlpha(0)
+				ns.sbabsorb[i]:SetAlpha(0)
+			end
 		else
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -15)
 			-- Current Fight
@@ -284,18 +298,21 @@ function ns.wham:UpdateStatusBars()
 				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
-				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
+				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
+				ns.sbheal[i]:SetValue(ns.healData[ns.pos[1]] or 0)
 			else
 				ns.resetbutton:SetAlpha(0)
 				ns.sbheal[i]:SetAlpha(0)
 			end
 			-- Absorb
-		--	if ns.absorbData[ns.pos[i]] then
-		--		ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
-		--		ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-		--		ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[1]] or 0)
-		--	end
+			if ns.absorbData[ns.pos[i]] then
+				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
+				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
+				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
+			else
+				ns.resetbutton:SetAlpha(0)
+				ns.sbabsorb[i]:SetAlpha(0)
+			end
 		end
 		
 		--Dps
