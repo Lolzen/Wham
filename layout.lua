@@ -191,40 +191,18 @@ for i=1, 5, 1 do
 	ns.sbabsorb[i]:SetStatusBarColor(1, 1, 0)
 	
 	-- Create the FontStrings
-	if not ns.sbdmg[i].sbtext then
-		-- Damage on the StatusBar
-		ns.sbdmg[i].sbtext = ns.sbdmg[i]:CreateFontString(nil, "OVERLAY")
-		ns.sbdmg[i].sbtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.sbdmg[i].sbtext:SetTextColor(1,0,0)
-		ns.sbdmg[i].sbtext:SetPoint("TOPRIGHT", ns.f[i], "TOPRIGHT", -2, 11)
-	
-		-- Name on the StausBar
-		ns.sbdmg[i].sbtext2 = ns.wham:CreateFontString(nil, "OVERLAY")
-		ns.sbdmg[i].sbtext2:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.sbdmg[i].sbtext2:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, 11)
+	if not ns.f[i].string1 then
+		-- #. Name
+		ns.f[i].string1 = ns.f[i]:CreateFontString(nil, "OVERLAY")
+		ns.f[i].string1:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.f[i].string1:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, 11)
 	end
-	
-	-- Healvalues on the StatusBar
-	if not ns.sbheal[i].sbtext then
-		ns.sbheal[i].sbtext = ns.sbheal[i]:CreateFontString(nil, "OVERLAY")
-		ns.sbheal[i].sbtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.sbheal[i].sbtext:SetTextColor(0,1,0.2)
+	if not ns.f[i].string2 then
+		-- absorb/heal/dmg
+		ns.f[i].string2 = ns.f[i]:CreateFontString(nil, "OVERLAY")
+		ns.f[i].string2:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.f[i].string2:SetPoint("TOPRIGHT", ns.f[i], "TOPRIGHT", -2, 11)
 	end
-	
-	-- Absorbvalues on the StatusBar
-	if not ns.sbabsorb[i].sbtext then
-		ns.sbabsorb[i].sbtext = ns.sbabsorb[i]:CreateFontString(nil, "OVERLAY")
-		ns.sbabsorb[i].sbtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.sbabsorb[i].sbtext:SetTextColor(0.8,0.8,0)
-	end
-	
-	-- Dps
-	ns.dps[i] = ns.wham:CreateFontString(nil, "OVERLAY")
-	ns.dps[i]:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	
-	-- Hps
-	ns.hps[i] = ns.wham:CreateFontString(nil, "OVERLAY")
-	ns.hps[i]:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 end
 
 function ns.wham:UpdateStatusBars()
@@ -264,9 +242,11 @@ function ns.wham:UpdateStatusBars()
 			end
 			-- Absorb
 			if ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
+				ns.resetbutton:SetAlpha(1)
+				ns.sbabsorb[i]:SetAlpha(1)
 				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
 				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[1]] or 0)
+				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
 			else
 				ns.resetbutton:SetAlpha(0)
 				ns.sbabsorb[i]:SetAlpha(0)
@@ -306,6 +286,8 @@ function ns.wham:UpdateStatusBars()
 			end
 			-- Absorb
 			if ns.absorbData[ns.pos[i]] then
+				ns.resetbutton:SetAlpha(1)
+				ns.sbabsorb[i]:SetAlpha(1)
 				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
 				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
 				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
@@ -314,75 +296,46 @@ function ns.wham:UpdateStatusBars()
 				ns.sbabsorb[i]:SetAlpha(0)
 			end
 		end
-		
-		--Dps
-		local combatTime = ns.combatTotalTime + (ns.combatStartTime and (GetTime() - ns.combatStartTime) or 0)
-		if ns.dmgData[ns.pos[i]] and combatTime > 0 then
-			ns.dps[i]:SetFormattedText("|cffbb0000%d|r", ns.dmgData[ns.pos[i]]/combatTime)
-		end
-		
-		--Hps
-		if ns.healData[ns.pos[i]] and combatTime > 0 then
-			ns.hps[i]:SetFormattedText("|cff00aa00%d|r", ns.healData[ns.pos[i]]/combatTime)
-		end
-		
-		if ns.healData[ns.pos[i]] and not ns.dmgData[ns.pos[i]] then
-			ns.sbheal[i].sbtext:SetPoint("BOTTOMRIGHT", ns.sbheal[i], "TOPRIGHT", 0, 2)
-		elseif ns.healData[ns.pos[i]] and ns.dmgData[ns.pos[i]] then
-			ns.sbheal[i].sbtext:SetPoint("RIGHT", ns.sbdmg[i].sbtext, "LEFT", 0, 0)
-		end
-		
-		-- Set the texts: name & values
-		if ns.curData[ns.pos[i]] then
-			local damage = ns.curData[ns.pos[i]]
-			ns.sbdmg[i].sbtext:SetFormattedText("%d (%.0f%%)", damage, damage / ns.curTotaldmg * 100)
-			ns.sbdmg[i].sbtext2:SetText(i..".    "..ns.pos[i])
+
+		-- Strings
+		if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
+			local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
+			local curdamage = ns.curData[ns.pos[i]] or 0
+			local heal = ns.healData[ns.pos[i]] or 0
+			local absorb = ns.absorbData[ns.pos[i]] or 0
+			local combatTime = ns.combatTotalTime + (ns.combatStartTime and (GetTime() - ns.combatStartTime) or 0)
+			ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, curdamage, curdamage / ns.curTotaldmg * 100)
+			if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]] or 0/combatTime, ns.healData[ns.pos[i]] or 0/combatTime)
+			elseif ns.healData[ns.pos[i]] then
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]] or 0/combatTime)
+			else
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]] or 0/combatTime)
+			end
 			ns.f[i].border:Show()
 			ns.f[i].bg:Show()
 		else
-			if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and ns.totalheal > 0 then 
-				local damage = ns.dmgData[ns.pos[i]]
-				local heal = ns.healData[ns.pos[i]]
-				ns.sbdmg[i].sbtext:SetFormattedText("%d (%.0f%%)", damage, damage / ns.totaldmg * 100)
-				ns.sbheal[i].sbtext:SetFormattedText("%d (%.0f%%)", heal, heal / ns.totalheal * 100)
-				ns.sbdmg[i].sbtext2:SetText("|cffffffff"..i.."|r. "..ns.pos[i])
+			if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 or ns.healData[ns.pos[i]] and ns.totalheal > 0 or ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
+				local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
+				local damage = ns.dmgData[ns.pos[i]] or 0
+				local heal = ns.healData[ns.pos[i]] or 0
+				local absorb = ns.absorbData[ns.pos[i]] or 0
+				local combatTime = ns.combatTotalTime + (ns.combatStartTime and (GetTime() - ns.combatStartTime) or 0)
+				ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, damage, damage / ns.totaldmg * 100)
+				if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
+					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]] or 0/combatTime, ns.healData[ns.pos[i]] or 0/combatTime)
+				elseif ns.healData[ns.pos[i]] then
+					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]] or 0/combatTime)
+				else
+					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]] or 0/combatTime)
+				end
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
-				ns.f[i].bg:Show()
-				ns.dps[i]:SetPoint("LEFT", ns.sbdmg[i].sbtext2, "RIGHT")
-				ns.hps[i]:SetPoint("LEFT", ns.dps[i], "RIGHT", 2, 0)
-			elseif ns.healData[ns.pos[i]] and ns.totalheal > 0 then
-				local heal = ns.healData[ns.pos[i]]
-				ns.sbheal[i].sbtext:SetFormattedText("%d (%.0f%%)", heal, heal / ns.totalheal * 100)
-				ns.sbdmg[i].sbtext2:SetText("|cffffffff"..i.."|r. "..ns.pos[i])
-				ns.f[i].border:Show()
-				ns.f[i].bg:Show()
-				ns.hps[i]:SetPoint("LEFT", ns.sbdmg[i].sbtext2, "RIGHT")
-			elseif ns.dmgData[ns.pos[i]] then
-				local damage = ns.dmgData[ns.pos[i]]
-				ns.sbdmg[i].sbtext:SetFormattedText("%d (%.0f%%)", damage, damage / ns.totaldmg * 100)
-				ns.sbdmg[i].sbtext2:SetText("|cffffffff"..i.."|r. "..ns.pos[i])
-				ns.f[i].border:Show()
-				ns.f[i].bg:Show()
-				ns.dps[i]:SetPoint("LEFT", ns.sbdmg[i].sbtext2, "RIGHT")
 			else
-				ns.sbdmg[i].sbtext:SetText(nil)
-				ns.sbdmg[i].sbtext2:SetText(nil)
+				ns.f[i].string1:SetText(nil)
+				ns.f[i].string2:SetText(nil)
 				ns.f[i].border:Hide()
 				ns.f[i].bg:Hide()
-				ns.dps[i]:SetText(nil)
-				ns.hps[i]:SetText(nil)
-			end
-		end
-
-		-- ClassColoring the Names on StatusBars for players
-		if ns.curData[ns.pos[i]] then
-			local sbColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
-				ns.sbdmg[i].sbtext2:SetTextColor(sbColor.r, sbColor.g, sbColor.b)
-		else
-			if ns.dmgData[ns.pos[i]] then
-				local sbColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
-				ns.sbdmg[i].sbtext2:SetTextColor(sbColor.r, sbColor.g, sbColor.b)
 			end
 		end
 	end
