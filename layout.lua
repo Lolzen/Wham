@@ -89,7 +89,7 @@ ns.resetbutton:SetWidth(36)
 ns.resetbutton:SetNormalTexture("Interface\\Buttons\\CancelButton-Up") 
 ns.resetbutton:SetPushedTexture("Interface\\Buttons\\CancelButton-Down")
 ns.resetbutton:SetHighlightTexture("Interface\\Buttons\\CancelButton-Highlight")
-ns.resetbutton:SetAlpha(0)
+--ns.resetbutton:SetAlpha(0)
 
 -- Kill all data
 ns.resetbutton:SetScript("OnClick", function(self)
@@ -104,12 +104,13 @@ ns.resetbutton:SetScript("OnClick", function(self)
 	end
 	for i=1, 5, 1 do
 		ns.sbdmg[i]:SetValue(0)
+		ns.sbdmg[i].bg:Hide()
 		ns.sbheal[i]:SetValue(0)
-		ns.dps[i]:SetText(nil)
-		ns.hps[i]:SetText(nil)
-		ns.sbdmg[i].sbtext:SetText(nil)
-		ns.sbdmg[i].sbtext2:SetText(nil)
-		ns.sbheal[i].sbtext:SetText(nil)
+		ns.sbheal[i].bg:Hide()
+		ns.sbabsorb[i]:SetValue(0)
+		ns.sbabsorb[i].bg:Hide()
+		ns.f[i].string1:SetText(nil)
+		ns.f[i].string2:SetText(nil)
 		ns.f[i].border:Hide()
 		ns.f[i].bg:Hide()
 	end
@@ -190,9 +191,16 @@ for i=1, 5, 1 do
 	ns.sbabsorb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 	ns.sbabsorb[i]:SetStatusBarColor(1, 1, 0)
 	
+	if not ns.sbabsorb[i].bg then
+		ns.sbabsorb[i].bg = ns.sbabsorb[i]:CreateTexture(nil, "BACKGROUND")
+		ns.sbabsorb[i].bg:SetAllPoints(ns.sbabsorb[i])
+		ns.sbabsorb[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+		ns.sbabsorb[i].bg:SetVertexColor(0.5, 0.5, 0)
+	end
+	
 	-- Create the FontStrings
 	if not ns.f[i].string1 then
-		-- #. Name
+		-- #. Name dps hps
 		ns.f[i].string1 = ns.f[i]:CreateFontString(nil, "OVERLAY")
 		ns.f[i].string1:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 		ns.f[i].string1:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, 11)
@@ -211,7 +219,6 @@ function ns.wham:UpdateStatusBars()
 			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -15)
 			-- Current Fight
 			if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
 				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
@@ -219,43 +226,36 @@ function ns.wham:UpdateStatusBars()
 			else
 				-- Dmg	
 				if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 then	
-					ns.resetbutton:SetAlpha(1)
 					ns.sbdmg[i]:SetAlpha(1)
 					ns.sbdmg[i]:SetMinMaxValues(0, ns.dmgData[ns.pos[1]] or 0)
 					ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 					ns.sbdmg[i]:SetValue(ns.dmgData[ns.pos[i]] or 0)
 				else
-					ns.resetbutton:SetAlpha(0)
 					ns.sbdmg[i]:SetAlpha(0)
 				end
 			end
 			-- Heal
 			if ns.healData[ns.pos[i]] and ns.totalheal > 0 then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbheal[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
 				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
 				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
 			else
-				ns.resetbutton:SetAlpha(0)
 				ns.sbheal[i]:SetAlpha(0)
 			end
 			-- Absorb
 			if ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbabsorb[i]:SetAlpha(1)
 				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
 				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
 				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
 			else
-				ns.resetbutton:SetAlpha(0)
 				ns.sbabsorb[i]:SetAlpha(0)
 			end
 		else
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -15)
 			-- Current Fight
 			if ns.curData[ns.pos[i]] and ns.cfdGather == true then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
 				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
@@ -263,36 +263,30 @@ function ns.wham:UpdateStatusBars()
 			else
 				-- Dmg
 				if ns.dmgData[ns.pos[i]] then
-					ns.resetbutton:SetAlpha(1)
 					ns.sbdmg[i]:SetAlpha(1)
 					ns.sbdmg[i]:SetMinMaxValues(0, ns.dmgData[ns.pos[1]] or 0)
 					ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 					ns.sbdmg[i]:SetValue(ns.dmgData[ns.pos[i]] or 0)
 				else
-					ns.resetbutton:SetAlpha(0)
 					ns.sbdmg[i]:SetAlpha(0)
 				end
 			end
 			-- Heal
 			if ns.healData[ns.pos[i]] then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
 				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
 				ns.sbheal[i]:SetValue(ns.healData[ns.pos[1]] or 0)
 			else
-				ns.resetbutton:SetAlpha(0)
 				ns.sbheal[i]:SetAlpha(0)
 			end
 			-- Absorb
 			if ns.absorbData[ns.pos[i]] then
-				ns.resetbutton:SetAlpha(1)
 				ns.sbabsorb[i]:SetAlpha(1)
 				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
 				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
 				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
 			else
-				ns.resetbutton:SetAlpha(0)
 				ns.sbabsorb[i]:SetAlpha(0)
 			end
 		end
@@ -346,9 +340,10 @@ function ns.wham:UpdateLayout()
 	sort(ns.pos, ns.sortByDamage)
 	
 	for i=1, 5 do
-		if ns.dmgData[ns.pos[i]] or ns.healData[ns.pos[i]] then
+		if ns.dmgData[ns.pos[i]] or ns.healData[ns.pos[i]] or ns.absorbData[ns.pos[i]] then
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
+			ns.resetbutton:SetAlpha(1)
 		end
 	end
 	ns.wham:UpdateStatusBars()
