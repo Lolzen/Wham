@@ -89,6 +89,7 @@ ns.resetbutton:SetWidth(36)
 ns.resetbutton:SetNormalTexture("Interface\\Buttons\\CancelButton-Up") 
 ns.resetbutton:SetPushedTexture("Interface\\Buttons\\CancelButton-Down")
 ns.resetbutton:SetHighlightTexture("Interface\\Buttons\\CancelButton-Highlight")
+ns.resetbutton:SetAlpha(0)
 
 -- Kill all data
 ns.resetbutton:SetScript("OnClick", function(self)
@@ -300,10 +301,12 @@ function ns.wham:UpdateStatusBars()
 			ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, curdamage, curdamage / ns.curTotaldmg * 100)
 			if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
 				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime, ns.healData[ns.pos[i]]/combatTime)
-			elseif ns.healData[ns.pos[i]] then
+			elseif ns.healData[ns.pos[i]] and combatTime > 0 then
 				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]]/combatTime)
-			else
+			elseif ns.dmgData[ns.pos[i]] and combatTime > 0 then
 				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime)
+			else
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
 			end
 			ns.f[i].border:Show()
 			ns.f[i].bg:Show()
@@ -317,10 +320,12 @@ function ns.wham:UpdateStatusBars()
 				ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, damage, damage / ns.totaldmg * 100)
 				if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
 					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime, ns.healData[ns.pos[i]]/combatTime)
-				elseif ns.healData[ns.pos[i]] then
+				elseif ns.healData[ns.pos[i]] and combatTime > 0 then
 					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]]/combatTime)
-				else
+				elseif ns.dmgData[ns.pos[i]] and combatTime > 0 then
 					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime)
+				else
+					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
 				end
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
