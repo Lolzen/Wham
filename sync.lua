@@ -60,6 +60,28 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			end
 		end
 	end
+	-- Everything Absorb related
+	if prefix == "Wham_ABSORB" then
+		-- Gathering Messages sent and converting them so we can work with them
+		extAbsorbName, extAbsorb_raw = strsplit(" ", msg, 2)
+		-- We can't compare strings to numbers, so we have to convert that
+		extAbsorb = tonumber(extAbsorb_raw, A)
+		
+		-- k = name
+		-- v = heal
+		for k, v in pairs(ns.absorbData) do
+			localAbsorbName = k
+			localAbsorb = v
+		end
+		
+		-- Check if the names match, so we don't override somone else's data
+		if extAbsorbName == localAbsorbName then
+			-- If the external HealData is more up to date, sync it
+			if extAbsorb > localAbsorb then
+				localAbsorb = extAbsorb
+			end
+		end
+	end
 end
 
 ns.syncFrame:SetScript("OnEvent", function(self, event, ...)  

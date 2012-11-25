@@ -40,6 +40,15 @@ function ns.absorbFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 		end
 	end
 	
+	-- Send local data to other Wham users for syncing
+	if ns.absorbData[name] then
+		if IsInRaid("player") then
+			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name], "RAID")
+		elseif IsInGroup("player") and not IsInRaid("player") then
+			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name], "PARTY")
+		end	
+	end
+	
 	ns.wham:UpdateLayout()
 end
 
