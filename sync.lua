@@ -68,7 +68,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		extAbsorb = tonumber(extAbsorb_raw, A)
 		
 		-- k = name
-		-- v = heal
+		-- v = absorb
 		for k, v in pairs(ns.absorbData) do
 			localAbsorbName = k
 			localAbsorb = v
@@ -76,7 +76,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		
 		-- Check if the names match, so we don't override somone else's data
 		if extAbsorbName == localAbsorbName then
-			-- If the external HealData is more up to date, sync it
+			-- If the external AbsorbData is more up to date, sync it
 			if extAbsorb > localAbsorb then
 				localAbsorb = extAbsorb
 			end
