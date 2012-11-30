@@ -8,6 +8,7 @@ local addon, ns = ...
 ns.cfdGather = false				-- [Plugin] log Current Fight Data? [true/false]
 ns.sync = false						-- [Plugin] sync data from other Wham users? [true/false]
 ns.solo_hide = false				-- gathers no data, until in a group or raid [true/false]
+ns.autoreset = false
 ns.width = 350
 ns.height = 170
 
