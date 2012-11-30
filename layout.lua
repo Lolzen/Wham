@@ -99,6 +99,9 @@ ns.resetbutton:SetScript("OnClick", function(self)
 	if ns.healData then
 		ns.healData = {}
 	end
+	if ns.absorbData then
+		ns.absorbData = {}
+	end
 	if ns.combatTotalTime then
 		ns.combatTotalTime = 0
 	end
