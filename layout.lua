@@ -312,7 +312,7 @@ function ns.wham:UpdateStatusBars()
 			ns.f[i].bg:Show()
 		else
 			if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 or ns.healData[ns.pos[i]] and ns.totalheal > 0 or ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
-				local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
+				local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))] or {0.3, 0.3, 0.3}
 				local damage = ns.dmgData[ns.pos[i]] or 0
 				local heal = ns.healData[ns.pos[i]] or 0
 				local absorb = ns.absorbData[ns.pos[i]] or 0
