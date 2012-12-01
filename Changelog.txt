@@ -4,7 +4,7 @@ Changelog:
 *Made Modular!
 
 [0.2 Alpha]
-*Added current damage module [WIP]
+*Added current damage module
 
 [0.3 Alpha]
 *Updated to 5.0.4
@@ -15,3 +15,4 @@ Changelog:
 [0.4 Alpha]
 *Add Absorb mechanics to heal module/layout
 *Add ability to drag wham around
+*Add option to reset data only manual
