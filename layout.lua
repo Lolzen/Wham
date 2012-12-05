@@ -276,10 +276,10 @@ function ns.wham:UpdateStatusBars()
 			end
 			-- Heal
 			if ns.healData[ns.pos[i]] then
-				ns.sbdmg[i]:SetAlpha(1)
+				ns.sbheal[i]:SetAlpha(1)
 				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
 				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
-				ns.sbheal[i]:SetValue(ns.healData[ns.pos[1]] or 0)
+				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
 			else
 				ns.sbheal[i]:SetAlpha(0)
 			end
