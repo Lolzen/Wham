@@ -128,8 +128,6 @@ end)
 ns.sbdmg = {}
 ns.sbheal = {}
 ns.sbabsorb = {}
-ns.dps = {}
-ns.hps = {}
 ns.f = {}
 
 for i=1, 5, 1 do
