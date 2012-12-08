@@ -342,7 +342,7 @@ function ns.wham:UpdateStatusBars()
 end
 
 function ns.wham:UpdateLayout()
-	-- Sort names by damage
+	-- Sort Statusbars by damage
 	sort(ns.pos, ns.sortByDamage)
 	
 	-- Gather Classes of wathced players
