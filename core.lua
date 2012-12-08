@@ -125,7 +125,8 @@ function ns.wham.PLAYER_REGEN_ENABLED()
 	ns.combatTotalTime = ns.combatTotalTime + GetTime() - ns.combatStartTime
 	ns.combatStartTime = nil
 end
- 
+
+-- Sortingfunction (Damage)
 function ns.sortByDamage(a, b)
 	if ns.cfdGather == true and ns.curData then
 		return (ns.curData[a] or 0) > (ns.curData[b] or 0)
@@ -133,6 +134,20 @@ function ns.sortByDamage(a, b)
 		if ns.dmgData then
 			return (ns.dmgData[a] or 0) > (ns.dmgData[b] or 0)
 		end
+	end
+end
+
+-- Sortingfunction (Heal)
+function ns.sortByHeal(a, b)
+	if ns.healData then
+		return (ns.healData[a] or 0) > (ns.healData[b] or 0)
+	end
+end
+
+-- Sortingfunction (Absorb)
+function ns.sortByAbsorb(a, b)
+	if ns.absorbData then
+		return (ns.absorbData[a] or 0) > (ns.absorbData[b] or 0)
 	end
 end
 
