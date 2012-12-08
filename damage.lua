@@ -12,8 +12,8 @@ function ns.wham:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5,
 	if not string.find(arg2, "_DAMAGE") then return end
 	
 	-- If in PvPzone don't gather data
---	local _ , instanceType = IsInInstance()
---	if instanceType == "pvp" or instanceType == "arena" then return end
+	local _ , instanceType = IsInInstance()
+	if instanceType == "pvp" or instanceType == "arena" then return end
 	
 	-- Dont gather data if we are Solo
 	if ns.solo_hide == true then
