@@ -1,8 +1,8 @@
-## Interface: 50001
+## Interface: 50100
 ## Title: Wham
 ## Author: Lolzen
 ## Notes: Lolzen's personal Dmg-Meter
-## Version: 0.4 Alpha
+## Version: 0.5 Alpha
 
 
 absorb.lua
