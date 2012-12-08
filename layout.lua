@@ -129,6 +129,7 @@ ns.sbdmg = {}
 ns.sbheal = {}
 ns.sbabsorb = {}
 ns.f = {}
+ns.class = {}
 
 for i=1, 5, 1 do
 	-- Create the frame all other bars will be attached to
@@ -294,7 +295,7 @@ function ns.wham:UpdateStatusBars()
 
 		-- Strings
 		if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
-			local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))]
+			local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
 			local curdamage = ns.curData[ns.pos[i]] or 0
 			local heal = ns.healData[ns.pos[i]] or 0
 			local absorb = ns.absorbData[ns.pos[i]] or 0
@@ -313,7 +314,7 @@ function ns.wham:UpdateStatusBars()
 			ns.f[i].bg:Show()
 		else
 			if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 or ns.healData[ns.pos[i]] and ns.totalheal > 0 or ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
-				local rcColor = RAID_CLASS_COLORS[select(2,UnitClass(ns.pos[i]))] or {0.3, 0.3, 0.3}
+				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
 				local damage = ns.dmgData[ns.pos[i]] or 0
 				local heal = ns.healData[ns.pos[i]] or 0
 				local absorb = ns.absorbData[ns.pos[i]] or 0
@@ -343,6 +344,13 @@ end
 function ns.wham:UpdateLayout()
 	-- Sort names by damage
 	sort(ns.pos, ns.sortByDamage)
+	
+	-- Gather Classes of wathced players
+	for class in pairs(ns.watched) do
+		if class ~= nil then
+			ns.class[class] = select(2,UnitClass(class))
+		end
+	end
 	
 	for i=1, 5 do
 		if ns.dmgData[ns.pos[i]] or ns.healData[ns.pos[i]] or ns.absorbData[ns.pos[i]] then
