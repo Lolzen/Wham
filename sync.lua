@@ -12,6 +12,7 @@ ns.syncFrame:RegisterEvent("CHAT_MSG_ADDON")
 function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_DMG")
 	RegisterAddonMessagePrefix("Wham_HEAL")
+	RegisterAddonMessagePrefix("Wham_ABSORB")
 end
 
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
@@ -34,7 +35,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extDmgName == localDmgName then
 			-- If the external DmgData is more up to date, sync it
 			if extDmg > localDmg then
-				localDmg = extDmg
+				ns.dmgData[extDmgName] = extDmg
 			end
 		end
 	end
@@ -56,7 +57,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extHealName == localHealName then
 			-- If the external HealData is more up to date, sync it
 			if extHeal > localHeal then
-				localHeal = extHeal
+				ns.healData[extHealName] = extHeal
 			end
 		end
 	end
@@ -78,7 +79,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extAbsorbName == localAbsorbName then
 			-- If the external AbsorbData is more up to date, sync it
 			if extAbsorb > localAbsorb then
-				localAbsorb = extAbsorb
+				ns.absorbdData[extAbsorbName] = extAbsorb
 			end
 		end
 	end
