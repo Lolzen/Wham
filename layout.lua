@@ -345,7 +345,7 @@ function ns.wham:UpdateLayout()
 	-- Sort Statusbars by damage
 	sort(ns.pos, ns.sortByDamage)
 	
-	-- Gather Classes of wathced players
+	-- Gather Classes of watched players
 	for class in pairs(ns.watched) do
 		if class ~= nil then
 			ns.class[class] = select(2,UnitClass(class))
