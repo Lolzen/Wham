@@ -77,7 +77,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 				ns.wham:UpdateLayout()
 			end
 		end
---	end
+	end
 	-- Everything Absorb related
 	if prefix == "Wham_ABSORB" then
 		-- Gathering Messages sent and converting them so we can work with them
