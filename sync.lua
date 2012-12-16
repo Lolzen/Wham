@@ -8,7 +8,7 @@ local addon, ns = ...
 ns.syncFrame = CreateFrame("Frame", "syncFrame", UIParent)
 ns.syncFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 ns.syncFrame:RegisterEvent("CHAT_MSG_ADDON")
-ns.syncFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+ns.syncFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_DMG")
@@ -107,9 +107,17 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			end
 		end
 	end
+	if prefix == "Wham_UPDATE" then
+		ns.wham:UpdateLayout()
+	end
 end
 
-function ns.syncFrame:COMBAT_LOG_EVENT_UNFILTERED()
+function ns.syncFrame:PLAYER_REGEN_DISABLED()
+	if IsInRaid("player") then
+		SendAddonMessage("Wham_UPDATE", nil, "RAID")
+	elseif IsInGroup("player") and not IsInRaid("player") then
+		SendAddonMessage("Wham_UPDATE", nil, "PARTY")
+	end
 	ns.wham:UpdateLayout()
 end
 
