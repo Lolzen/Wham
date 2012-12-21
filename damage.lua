@@ -5,10 +5,13 @@
 
 local addon, ns = ...
 
+ns.dmgFrame = CreateFrame("Frame", "damageDataFrame", UIParent)
+ns.dmgFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
 ns.totaldmg = 0
 ns.dmgData = {}
 
-function ns.wham:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
+function ns.dmgFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
 	if not string.find(arg2, "_DAMAGE") then return end
 	
 	-- If in PvPzone don't gather data
@@ -72,11 +75,21 @@ function ns.wham:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5,
 		if ns.dmgData[name] then
 			if IsInRaid("player") then
 				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "RAID")
+				SendAddonMessage("Wham_UPDATE", nil, "RAID")
 			elseif IsInGroup("player") and not IsInRaid("player") then
 				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "PARTY")
+				SendAddonMessage("Wham_UPDATE", nil, "PARTY")
 			end
 		end
 	end
 
 	ns.wham:UpdateLayout()
 end
+
+ns.dmgFrame:SetScript("OnEvent", function(self, event, ...)  
+	if(self[event]) then
+		self[event](self, event, ...)
+	else
+		print("Wham debug (dmgFrame): "..event)
+	end 
+end)
