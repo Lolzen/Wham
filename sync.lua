@@ -14,6 +14,7 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_DMG")
 	RegisterAddonMessagePrefix("Wham_HEAL")
 	RegisterAddonMessagePrefix("Wham_ABSORB")
+	RegisterAddonMessagePrefix("Wham_UPDATE")
 end
 
 local localDmg, localHeal, localAbsorb
