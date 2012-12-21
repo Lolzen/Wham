@@ -33,8 +33,10 @@ function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, 
 		if ns.healData[name] then
 			if IsInRaid("player") then
 				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name], "RAID")
+				SendAddonMessage("Wham_UPDATE", nil, "RAID")
 			elseif IsInGroup("player") and not IsInRaid("player") then
 				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name], "PARTY")
+				SendAddonMessage("Wham_UPDATE", nil, "PARTY")
 			end
 		end
 	end
