@@ -20,13 +20,14 @@ end
 local localDmg, localHeal, localAbsorb
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
-	--print(channel..": "..prefix.." - From: ["..sender.."]")
+	print(channel..": "..prefix.." - From: ["..sender.."] > "..msg)
 	-- Everything Damage related
 	if prefix == "Wham_DMG" then
 		-- Gathering Messages sent and converting them so we can work with them
-		local extDmgName_raw, extDmg_raw = strsplit(" ", msg, 2)
+		local extDmgName_raw, extDmg_raw, extTotalDmg_raw = strsplit(" ", msg, 3)
 		-- We can't compare strings to numbers, so we have to convert that
 		local extDmg = tonumber(extDmg_raw, A)
+		local extTotalDmg = tonumber(extTotalDmg_raw, A)
 		-- Attach realm to the Name, so we don't get duplicates
 		local name, realm = UnitName(extDmgName_raw)
 		realm = realm and realm ~= "" and "-"..realm or ""
@@ -46,6 +47,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extDmg > localDmg then
 			if ns.watched[extDmgName] then
 				ns.dmgData[extDmgName] = extDmg
+				ns.totaldmg = extTotalDmg
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -53,9 +55,10 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	-- Everything Heal related
 	if prefix == "Wham_HEAL" then
 		-- Gathering Messages sent and converting them so we can work with them
-		local extHealName_raw, extHeal_raw = strsplit(" ", msg, 2)
+		local extHealName_raw, extHeal_raw, extTotalheal_raw = strsplit(" ", msg, 3)
 		-- We can't compare strings to numbers, so we have to convert that
 		local extHeal = tonumber(extHeal_raw, A)
+		local extTotalheal = tonumber(extTotalHeal_raw, A)
 		-- Attach realm to the Name, so we don't get duplicates
 		local name, realm = UnitName(extHealName_raw)
 		realm = realm and realm ~= "" and "-"..realm or ""
@@ -75,6 +78,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extHeal > localHeal then
 			if ns.watched[extHealName] then
 				ns.healData[extHealName] = extHeal
+				ns.totalheal = extTotalHeal
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -82,9 +86,10 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	-- Everything Absorb related
 	if prefix == "Wham_ABSORB" then
 		-- Gathering Messages sent and converting them so we can work with them
-		local extAbsorbName_raw, extAbsorb_raw = strsplit(" ", msg, 2)
+		local extAbsorbName_raw, extAbsorb_raw, extTotalAbsorb_raw = strsplit(" ", msg, 3)
 		-- We can't compare strings to numbers, so we have to convert that
 		local extAbsorb = tonumber(extAbsorb_raw, A)
+		local extTotalAbsorb = tonumber(extTotalAbsorb_raw, A)
 		-- Attach realm to the Name, so we don't get duplicates
 		local name, realm = UnitName(extAbsorbName_raw)
 		realm = realm and realm ~= "" and "-"..realm or ""
@@ -104,6 +109,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extAbsorb > localAbsorb then
 			if ns.watched[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
+				ns.totalabsorb = extTotalAbsorb
 				ns.wham:UpdateLayout()
 			end
 		end

@@ -74,10 +74,10 @@ function ns.dmgFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, a
 		-- Send local data to other Wham users for syncing
 		if ns.dmgData[name] then
 			if IsInRaid("player") then
-				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "RAID")
+				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name].." "..ns.totaldmg, "RAID")
 				SendAddonMessage("Wham_UPDATE", nil, "RAID")
 			elseif IsInGroup("player") and not IsInRaid("player") then
-				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name], "PARTY")
+				SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name].." "..ns.totaldmg, "PARTY")
 				SendAddonMessage("Wham_UPDATE", nil, "PARTY")
 			end
 		end
