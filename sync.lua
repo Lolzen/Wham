@@ -43,7 +43,10 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			localDmg = 0
 		end
 
-		ns.watched[extDmgName] = true
+		if extDmgName ~= "Unknown" then
+			ns.watched[extDmgName] = true
+		end
+		
 		if extDmg > localDmg then
 			if ns.watched[extDmgName] then
 				ns.dmgData[extDmgName] = extDmg
@@ -74,7 +77,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			localHeal = 0
 		end
 
-		ns.watched[extHealName] = true
+		if extHealname ~= "Unknown" then
+			ns.watched[extHealName] = true
+		end
 		if extHeal > localHeal then
 			if ns.watched[extHealName] then
 				ns.healData[extHealName] = extHeal
@@ -105,7 +110,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			localAbsorb = 0
 		end
 
-		ns.watched[extAbsorbName] = true		
+		if extAbsorbName ~= "Unknown" then
+			ns.watched[extAbsorbName] = true
+		end
 		if extAbsorb > localAbsorb then
 			if ns.watched[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
