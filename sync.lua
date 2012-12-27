@@ -15,12 +15,13 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_HEAL")
 	RegisterAddonMessagePrefix("Wham_ABSORB")
 	RegisterAddonMessagePrefix("Wham_UPDATE")
+	RegisterAddonMessagePrefix("Wham_RESET")
 end
 
 local localDmg, localHeal, localAbsorb
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
-	print(channel..": "..prefix.." - From: ["..sender.."] > "..msg)
+	--print(channel..": "..prefix.." - From: ["..sender.."] > "..msg)
 	-- Everything Damage related
 	if prefix == "Wham_DMG" then
 		-- Gathering Messages sent and converting them so we can work with them
@@ -123,6 +124,12 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	end
 	if prefix == "Wham_UPDATE" then
 		ns.wham:UpdateLayout()
+	end
+	if prefix == "Wham_RESET" then
+		if ns.acceptExternalReset == true then
+			ns.resetData()
+			print("Recieved synced data reset. All data is resetted.")
+		end
 	end
 end
 

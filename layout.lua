@@ -5,7 +5,9 @@
 --[[ Available values:
 >>Config<<
 *ns.cfdGather
+*ns.sync
 *ns.solo_hide
+*ns.acceptExternalReset
 *ns.width
 *ns.height
 
@@ -23,24 +25,27 @@
 *ns.curData
 
 >>Damage Data<<
-ns.totaldmg
-ns.dmgData
+*ns.totaldmg
+*ns.dmgData
 
 >>Heal Data<<
-ns.healFrame
-ns.totalheal
-ns.healData
+*ns.healFrame
+*ns.totalheal
+*ns.healData
 
 >>Absorb Data<<
-ns.absorbFrame
-ns.totalabsorb
-ns.absorbData
+*ns.absorbFrame
+*ns.totalabsorb
+*ns.absorbData
 
 >>Layout<<
-ns.wham:UpdateLayout()
+*ns.wham:UpdateLayout()
 This is the function to update everything like texts, values or statusbars
 Just put everything that needs to be uptated in there, look below for an example
 do not remove this or you will have errors
+*ns.resetData()
+This function will be called from within the sync module, to reset the data per request from other users
+this also has to be present
 ]]
 
 local addon, ns = ...
@@ -90,9 +95,22 @@ ns.resetbutton:SetNormalTexture("Interface\\Buttons\\CancelButton-Up")
 ns.resetbutton:SetPushedTexture("Interface\\Buttons\\CancelButton-Down")
 ns.resetbutton:SetHighlightTexture("Interface\\Buttons\\CancelButton-Highlight")
 ns.resetbutton:SetAlpha(0)
+ns.resetbutton:RegisterForClicks("LeftButtonDown", "RightButtonDown")
 
 -- Kill all data
-ns.resetbutton:SetScript("OnClick", function(self)
+ns.resetbutton:SetScript("OnClick", function(self, button)
+	if button == "LeftButton" then
+		ns.resetData()
+	elseif button == "RightButton" then
+		if IsInRaid("player") then
+			SendAddonMessage("Wham_RESER", nil, "RAID")
+		elseif IsInGroup("player") and not IsInRaid("player") then
+			SendAddonMessage("Wham_RESET", nil, "PARTY")
+		end
+	end
+end)
+
+function ns.resetData(self)
 	if ns.dmgData then
 		ns.dmgData = {}
 	end
@@ -120,7 +138,7 @@ ns.resetbutton:SetScript("OnClick", function(self)
 	ns.resetbutton:SetAlpha(0)
 	ns.bg:SetAlpha(0)
 	ns.border:SetAlpha(0)
-end)
+end
 
 --[[=======================
 ===		Statusbars		===
