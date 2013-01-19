@@ -28,7 +28,7 @@ ns.pos = {}
 ns.owners = {}
 
 -- Add players to watched list
-local function addUnit(unit)
+function ns.wham:addUnit(unit)
 	local name, realm = UnitName(unit)
 	if not name then return end
 	realm = realm and realm ~= "" and "-"..realm or ""
@@ -57,7 +57,7 @@ function ns.wham:UpdateWatchedPlayers()
 	local isInGroup = IsInGroup("player")
 	if isInGroup then
 		for i=1, GetNumSubgroupMembers() do
-			addUnit("party"..i)
+			ns.wham:addUnit("party"..i)
 			if ("partypet"..i) then
 				ns.owners[UnitName("party"..i)] = UnitName("partypet"..i)
 			end
@@ -68,7 +68,7 @@ function ns.wham:UpdateWatchedPlayers()
 	local isInRaid = IsInRaid("player")
 	if isInRaid then
 		for i=1, GetNumGroupMembers() do
-			addUnit("raid"..i)
+			ns.wham:addUnit("raid"..i)
 			if ("raidpet"..i) then
 				ns.owners[UnitName("raid"..i)] = UnitName("raidpet"..i)
 			end
