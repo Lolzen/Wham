@@ -31,12 +31,9 @@ function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, 
 		
 		-- Send local data to other Wham users for syncing
 		if ns.healData[name] then
-			if IsInRaid("player") then
-				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name].." "..ns.totalheal, "RAID")
-				SendAddonMessage("Wham_UPDATE", nil, "RAID")
-			elseif IsInGroup("player") and not IsInRaid("player") then
-				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name].." "..ns.totalheal, "PARTY")
-				SendAddonMessage("Wham_UPDATE", nil, "PARTY")
+			if IsInRaid("player") or IsInGroup("player") then
+				SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name].." "..ns.totalheal, "WHISPER", name)
+				SendAddonMessage("Wham_UPDATE", nil, "WHISPER", name)
 			end
 		end
 	end
