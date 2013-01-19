@@ -16,6 +16,3 @@ Changelog:
 *Add Absorb mechanics to heal module/layout
 *Add ability to drag wham around
 *Add option to reset data only manual
-
-[0.5 Alpha]
-*Add basic synced data reset
