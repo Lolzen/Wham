@@ -18,7 +18,7 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_RESET")
 end
 
-local localDmg, localHeal, localAbsorb
+local localDmg, localHeal, localAbsorb = 0, 0, 0
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
 	--print(channel..": "..prefix.." - From: ["..sender.."] > "..msg)
@@ -35,11 +35,6 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		-- v = dmg
 		for extDmgName, v in pairs(ns.dmgData) do
 			localDmg = v
-		end
-
-		-- initialize if nil
-		if localDmg == nil then
-			localDmg = 0
 		end
 
 		if extDmg > localDmg then
@@ -65,11 +60,6 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			localHeal = v
 		end
 
-		-- initialize if nil
-		if localHeal == nil then
-			localHeal = 0
-		end
-
 		if extHeal > localHeal then
 			if ns.watched[extHealName] then
 				ns.healData[extHealName] = extHeal
@@ -91,11 +81,6 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		-- v = absorb
 		for extAbsorbName, v in pairs(ns.absorbData) do
 			localAbsorb = v
-		end
-
-		-- initialize if nil
-		if localAbsorb == nil then
-			localAbsorb = 0
 		end
 
 		if extAbsorb > localAbsorb then
