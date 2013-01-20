@@ -5,12 +5,14 @@
 ## Version: 0.5 Alpha
 
 
-absorb.lua
+
 config.lua
 core.lua
-curdata.lua
-damage.lua
-heal.lua
 layout.lua
-slashcommands.lua
-sync.lua
+
+modules\absorb.lua
+modules\curdata.lua
+modules\damage.lua
+modules\heal.lua
+modules\slashcommands.lua
+modules\sync.lua

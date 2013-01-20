@@ -20,3 +20,4 @@ Changelog:
 [0.5 Alpha]
 *Add basic synced data reset
 *Cleaned up sync code
+*Modules are now loacated at Wham/modules
