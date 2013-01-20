@@ -23,7 +23,7 @@ function ns.interruptFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, a
 	end
 	
 	if string.find(arg2, "_INTERRUPT") then
-		local name, spellname = arg5, select(1, GetSpellInfo(arg15))
+		local name, spellname = arg5, arg13
 
 		-- Add interrupts of the players
 		-- [WIP] ToDo: divide into spells

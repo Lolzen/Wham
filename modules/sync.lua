@@ -16,6 +16,7 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_ABSORB")
 	RegisterAddonMessagePrefix("Wham_DEATH")
 	RegisterAddonMessagePrefix("Wham_INTERRUPT")
+	RegisterAddonMessagePrefix("Wham_DISPEL")
 	RegisterAddonMessagePrefix("Wham_UPDATE")
 	RegisterAddonMessagePrefix("Wham_RESET")
 end
@@ -117,7 +118,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		-- Add to watched list
 		ns.wham:addUnit(extDeathName)
 
-		-- v = absorb
+		-- v = deaths
 		for extDeathName, v in pairs(ns.deathData) do
 			localDeaths = v
 		end
@@ -139,7 +140,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		-- Add to watched list
 		ns.wham:addUnit(extInterruptName)
 
-		-- v = absorb
+		-- v = interrupts
 		for extInterruptName, v in pairs(ns.interruptData) do
 			localInterrupts = v
 		end
@@ -147,6 +148,27 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extInterrupts > localInterrupts then
 			if ns.watched[extInterruptName] then
 				ns.interruptData[extInterruptName] = extInterrupts
+				ns.wham:UpdateLayout()
+			end
+		end
+	end
+	-- Dispels
+	if prefix == "Wham_DISPEL" then
+		-- Gathering Messages sent and converting them so we can work with them
+		local extDispelName, extDispels_raw = strsplit(" ", msg, 2)
+		-- We can't compare strings to numbers, so we have to convert that
+		local extDispels = tonumber(extDispels_raw, A)
+		-- Add to watched list
+		ns.wham:addUnit(extDispelName)
+
+		-- v = dispels
+		for extDispelName, v in pairs(ns.dispelData) do
+			localDispels = v
+		end
+
+		if extDispels > localDispels then
+			if ns.watched[extDispelName] then
+				ns.dispelData[extDispelName] = extDispells
 				ns.wham:UpdateLayout()
 			end
 		end
