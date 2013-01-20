@@ -21,5 +21,6 @@ Changelog:
 *Add basic synced data reset
 *Cleaned up sync code
 *Modules are now loacated at Wham/modules
-*Add Death Tracker module
+*Add Death tracker module
 *Add Interrupt tracker module
+*Add Dispel tracker module

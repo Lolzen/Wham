@@ -14,6 +14,7 @@ modules\absorb.lua
 modules\curdata.lua
 modules\damage.lua
 modules\deathtrack.lua
+modules\dispel.lua
 modules\heal.lua
 modules\interrupt.lua
 modules\slashcommands.lua
