@@ -27,3 +27,4 @@ Changelog:
 *Add Dispel tracker module
 
 [0.6 Alpha]
+*Modules are toggleable from within the config.lua
