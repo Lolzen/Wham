@@ -5,8 +5,8 @@
 
 local addon, ns = ...
 
-ns.cfdGather = false				-- [Plugin] log Current Fight Data? [true/false]
-ns.sync = true						-- [Plugin] sync data from other Wham users? [true/false]
+ns.cfdGather = false				-- [module] log Current Fight Data? [true/false]
+ns.sync = true						-- [module] sync data from other Wham users? [true/false]
 ns.solo_hide = false				-- gathers no data, until in a group or raid [true/false]
 ns.autoAcceptExternalReset = true	-- autoaccept resets from other people [true/false]
 ns.width = 400
