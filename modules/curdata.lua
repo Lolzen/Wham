@@ -4,6 +4,7 @@
 -- Gathers Neccesary data for current fight
 
 local addon, ns = ...
+if ns.currentfightdatamodule == false then return end
 
 ns.curFrame = CreateFrame("Frame", "curDataFrame", UIParent)
 ns.curFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

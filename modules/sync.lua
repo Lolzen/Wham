@@ -4,6 +4,7 @@
 -- sync module
 
 local addon, ns = ...
+if ns.syncmodule == false then return end
 
 ns.syncFrame = CreateFrame("Frame", "syncFrame", UIParent)
 ns.syncFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

@@ -4,6 +4,7 @@
 -- Gathers Interrupts
 
 local addon, ns = ...
+if ns.interruptmodule == false then return end
 
 ns.interruptFrame = CreateFrame("Frame", "interruptDataFrame", UIParent)
 ns.interruptFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

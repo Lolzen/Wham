@@ -4,6 +4,7 @@
 -- Gathers Neccesary data for Damage
 
 local addon, ns = ...
+if ns.damagemodule == false then return end
 
 ns.dmgFrame = CreateFrame("Frame", "damageDataFrame", UIParent)
 ns.dmgFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

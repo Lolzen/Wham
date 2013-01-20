@@ -4,6 +4,7 @@
 -- checks for version
 
 local addon, ns = ...
+if ns.versioncheckmodule == false then return end
 
 local localversion = GetAddOnMetadata("Wham", "Version")
 

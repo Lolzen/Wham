@@ -4,6 +4,7 @@
 -- Gathers Dispels
 
 local addon, ns = ...
+if ns.dispelmodule == false then return end
 
 ns.dispelFrame = CreateFrame("Frame", "dispelDataFrame", UIParent)
 ns.dispelFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

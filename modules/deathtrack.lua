@@ -4,6 +4,7 @@
 -- Tracks Deaths
 
 local addon, ns = ...
+if ns.deathtrackmodule == false then return end
 
 ns.deathFrame = CreateFrame("Frame", "deathDataFrame", UIParent)
 ns.deathFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

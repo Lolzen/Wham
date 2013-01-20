@@ -2,7 +2,9 @@
 ===		Healdata   	 ===
 ====================]]--
 -- Gathers Neccesary data for Heal
+
 local addon, ns = ...
+if ns.healmodule == false then return end
 
 ns.healFrame = CreateFrame("Frame", "healDataFrame", UIParent)
 ns.healFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

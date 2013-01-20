@@ -5,6 +5,7 @@
 -- provides executable slashcommands; type /wham for help
 
 local addon, ns = ...
+if ns.slashcommandsmodule == false then return end
 
 local channel, wname
 local paste = function(self)

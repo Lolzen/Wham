@@ -2,7 +2,9 @@
 ===		Absorbdata     ===
 ======================]]--
 -- Gathers Neccesary data for Absorb
+
 local addon, ns = ...
+if ns.absorbmodule == false then return end
 
 ns.absorbFrame = CreateFrame("Frame", "absorbDataFrame", UIParent)
 ns.absorbFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
