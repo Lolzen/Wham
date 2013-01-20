@@ -4,7 +4,7 @@
 -- Here you can modify the look of the data display
 --[[ Available values:
 >>Config<<
-*ns.cfdGather
+*ns.currentfightdatamodule
 *ns.sync
 *ns.solo_hide
 *ns.acceptExternalReset
@@ -238,7 +238,7 @@ function ns.wham:UpdateStatusBars()
 		if i == 1 then
 			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -15)
 			-- Current Fight
-			if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
+			if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 then
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
 				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
@@ -275,7 +275,7 @@ function ns.wham:UpdateStatusBars()
 		else
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -15)
 			-- Current Fight
-			if ns.curData[ns.pos[i]] and ns.cfdGather == true then
+			if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] then
 				ns.sbdmg[i]:SetAlpha(1)
 				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
 				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
@@ -312,7 +312,7 @@ function ns.wham:UpdateStatusBars()
 		end
 
 		-- Strings
-		if ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 and ns.cfdGather == true then
+		if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 then
 			local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
 			local curdamage = ns.curData[ns.pos[i]] or 0
 			local heal = ns.healData[ns.pos[i]] or 0
