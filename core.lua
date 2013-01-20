@@ -132,7 +132,7 @@ end
 
 -- Sortingfunction (Damage)
 function ns.sortByDamage(a, b)
-	if ns.cfdGather == true and ns.curData then
+	if currentfightdatamodule == true and ns.curData then
 		return (ns.curData[a] or 0) > (ns.curData[b] or 0)
 	else
 		if ns.dmgData then
