@@ -20,7 +20,10 @@ Changelog:
 [0.5 Alpha]
 *Add basic synced data reset
 *Cleaned up sync code
+*Add versioncheck module
 *Modules are now loacated at Wham/modules
 *Add Death tracker module
 *Add Interrupt tracker module
 *Add Dispel tracker module
+
+[0.6 Alpha]
