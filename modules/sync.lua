@@ -15,6 +15,7 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_HEAL")
 	RegisterAddonMessagePrefix("Wham_ABSORB")
 	RegisterAddonMessagePrefix("Wham_DEATH")
+	RegisterAddonMessagePrefix("Wham_INTERRUPT")
 	RegisterAddonMessagePrefix("Wham_UPDATE")
 	RegisterAddonMessagePrefix("Wham_RESET")
 end
@@ -33,7 +34,7 @@ StaticPopupDialogs["WHAM_CHECK_DATA_RESET"] = {
 	preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
 }
 
-local localDmg, localHeal, localAbsorb = 0, 0, 0
+local localDmg, localHeal, localAbsorb, extDeaths, extinterrupts = 0, 0, 0, 0, 0
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
 	--print(channel..": "..prefix.." - From: ["..sender.."] > "..msg)
@@ -106,6 +107,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			end
 		end
 	end
+	-- Deaths
 	if prefix == "Wham_DEATH" then
 		-- Gathering Messages sent and converting them so we can work with them
 		local extDeathName, extDeaths_raw, extTotalDeaths_raw = strsplit(" ", msg, 3)
@@ -124,6 +126,27 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extDeathName] then
 				ns.deathData[extDeathName] = extDeaths
 				ns.totaldeaths = extTotalDeaths
+				ns.wham:UpdateLayout()
+			end
+		end
+	end
+	-- Interrupts
+	if prefix == "Wham_INTERRUPT" then
+		-- Gathering Messages sent and converting them so we can work with them
+		local extInterruptName, extInterrupts_raw = strsplit(" ", msg, 2)
+		-- We can't compare strings to numbers, so we have to convert that
+		local extInterrupts = tonumber(extInterrupts_raw, A)
+		-- Add to watched list
+		ns.wham:addUnit(extInterruptName)
+
+		-- v = absorb
+		for extInterruptName, v in pairs(ns.interruptData) do
+			localInterrupts = v
+		end
+
+		if extInterrupts > localInterrupts then
+			if ns.watched[extInterruptName] then
+				ns.interruptData[extInterruptName] = extInterrupts
 				ns.wham:UpdateLayout()
 			end
 		end
