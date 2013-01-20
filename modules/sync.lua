@@ -18,6 +18,20 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_RESET")
 end
 
+StaticPopupDialogs["WHAM_CHECK_DATA_RESET"] = {
+	text = "Data reset requested. Reset all data?",
+	button1 = "Yes",
+	button2 = "No",
+	OnAccept = function()
+		ns.resetData()
+		print("Accepted synced data reset. All data is resetted.")
+	end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = false,
+	preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+}
+
 local localDmg, localHeal, localAbsorb = 0, 0, 0
 function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
@@ -95,9 +109,11 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		ns.wham:UpdateLayout()
 	end
 	if prefix == "Wham_RESET" then
-		if ns.acceptExternalReset == true then
+		if ns.autoAcceptExternalReset == true then
 			ns.resetData()
 			print("Recieved synced data reset. All data is resetted.")
+		else
+			StaticPopup_Show("WHAM_CHECK_DATA_RESET")
 		end
 	end
 end
