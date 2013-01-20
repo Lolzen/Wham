@@ -13,6 +13,7 @@ layout.lua
 modules\absorb.lua
 modules\curdata.lua
 modules\damage.lua
+modules\deathtrack.lua
 modules\heal.lua
 modules\slashcommands.lua
 modules\sync.lua

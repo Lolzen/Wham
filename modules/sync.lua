@@ -14,6 +14,7 @@ function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_DMG")
 	RegisterAddonMessagePrefix("Wham_HEAL")
 	RegisterAddonMessagePrefix("Wham_ABSORB")
+	RegisterAddonMessagePrefix("Wham_DEATH")
 	RegisterAddonMessagePrefix("Wham_UPDATE")
 	RegisterAddonMessagePrefix("Wham_RESET")
 end
@@ -101,6 +102,28 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
 				ns.totalabsorb = extTotalAbsorb
+				ns.wham:UpdateLayout()
+			end
+		end
+	end
+	if prefix == "Wham_DEATH" then
+		-- Gathering Messages sent and converting them so we can work with them
+		local extDeathName, extDeaths_raw, extTotalDeaths_raw = strsplit(" ", msg, 3)
+		-- We can't compare strings to numbers, so we have to convert that
+		local extDeaths = tonumber(extDeaths_raw, A)
+		local extTotalDeaths = tonumber(extTotalDeaths_raw, A)
+		-- Add to watched list
+		ns.wham:addUnit(extDeathName)
+
+		-- v = absorb
+		for extDeathName, v in pairs(ns.deathData) do
+			localDeaths = v
+		end
+
+		if extDeaths > localDeaths then
+			if ns.watched[extDeathName] then
+				ns.deathData[extDeathName] = extDeaths
+				ns.totaldeaths = extTotalDeaths
 				ns.wham:UpdateLayout()
 			end
 		end
