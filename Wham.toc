@@ -16,3 +16,4 @@ modules\damage.lua
 modules\heal.lua
 modules\slashcommands.lua
 modules\sync.lua
+modules\versioncheck.lua
