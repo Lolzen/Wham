@@ -103,10 +103,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 end
 
 function ns.syncFrame:PLAYER_REGEN_DISABLED()
-	if IsInRaid("player") then
-		SendAddonMessage("Wham_UPDATE", nil, "RAID")
-	elseif IsInGroup("player") and not IsInRaid("player") then
-		SendAddonMessage("Wham_UPDATE", nil, "PARTY")
+	if IsInGroup("player") then
+		local channel = IsInRaid("player") and "RAID" or "PARTY"
+		SendAddonMessage("Wham_UPDATE", nil, channel)
 	end
 	ns.wham:UpdateLayout()
 end

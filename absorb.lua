@@ -42,13 +42,11 @@ function ns.absorbFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 	
 	-- Send local data to other Wham users for syncing
 	if ns.absorbData[name] then
-		if IsInRaid("player") then
-			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name].." "..ns.totalabsorb, "RAID")
-			SendAddonMessage("Wham_UPDATE", nil, "RAID")
-		elseif IsInGroup("player") and not IsInRaid("player") then
-			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name].." "..ns.totalabsorb, "PARTY")
-			SendAddonMessage("Wham_UPDATE", nil, "PARTY")
-		end	
+		if IsInGroup("player") then
+			local channel = IsInRaid("player") and "RAID" or "PARTY"
+			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name].." "..ns.totalabsorb, channel)
+			SendAddonMessage("Wham_UPDATE", nil, channel)
+		end
 	end
 	
 	ns.wham:UpdateLayout()
