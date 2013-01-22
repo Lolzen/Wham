@@ -11,16 +11,11 @@ ns.wham:SetSize(ns.width, ns.height)
 ns.wham:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.wham:RegisterEvent("GROUP_ROSTER_UPDATE")
 ns.wham:RegisterEvent("PLAYER_ENTERING_WORLD")
-ns.wham:RegisterEvent("PLAYER_REGEN_DISABLED")
-ns.wham:RegisterEvent("PLAYER_REGEN_ENABLED")
 ns.wham:RegisterEvent("UNIT_PET")
 
 --[[====================================
 ===		Gathering necessary Data	 ===
 ====================================]]--
-
-ns.combatStartTime = 0
-ns.combatTotalTime = 0
 
 -- Tables
 ns.watched = {}
@@ -119,15 +114,6 @@ end
 function ns.wham.PLAYER_ENTERING_WORLD()
 	ns.wham:UpdateWatchedPlayers()
 	ns.wham:UpdateLayout()
-end
-
-function ns.wham.PLAYER_REGEN_DISABLED()
-	ns.combatStartTime = GetTime()
-end
-
-function ns.wham.PLAYER_REGEN_ENABLED()
-	ns.combatTotalTime = ns.combatTotalTime + GetTime() - ns.combatStartTime
-	ns.combatStartTime = nil
 end
 
 -- Sortingfunction (Damage)
