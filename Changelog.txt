@@ -28,3 +28,4 @@ Changelog:
 
 [0.6 Alpha]
 *Modules are toggleable from within the config.lua
+*[WiP] Add combatTime module

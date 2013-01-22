@@ -4,13 +4,12 @@
 ## Notes: A modular Dmg-Meter
 ## Version: 0.6 Alpha
 
-
-
 config.lua
 core.lua
 layout.lua
 
 modules\absorb.lua
+modules\combattime.lua
 modules\curdata.lua
 modules\damage.lua
 modules\deathtrack.lua
