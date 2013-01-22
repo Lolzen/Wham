@@ -29,3 +29,4 @@ Changelog:
 [0.6 Alpha]
 *Modules are toggleable from within the config.lua
 *[WiP] Add combatTime module
+*Wham doesn't depend on a layout anymore

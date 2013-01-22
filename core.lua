@@ -108,12 +108,16 @@ ns.wham.GROUP_ROSTER_UPDATE = ns.wham.UpdateWatchedPlayers
 ns.wham.UNIT_PET = ns.wham.UpdateWatchedPlayers
 
 function ns.wham.COMBAT_LOG_EVENT_UNFILTERED()
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then
+		ns.wham:UpdateLayout()
+	end
 end
 
 function ns.wham.PLAYER_ENTERING_WORLD()
 	ns.wham:UpdateWatchedPlayers()
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then
+		ns.wham:UpdateLayout()
+	end
 end
 
 -- Sortingfunction (Damage)

@@ -42,7 +42,9 @@ function ns.interruptFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, a
 		end
 	end
 
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then	
+		ns.wham:UpdateLayout()
+	end
 end
 
 ns.interruptFrame:SetScript("OnEvent", function(self, event, ...)  

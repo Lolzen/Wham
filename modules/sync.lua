@@ -59,7 +59,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extDmgName] then
 				ns.dmgData[extDmgName] = extDmg
 				ns.totaldmg = extTotalDmg
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
@@ -82,7 +84,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extHealName] then
 				ns.healData[extHealName] = extHeal
 				ns.totalheal = extTotalHeal
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
@@ -105,7 +109,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
 				ns.totalabsorb = extTotalAbsorb
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
@@ -128,7 +134,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 			if ns.watched[extDeathName] then
 				ns.deathData[extDeathName] = extDeaths
 				ns.totaldeaths = extTotalDeaths
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
@@ -149,7 +157,9 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extInterrupts > localInterrupts then
 			if ns.watched[extInterruptName] then
 				ns.interruptData[extInterruptName] = extInterrupts
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
@@ -170,12 +180,16 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extDispels > localDispels then
 			if ns.watched[extDispelName] then
 				ns.dispelData[extDispelName] = extDispells
-				ns.wham:UpdateLayout()
+				if ns.wham.UpdateLayout then
+					ns.wham:UpdateLayout()
+				end
 			end
 		end
 	end
 	if prefix == "Wham_UPDATE" then
-		ns.wham:UpdateLayout()
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
+		end
 	end
 	if prefix == "Wham_RESET" then
 		if ns.autoAcceptExternalReset == true then
@@ -192,7 +206,9 @@ function ns.syncFrame:PLAYER_REGEN_DISABLED()
 		local channel = IsInRaid("player") and "RAID" or "PARTY"
 		SendAddonMessage("Wham_UPDATE", nil, channel)
 	end
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then
+		ns.wham:UpdateLayout()
+	end
 end
 
 ns.syncFrame:SetScript("OnEvent", function(self, event, ...)  

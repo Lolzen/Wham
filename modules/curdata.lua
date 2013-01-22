@@ -79,7 +79,9 @@ function ns.curFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, a
 		end
 	end
 
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then
+		ns.wham:UpdateLayout()
+	end
 end
 
 ns.curFrame:SetScript("OnEvent", function(self, event, ...)  

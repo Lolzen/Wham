@@ -47,7 +47,9 @@ function ns.deathFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4,
 		end
 	end
 
-	ns.wham:UpdateLayout()
+	if ns.wham.UpdateLayout then
+		ns.wham:UpdateLayout()
+	end
 end
 
 ns.deathFrame:SetScript("OnEvent", function(self, event, ...)  
