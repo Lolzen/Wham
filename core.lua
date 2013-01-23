@@ -145,6 +145,34 @@ function ns.sortByAbsorb(a, b)
 	end
 end
 
+-- Resettingfuinction (reset all collected data)
+function ns.resetData()
+	if ns.dmgData then
+		ns.dmgData = {}
+	end
+	if ns.healData then
+		ns.healData = {}
+	end
+	if ns.absorbData then
+		ns.absorbData = {}
+	end
+	if ns.deathData then
+		ns.deathData = {}
+	end
+	if ns.dispelData then
+		ns.dispelData = {}
+	end
+	if ns.interruptData then
+		ns.interruptData = {}
+	end
+	if ns.combatTotalTime then
+		ns.combatTotalTime = 0
+	end
+	if ns.layoutSpecificReset then
+		ns.layoutSpecificReset()
+	end
+end
+
 ns.wham:SetScript("OnEvent", function(self, event, ...)  
 	if(self[event]) then
 		self[event](self, event, ...)
