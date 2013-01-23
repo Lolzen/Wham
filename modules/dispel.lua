@@ -42,7 +42,7 @@ function ns.dispelFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 		if ns.dispelData[name] then
 			if IsInGroup("player") then
 				local channel = IsInRaid("player") and "RAID" or "PARTY"
-				SendAddonMessage("Wham_DISPEL", name.." "..ns.dispelData[name], channel)
+				SendAddonMessage("Wham_DISPEL", name.." "..ns.dispelData[name].." "..ns.totaldispels, channel)
 				SendAddonMessage("Wham_UPDATE", nil, channel)
 			end
 		end
