@@ -268,7 +268,7 @@ for i=1, 5, 1 do
 		ns.sb[i].bg = ns.sb[i]:CreateTexture(nil, "BACKGROUND")
 		ns.sb[i].bg:SetAllPoints(ns.sb[i])
 		ns.sb[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-		ns.sb[i].bg:SetVertexColor(0.4, 0, 0)
+		ns.sb[i].bg:SetVertexColor(0.3, 0.3, 0.3)
 	end
 	
 	-- Create the FontStrings
