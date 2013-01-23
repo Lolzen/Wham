@@ -143,9 +143,10 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	-- Interrupts
 	if prefix == "Wham_INTERRUPT" then
 		-- Gathering Messages sent and converting them so we can work with them
-		local extInterruptName, extInterrupts_raw = strsplit(" ", msg, 2)
+		local extInterruptName, extInterrupts_raw, extTotalInterrupts_raw = strsplit(" ", msg, 3)
 		-- We can't compare strings to numbers, so we have to convert that
 		local extInterrupts = tonumber(extInterrupts_raw, A)
+		local extTotalInterrupts = tonumber(extTotalInterrupts_raw, A)
 		-- Add to watched list
 		ns.wham:addUnit(extInterruptName)
 
@@ -157,6 +158,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extInterrupts > localInterrupts then
 			if ns.watched[extInterruptName] then
 				ns.interruptData[extInterruptName] = extInterrupts
+				ns.totalinterrupts = extTotalInterrupts
 				if ns.wham.UpdateLayout then
 					ns.wham:UpdateLayout()
 				end
@@ -166,9 +168,10 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	-- Dispels
 	if prefix == "Wham_DISPEL" then
 		-- Gathering Messages sent and converting them so we can work with them
-		local extDispelName, extDispels_raw = strsplit(" ", msg, 2)
+		local extDispelName, extDispels_raw, extTotalDispels_raw = strsplit(" ", msg, 3)
 		-- We can't compare strings to numbers, so we have to convert that
 		local extDispels = tonumber(extDispels_raw, A)
+		local extTotalDispels = tonumber(extTotalDispels_raw, A)
 		-- Add to watched list
 		ns.wham:addUnit(extDispelName)
 
@@ -180,6 +183,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		if extDispels > localDispels then
 			if ns.watched[extDispelName] then
 				ns.dispelData[extDispelName] = extDispells
+				ns.totaldispels = extTotalDispels
 				if ns.wham.UpdateLayout then
 					ns.wham:UpdateLayout()
 				end
