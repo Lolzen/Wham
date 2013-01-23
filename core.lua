@@ -159,6 +159,13 @@ function ns.sortByDispels(a, b)
 	end
 end
 
+-- Sortingfunction (Interrupts)
+function ns.sortByInterrupts(a, b)
+	if ns.interruptData then
+		return (ns.interruptData[a] or 0) > (ns.interruptData[b] or 0)
+	end
+end
+
 -- Resettingfuinction (reset all collected data)
 function ns.resetData()
 	if ns.dmgData then
