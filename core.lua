@@ -145,6 +145,13 @@ function ns.sortByAbsorb(a, b)
 	end
 end
 
+-- Sortingfunction (Deaths)
+function ns.sortByDeaths(a, b)
+	if ns.deathData then
+		return (ns.deathData[a] or 0) > (ns.deathData[b] or 0)
+	end
+end
+
 -- Resettingfuinction (reset all collected data)
 function ns.resetData()
 	if ns.dmgData then
