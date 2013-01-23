@@ -214,7 +214,6 @@ function ns.updateTabs()
 		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
 			if ns.activatedModes[v] == true then
 				ns.switchMode(v)
-				print("Switched mode to "..v)
 				ns.wham:UpdateLayout()
 			else
 				print("Module for "..v.." deactivated. Check your config.lua")
