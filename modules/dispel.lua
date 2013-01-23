@@ -9,6 +9,7 @@ if ns.dispelmodule == false then return end
 ns.dispelFrame = CreateFrame("Frame", "dispelDataFrame", UIParent)
 ns.dispelFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
+ns.totaldispels = 0
 ns.dispelData = {}
 
 function ns.dispelFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
@@ -30,6 +31,11 @@ function ns.dispelFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 		-- [WIP] ToDo: divide into spells
 		if ns.watched[name] then
 			ns.dispelData[name] = (ns.dispelData[name] or 0) + 1
+		end
+		
+		ns.totaldispels = 0
+		for _, name in pairs(ns.pos) do
+			ns.totaldispels = (ns.totaldispels or 0) + (ns.dispelData[name] or 0)
 		end
 		
 		-- Send local data to other Wham users for syncing
