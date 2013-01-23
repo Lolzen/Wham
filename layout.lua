@@ -4,12 +4,11 @@
 -- Sample layout: basic tabbed layout
 
 --[[
-*make non clickable when hidden
+*extend view to 10 when in raid
 ]]
 
 local addon, ns = ...
 
--- Make Wham is movable
 ns.wham:EnableMouse(true)
 ns.wham:SetMovable(true)
 ns.wham:SetUserPlaced(true)
@@ -36,14 +35,6 @@ end)
 ns.wham:SetScript("OnMouseUp", function()
 	ns.wham:StopMovingOrSizing()
 end)
-
---ns.wham:SetScript("OnEnter", function()
---	ShowHelpTooltip()
---end)
-
---ns.wham:SetScript("OnEnter", function()
---	HideHelpTooltip()
---end)
 
 -- Background
 ns.bg = ns.wham:CreateTexture("Background")
@@ -155,11 +146,8 @@ end
 
 -- A little helper to check if mode is set correct, if not do it
 -- also color statusbars corresponding to mode
-function ns.checkMode()
+function ns.checkColor()
 	for i=1, 5, 1 do
-		if not ns.modeData[ns.pos[i]] then
-			ns.switchMode(ns.activeMode)
-		end
 		if ns.activeMode == "Damage" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
 		elseif ns.activeMode == "Heal" then
@@ -182,11 +170,12 @@ function ns.updateTabs()
 		if not ns.tabs[k] then
 			ns.tabs[k] = CreateFrame("Frame", v.."-Tab", ns.wham)
 			if k == 1 then
-				ns.tabs[k]:SetPoint("TOPLEFT", ns.wham, "TOPRIGHT", 4, -1)
+				ns.tabs[k]:SetPoint("TOPRIGHT", ns.wham, "TOPLEFT", -4, -1)
 			else
 				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
 			end
 			ns.tabs[k]:SetSize(60, 12)
+			ns.tabs[k]:SetAlpha(1)
 		end
 		-- Backgrond
 		if not ns.tabs[k].bg then
@@ -219,6 +208,7 @@ function ns.updateTabs()
 			ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 			ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
 			ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
+			ns.tabs[k].border:SetAlpha(1)
 		end
 		-- clickscript for switching
 		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
@@ -230,14 +220,9 @@ function ns.updateTabs()
 				print("Module for "..v.." deactivated. Check your config.lua")
 			end
 		end)
-		-- decide to hide or show the tabs
-		if ns.modeData then
-			ns.tabs[k]:SetAlpha(1)
-			ns.tabs[k].border:SetAlpha(1)
-		else
-			ns.tabs[k]:SetAlpha(0)
-			ns.tabs[k].border:SetAlpha(0)
-		end
+
+			
+
 	end
 end
 
@@ -318,7 +303,7 @@ function ns.wham:UpdateStatusBars()
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
 			if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
 				ns.sb[i]:SetAlpha(1)
-				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[i]] or 0)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[i]] or 0)
 			else
@@ -375,7 +360,8 @@ function ns.wham:UpdateLayout()
 			ns.border:SetAlpha(1)
 		end
 	end
+	
 	ns.wham:UpdateStatusBars()
 	ns.updateTabs()
-	ns.checkMode()
+	ns.checkColor()
 end
