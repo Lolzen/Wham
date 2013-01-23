@@ -11,19 +11,20 @@ local addon, ns = ...
 ns.absorbModule = true
 ns.currentfightdatamodule = false
 ns.damagemodule = true
-ns.deathtrackmodule = false
-ns.dispelmodule = false
+ns.deathtrackmodule = true
+ns.dispelmodule = true
 ns.healmodule = true
-ns.interruptmodule = false
+ns.interruptmodule = true
 ns.slashcommandsmodule = true
 ns.syncmodule = true
 ns.versioncheckmodule = true
 
 --[Settings]--
+ns.initMode = "Damage"				-- Select which mode to display per standard [Damage, Heal, Absorb, Deaths, Dispels, Interrupts]
 ns.solo_hide = false				-- gathers no data, until in a group or raid [true/false]
-ns.autoAcceptExternalReset = true	-- autoaccept resets from other people [true/false]
-ns.width = 400
-ns.height = 170
+ns.autoAcceptExternalReset = true	-- !Depends on sync module! autoaccept resets from other people [true/false]
+ns.width = 250
+ns.height = 90
 
 -- tempPets contains all temporary summoned pets, which will be added to the summoners/owners damage
 ns.tempPets = {

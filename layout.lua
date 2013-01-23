@@ -1,70 +1,49 @@
---[[===================
-===		Layout		===
-===================]]--
--- Here you can modify the look of the data display
---[[ Available values:
->>Config<<
-*ns.currentfightdatamodule
-*ns.sync
-*ns.solo_hide
-*ns.acceptExternalReset
-*ns.width
-*ns.height
+--[[===========================
+===		Layout (Tabbed)		===
+===========================]]--
+-- Sample layout: basic tabbed layout
 
->>Core<<
-*ns.wham
-*ns.combatStartTime
-*ns.combatTotalTime
-*ns.watched
-*ns.pos
-*ns.owners
-
->>Current Fight Data<<
-*ns.curframe
-*ns.curTotaldmg
-*ns.curData
-
->>Damage Data<<
-*ns.totaldmg
-*ns.dmgData
-
->>Heal Data<<
-*ns.healFrame
-*ns.totalheal
-*ns.healData
-
->>Absorb Data<<
-*ns.absorbFrame
-*ns.totalabsorb
-*ns.absorbData
-
->>Layout<<
-*ns.wham:UpdateLayout()
-This is the function to update everything like texts, values or statusbars
-Just put everything that needs to be uptated in there, look below for an example
-do not remove this or you will have errors
-*ns.resetData()
-This function will be called from within the sync module, to reset the data per request from other users
-this also has to be present
+--[[
+*make non clickable when hidden
 ]]
 
 local addon, ns = ...
 
--- Wham is movable ;>
+-- Make Wham is movable
 ns.wham:EnableMouse(true)
 ns.wham:SetMovable(true)
 ns.wham:SetUserPlaced(true)
 
-ns.wham:SetScript("OnMouseDown", function()
+-- Script for moving the freame and resetting data
+ns.wham:SetScript("OnMouseDown", function(self, button)
 	if IsAltKeyDown() then
 		ns.wham:ClearAllPoints()
 		ns.wham:StartMoving()
+	end
+	if IsShiftKeyDown() then
+		if button == "LeftButton" then
+			ns.resetData()
+			print("Data has been resetted.")
+		elseif button == "RightButton" then
+			if IsInGroup("player") then
+				local channel = IsInRaid("player") and "RAID" or "PARTY"
+				SendAddonMessage("Wham_RESET", nil, channel)
+			end
+		end
 	end
 end)
 
 ns.wham:SetScript("OnMouseUp", function()
 	ns.wham:StopMovingOrSizing()
 end)
+
+--ns.wham:SetScript("OnEnter", function()
+--	ShowHelpTooltip()
+--end)
+
+--ns.wham:SetScript("OnEnter", function()
+--	HideHelpTooltip()
+--end)
 
 -- Background
 ns.bg = ns.wham:CreateTexture("Background")
@@ -83,76 +62,194 @@ ns.border:SetPoint("BOTTOMRIGHT", ns.bg, 2, -1)
 ns.border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 ns.border:SetAlpha(0)
 
---[[===================
-===		Buttons		===
-===================]]--
--- ResetButton
-ns.resetbutton = CreateFrame("Button", "ResetButton", ns.wham)
-ns.resetbutton:SetPoint("BOTTOMRIGHT", ns.wham, 4, 0)
-ns.resetbutton:SetHeight(36)
-ns.resetbutton:SetWidth(36)
-ns.resetbutton:SetNormalTexture("Interface\\Buttons\\CancelButton-Up") 
-ns.resetbutton:SetPushedTexture("Interface\\Buttons\\CancelButton-Down")
-ns.resetbutton:SetHighlightTexture("Interface\\Buttons\\CancelButton-Highlight")
-ns.resetbutton:SetAlpha(0)
-ns.resetbutton:RegisterForClicks("LeftButtonDown", "RightButtonDown")
-
--- Kill all data
-ns.resetbutton:SetScript("OnClick", function(self, button)
-	if button == "LeftButton" then
-		ns.resetData()
-	elseif button == "RightButton" then
-		if IsInRaid("player") then
-			SendAddonMessage("Wham_RESER", nil, "RAID")
-		elseif IsInGroup("player") and not IsInRaid("player") then
-			SendAddonMessage("Wham_RESET", nil, "PARTY")
-		end
-	end
-end)
-
-function ns.resetData(self)
-	if ns.dmgData then
-		ns.dmgData = {}
-	end
-	if ns.healData then
-		ns.healData = {}
-	end
-	if ns.absorbData then
-		ns.absorbData = {}
-	end
-	if ns.combatTotalTime then
-		ns.combatTotalTime = 0
-	end
+function ns.layoutSpecificReset()
 	for i=1, 5, 1 do
-		ns.sbdmg[i]:SetValue(0)
-		ns.sbdmg[i].bg:Hide()
-		ns.sbheal[i]:SetValue(0)
-		ns.sbheal[i].bg:Hide()
-		ns.sbabsorb[i]:SetValue(0)
-		ns.sbabsorb[i].bg:Hide()
+		ns.sb[i]:SetValue(0)
+		ns.sb[i].bg:Hide()
 		ns.f[i].string1:SetText(nil)
 		ns.f[i].string2:SetText(nil)
 		ns.f[i].border:Hide()
 		ns.f[i].bg:Hide()
 	end
-	ns.resetbutton:SetAlpha(0)
+	for i=1, #ns.tabs do
+		ns.tabs[i]:SetAlpha(0)
+		ns.tabs[i].border:SetAlpha(0)
+	end
 	ns.bg:SetAlpha(0)
 	ns.border:SetAlpha(0)
 end
 
---[[=======================
-===		Statusbars		===
-=======================]]--
-ns.sbdmg = {}
-ns.sbheal = {}
-ns.sbabsorb = {}
+-- Initialize tabs for switching modes
+ns.activeMode = ns.initMode --activate mode chose in confic first
+
+-- Check which modules are true in config.lua and pollute the activatedModes table
+ns.activatedModes = {}
+if ns.damagemodule == true then
+	ns.activatedModes["Damage"] = true
+else
+	ns.activatedModes["Damage"] = false
+end
+if ns.healmodule == true then
+	ns.activatedModes["Heal"] = true
+else
+	ns.activatedModes["Heal"] = false
+end
+if ns.absorbModule == true then
+	ns.activatedModes["Absorb"] = true
+else
+	ns.activatedModes["Absorb"] = false
+end
+if ns.deathtrackmodule == true then
+	ns.activatedModes["Deaths"] = true
+else
+	ns.activatedModes["Deaths"] = false
+end
+if ns.dispelmodule == true then
+	ns.activatedModes["Dispels"] = true
+else
+	ns.activatedModes["Dispels"] = false
+end
+if ns.interruptmodule == true then
+	ns.activatedModes["Interrupts"] = true
+else
+	ns.activatedModes["Interrupts"] = false
+end
+
+-- Modes available, used as tokens for creating our tabs
+ns.modes = {
+	"Damage",
+	"Heal",
+	"Absorb",
+	"Deaths",
+	"Dispels",
+	"Interrupts",
+}
+
+-- Select recieved mode as activeMode
+function ns.switchMode(selectedMode)
+	ns.activeMode = selectedMode
+	-- Use the selected data
+	if selectedMode == "Damage" and ns.currentfightdatamodule == true then
+		ns.modeTotal = ns.curTotaldmg
+		ns.modeData = ns.curData
+	elseif selectedMode == "Damage" then
+		ns.modeTotal = ns.totaldmg
+		ns.modeData = ns.dmgData
+	elseif selectedMode == "Heal" then
+		ns.modeTotal = ns.totalheal
+		ns.modeData = ns.healData
+	elseif selectedMode == "Absorb" then
+		ns.modeTotal = ns.totalabsorb
+		ns.modeData = ns.absorbData
+	elseif selectedMode == "Deaths" then
+		ns.modeTotal = ns.totaldeaths
+		ns.modeData = ns.deathData
+	elseif selectedMode == "Dispels" then
+		ns.modeTotal = ns.totaldispels
+		ns.modeData = ns.dispelData
+	elseif selectedMode == "Interrupts" then
+		ns.modeTotal = ns.totalinterrupts
+		ns.modeData = ns.interruptData
+	end
+end
+
+-- A little helper to check if mode is set correct, if not do it
+-- also color statusbars corresponding to mode
+function ns.checkMode()
+	for i=1, 5, 1 do
+		if not ns.modeData[ns.pos[i]] then
+			ns.switchMode(ns.activeMode)
+		end
+		if ns.activeMode == "Damage" then
+			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
+		elseif ns.activeMode == "Heal" then
+			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
+		elseif ns.activeMode == "Absorb" then
+			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
+		elseif ns.activeMode == "Deaths" then
+			ns.sb[i]:SetStatusBarColor(0.2, 0.2, 0.2)
+		else
+			ns.sb[i]:SetStatusBarColor(0.7, 0.7, 0.7)
+		end
+	end
+end
+
+-- Create some clickable tabs
+ns.tabs = {}
+function ns.updateTabs()
+	for k, v in pairs(ns.modes) do
+		-- Create the Tabs
+		if not ns.tabs[k] then
+			ns.tabs[k] = CreateFrame("Frame", v.."-Tab", ns.wham)
+			if k == 1 then
+				ns.tabs[k]:SetPoint("TOPLEFT", ns.wham, "TOPRIGHT", 4, -1)
+			else
+				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
+			end
+			ns.tabs[k]:SetSize(60, 12)
+		end
+		-- Backgrond
+		if not ns.tabs[k].bg then
+			ns.tabs[k].bg = ns.tabs[k]:CreateTexture("Background")
+			ns.tabs[k].bg:SetAllPoints(ns.tabs[k])
+		end
+		if v == ns.activeMode then
+			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
+		else
+			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
+		end
+		-- Labels
+		if not ns.tabs[k].label then
+			ns.tabs[k].label = ns.tabs[k]:CreateFontString(nil, "OVERLAY")
+			ns.tabs[k].label:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+			ns.tabs[k].label:SetPoint("CENTER", ns.tabs[k], "CENTER", 0, 0)
+			if ns.activatedModes[v] == true then
+				ns.tabs[k].label:SetFormattedText("%s", v)
+			else
+				ns.tabs[k].label:SetFormattedText("|cff550000%s|r", v)
+			end
+		end
+		-- Border
+		if not ns.tabs[k].border then
+			ns.tabs[k].border = CreateFrame("Frame", nil, ns.wham)
+			ns.tabs[k].border:SetBackdrop({
+				edgeFile = "Interface\\AddOns\\Wham\\Textures\\border3", edgeSize = 8,
+				insets = {left = 4, right = 4, top = 4, bottom = 4},
+			})
+			ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
+			ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
+			ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
+		end
+		-- clickscript for switching
+		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
+			if ns.activatedModes[v] == true then
+				ns.switchMode(v)
+				print("Switched mode to "..v)
+				ns.wham:UpdateLayout()
+			else
+				print("Module for "..v.." deactivated. Check your config.lua")
+			end
+		end)
+		-- decide to hide or show the tabs
+		if ns.modeData then
+			ns.tabs[k]:SetAlpha(1)
+			ns.tabs[k].border:SetAlpha(1)
+		else
+			ns.tabs[k]:SetAlpha(0)
+			ns.tabs[k].border:SetAlpha(0)
+		end
+	end
+end
+
+-- Handle the Statusbars
+ns.sb = {}
 ns.f = {}
 ns.class = {}
 
 for i=1, 5, 1 do
 	-- Create the frame all other bars will be attached to
 	ns.f[i] = CreateFrame("Frame", nil, ns.wham)
-	ns.f[i]:SetHeight(14)
+	ns.f[i]:SetHeight(15)
 	ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
 	
 	-- Border
@@ -175,193 +272,95 @@ for i=1, 5, 1 do
 		ns.f[i].bg:SetVertexColor(0, 0, 0)
 	end
 	
-	-- Create the dmgStatusBars
-	ns.sbdmg[i] = CreateFrame("StatusBar", "dmgStatusBar"..i, ns.wham)
-	ns.sbdmg[i]:SetHeight(8)
-	ns.sbdmg[i]:SetWidth(ns.wham:GetWidth() -8)
-	ns.sbdmg[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-	ns.sbdmg[i]:SetStatusBarColor(0.8, 0, 0)
+	-- Create the StatusBars
+	ns.sb[i] = CreateFrame("StatusBar", "StatusBar"..i, ns.wham)
+	ns.sb[i]:SetHeight(15)
+	ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
+	ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 	
-	-- dmgStatusBars background
-	if not ns.sbdmg[i].bg then
-		ns.sbdmg[i].bg = ns.sbdmg[i]:CreateTexture(nil, "BACKGROUND")
-		ns.sbdmg[i].bg:SetAllPoints(ns.sbdmg[i])
-		ns.sbdmg[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-		ns.sbdmg[i].bg:SetVertexColor(0.4, 0, 0)
-	end
-	
-	-- Create the healStatusBars
-	ns.sbheal[i] = CreateFrame("StatusBar", "healStatusBar"..i, ns.wham)
-	ns.sbheal[i]:SetHeight(3)
-	ns.sbheal[i]:SetWidth(ns.wham:GetWidth() -8)
-	ns.sbheal[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-	ns.sbheal[i]:SetStatusBarColor(0, 0.8, 0.2)
-	
-	if not ns.sbheal[i].bg then
-		ns.sbheal[i].bg = ns.sbheal[i]:CreateTexture(nil, "BACKGROUND")
-		ns.sbheal[i].bg:SetAllPoints(ns.sbheal[i])
-		ns.sbheal[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-		ns.sbheal[i].bg:SetVertexColor(0, 0.4, 0.1)
-	end
-	
-	-- Create the absorbStatusBars
-	ns.sbabsorb[i] = CreateFrame("StatusBar", "absorbStatusBar"..i, ns.wham)
-	ns.sbabsorb[i]:SetHeight(3)
-	ns.sbabsorb[i]:SetWidth(ns.wham:GetWidth() -8)
-	ns.sbabsorb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-	ns.sbabsorb[i]:SetStatusBarColor(1, 1, 0)
-	
-	if not ns.sbabsorb[i].bg then
-		ns.sbabsorb[i].bg = ns.sbabsorb[i]:CreateTexture(nil, "BACKGROUND")
-		ns.sbabsorb[i].bg:SetAllPoints(ns.sbabsorb[i])
-		ns.sbabsorb[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-		ns.sbabsorb[i].bg:SetVertexColor(0.5, 0.5, 0)
+	-- StatusBars background
+	if not ns.sb[i].bg then
+		ns.sb[i].bg = ns.sb[i]:CreateTexture(nil, "BACKGROUND")
+		ns.sb[i].bg:SetAllPoints(ns.sb[i])
+		ns.sb[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+		ns.sb[i].bg:SetVertexColor(0.4, 0, 0)
 	end
 	
 	-- Create the FontStrings
 	if not ns.f[i].string1 then
-		-- #. Name dps hps
+		-- #. Name
 		ns.f[i].string1 = ns.f[i]:CreateFontString(nil, "OVERLAY")
 		ns.f[i].string1:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.f[i].string1:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, 11)
+		ns.f[i].string1:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, -2)
 	end
 	if not ns.f[i].string2 then
-		-- absorb/heal/dmg
+		-- mode (mode%)
 		ns.f[i].string2 = ns.f[i]:CreateFontString(nil, "OVERLAY")
 		ns.f[i].string2:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.f[i].string2:SetPoint("TOPRIGHT", ns.f[i], "TOPRIGHT", -2, 11)
+		ns.f[i].string2:SetPoint("TOPRIGHT", ns.f[i], "TOPRIGHT", -2, -2)
 	end
 end
 
 function ns.wham:UpdateStatusBars()
+	-- show the first 5 of our selected mode
 	for i=1, 5, 1 do
 		if i == 1 then
-			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -15)
-			-- Current Fight
-			if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 then
-				ns.sbdmg[i]:SetAlpha(1)
-				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
-				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-				ns.sbdmg[i]:SetValue(ns.curData[ns.pos[i]] or 0)
+			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
+			if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
+				ns.sb[i]:SetAlpha(1)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
+				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.pos[i]] or 0)
 			else
-				-- Dmg	
-				if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 then	
-					ns.sbdmg[i]:SetAlpha(1)
-					ns.sbdmg[i]:SetMinMaxValues(0, ns.dmgData[ns.pos[1]] or 0)
-					ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-					ns.sbdmg[i]:SetValue(ns.dmgData[ns.pos[i]] or 0)
-				else
-					ns.sbdmg[i]:SetAlpha(0)
-				end
-			end
-			-- Heal
-			if ns.healData[ns.pos[i]] and ns.totalheal > 0 then
-				ns.sbheal[i]:SetAlpha(1)
-				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
-				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
-				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
-			else
-				ns.sbheal[i]:SetAlpha(0)
-			end
-			-- Absorb
-			if ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
-				ns.sbabsorb[i]:SetAlpha(1)
-				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
-				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
-			else
-				ns.sbabsorb[i]:SetAlpha(0)
+				ns.sb[i]:SetAlpha(0)
 			end
 		else
-			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -15)
-			-- Current Fight
-			if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] then
-				ns.sbdmg[i]:SetAlpha(1)
-				ns.sbdmg[i]:SetMinMaxValues(0, ns.curData[ns.pos[1]] or 0)
-				ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-				ns.sbdmg[i]:SetValue(ns.curData[ns.pos[i]] or 0)
+			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
+			if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
+				ns.sb[i]:SetAlpha(1)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[i]] or 0)
+				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.pos[i]] or 0)
 			else
-				-- Dmg
-				if ns.dmgData[ns.pos[i]] then
-					ns.sbdmg[i]:SetAlpha(1)
-					ns.sbdmg[i]:SetMinMaxValues(0, ns.dmgData[ns.pos[1]] or 0)
-					ns.sbdmg[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-					ns.sbdmg[i]:SetValue(ns.dmgData[ns.pos[i]] or 0)
-				else
-					ns.sbdmg[i]:SetAlpha(0)
-				end
-			end
-			-- Heal
-			if ns.healData[ns.pos[i]] then
-				ns.sbheal[i]:SetAlpha(1)
-				ns.sbheal[i]:SetMinMaxValues(0, ns.healData[ns.pos[1]] or 0)
-				ns.sbheal[i]:SetPoint("TOPLEFT", ns.f[i], 0, -3)
-				ns.sbheal[i]:SetValue(ns.healData[ns.pos[i]] or 0)
-			else
-				ns.sbheal[i]:SetAlpha(0)
-			end
-			-- Absorb
-			if ns.absorbData[ns.pos[i]] then
-				ns.sbabsorb[i]:SetAlpha(1)
-				ns.sbabsorb[i]:SetMinMaxValues(0, ns.absorbData[ns.pos[1]] or 0)
-				ns.sbabsorb[i]:SetPoint("TOPLEFT", ns.f[i], 0, 0)
-				ns.sbabsorb[i]:SetValue(ns.absorbData[ns.pos[i]] or 0)
-			else
-				ns.sbabsorb[i]:SetAlpha(0)
+				ns.sb[i]:SetAlpha(0)
 			end
 		end
 
 		-- Strings
-		if ns.currentfightdatamodule == true and ns.curData[ns.pos[i]] and ns.curTotaldmg > 0 then
+		if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
 			local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
-			local curdamage = ns.curData[ns.pos[i]] or 0
-			local heal = ns.healData[ns.pos[i]] or 0
-			local absorb = ns.absorbData[ns.pos[i]] or 0
-			local combatTime = ns.combatTotalTime + (ns.combatStartTime and (GetTime() - ns.combatStartTime) or 0)
-			ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, curdamage, curdamage / ns.curTotaldmg * 100)
-			if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime, ns.healData[ns.pos[i]]/combatTime)
-			elseif ns.healData[ns.pos[i]] and combatTime > 0 then
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]]/combatTime)
-			elseif ns.dmgData[ns.pos[i]] and combatTime > 0 then
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime)
-			else
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
-			end
+			local curModeVal = ns.modeData[ns.pos[i]] or 0
+			ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
+			ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
 			ns.f[i].border:Show()
 			ns.f[i].bg:Show()
 		else
-			if ns.dmgData[ns.pos[i]] and ns.totaldmg > 0 or ns.healData[ns.pos[i]] and ns.totalheal > 0 or ns.absorbData[ns.pos[i]] and ns.totalabsorb > 0 then
-				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
-				local damage = ns.dmgData[ns.pos[i]] or 0
-				local heal = ns.healData[ns.pos[i]] or 0
-				local absorb = ns.absorbData[ns.pos[i]] or 0
-				local combatTime = ns.combatTotalTime + (ns.combatStartTime and (GetTime() - ns.combatStartTime) or 0)
-				ns.f[i].string2:SetFormattedText("|cffffff00%d (%.0f%%)|r |cff00ff22%d (%.0f%%)|r |cffff0000%d (%.0f%%)|r", absorb, absorb / ns.totalabsorb * 100, heal, heal / ns.totalheal * 100, damage, damage / ns.totaldmg * 100)
-				if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] and combatTime > 0 then
-					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime, ns.healData[ns.pos[i]]/combatTime)
-				elseif ns.healData[ns.pos[i]] and combatTime > 0 then
-					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cff00ff00%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.healData[ns.pos[i]]/combatTime)
-				elseif ns.dmgData[ns.pos[i]] and combatTime > 0 then
-					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r |cffff0000%d|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i], ns.dmgData[ns.pos[i]]/combatTime)
-				else
-					ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
-				end
-				ns.f[i].border:Show()
-				ns.f[i].bg:Show()
-			else
-				ns.f[i].string1:SetText(nil)
-				ns.f[i].string2:SetText(nil)
-				ns.f[i].border:Hide()
-				ns.f[i].bg:Hide()
-			end
+			ns.f[i].string1:SetText(nil)
+			ns.f[i].string2:SetText(nil)
+			ns.f[i].border:Hide()
+			ns.f[i].bg:Hide()
 		end
 	end
 end
 
 function ns.wham:UpdateLayout()
-	-- Sort Statusbars by damage
-	sort(ns.pos, ns.sortByDamage)
+	-- Sort Statusbars by mode, so they aren't getting displayed funny
+	if ns.activeMode == "Damage" then
+		sort(ns.pos, ns.sortByDamage)
+	elseif ns.activeMode == "Heal" then
+		sort(ns.pos, ns.sortByHeal)
+	elseif ns.activeMode == "Absorb" then
+		sort(ns.pos, ns.sortByAbsorb)
+	elseif ns.activeMode == "Deaths" then
+		sort(ns.pos, ns.sortByDeaths)
+	elseif ns.activeMode == "Dispels" then
+		sort(ns.pos, ns.sortByDispels)
+	elseif ns.activeMode == "Interrupts" then
+		sort(ns.pos, ns.sortByinterrupts)
+	end
+	
+	-- ensure we're always getting fresh modedata
+	ns.switchMode(ns.activeMode)
 	
 	-- Gather Classes of watched players
 	for class in pairs(ns.watched) do
@@ -371,11 +370,12 @@ function ns.wham:UpdateLayout()
 	end
 	
 	for i=1, 5 do
-		if ns.dmgData[ns.pos[i]] or ns.healData[ns.pos[i]] or ns.absorbData[ns.pos[i]] then
+		if ns.modeData[ns.pos[i]] then
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
-			ns.resetbutton:SetAlpha(1)
 		end
 	end
 	ns.wham:UpdateStatusBars()
+	ns.updateTabs()
+	ns.checkMode()
 end
