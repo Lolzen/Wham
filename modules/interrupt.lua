@@ -9,6 +9,7 @@ if ns.interruptmodule == false then return end
 ns.interruptFrame = CreateFrame("Frame", "interruptDataFrame", UIParent)
 ns.interruptFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
+ns.totalinterrupts = 0
 ns.interruptData = {}
 
 function ns.interruptFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
@@ -32,11 +33,16 @@ function ns.interruptFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, a
 			ns.interruptData[name] = (ns.interruptData[name] or 0) + 1
 		end
 		
+		ns.totalinterrupts = 0
+		for _, name in pairs(ns.pos) do
+			ns.totalinterrupts = (ns.totalinterrupts or 0) + (ns.interruptData[name] or 0)
+		end
+		
 		-- Send local data to other Wham users for syncing
 		if ns.interruptData[name] then
 			if IsInGroup("player") then
 				local channel = IsInRaid("player") and "RAID" or "PARTY"
-				SendAddonMessage("Wham_INTERRUPT", name.." "..ns.interruptData[name], channel)
+				SendAddonMessage("Wham_INTERRUPT", name.." "..ns.interruptData[name].." "..ns.totalinterrupts, channel)
 				SendAddonMessage("Wham_UPDATE", nil, channel)
 			end
 		end
