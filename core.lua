@@ -152,6 +152,13 @@ function ns.sortByDeaths(a, b)
 	end
 end
 
+-- Sortingfunction (Dispels)
+function ns.sortByDispels(a, b)
+	if ns.dispelData then
+		return (ns.dispelData[a] or 0) > (ns.dispelData[b] or 0)
+	end
+end
+
 -- Resettingfuinction (reset all collected data)
 function ns.resetData()
 	if ns.dmgData then
