@@ -175,7 +175,6 @@ function ns.updateTabs()
 				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
 			end
 			ns.tabs[k]:SetSize(60, 12)
-			ns.tabs[k]:SetAlpha(1)
 		end
 		-- Backgrond
 		if not ns.tabs[k].bg then
@@ -208,7 +207,6 @@ function ns.updateTabs()
 			ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 			ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
 			ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
-			ns.tabs[k].border:SetAlpha(1)
 		end
 		-- clickscript for switching
 		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
@@ -219,9 +217,20 @@ function ns.updateTabs()
 				print("Module for "..v.." deactivated. Check your config.lua")
 			end
 		end)
+	end
+end
 
-			
+function ns.hideTabs()
+	for i=1, #ns.tabs do
+		ns.tabs[i]:SetAlpha(0)
+		ns.tabs[i].border:SetAlpha(0)
+	end
+end
 
+function ns.showTabs()
+	for i=1, #ns.tabs do
+		ns.tabs[i]:SetAlpha(1)
+		ns.tabs[i].border:SetAlpha(1)
 	end
 end
 
@@ -235,7 +244,7 @@ for i=1, 5, 1 do
 	ns.f[i] = CreateFrame("Frame", nil, ns.wham)
 	ns.f[i]:SetHeight(15)
 	ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
-	
+
 	-- Border
 	if not ns.f[i].border then
 		ns.f[i].border = CreateFrame("Frame", nil, ns.f[i])
@@ -247,7 +256,7 @@ for i=1, 5, 1 do
 		ns.f[i].border:SetPoint("BOTTOMRIGHT", ns.f[i], 2, -1)
 		ns.f[i].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 	end
-	
+
 	-- background
 	if not ns.f[i].bg then
 		ns.f[i].bg = ns.f[i]:CreateTexture(nil, "BACKGROUND")
@@ -255,13 +264,13 @@ for i=1, 5, 1 do
 		ns.f[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 		ns.f[i].bg:SetVertexColor(0, 0, 0)
 	end
-	
+
 	-- Create the StatusBars
 	ns.sb[i] = CreateFrame("StatusBar", "StatusBar"..i, ns.wham)
 	ns.sb[i]:SetHeight(15)
 	ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
 	ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-	
+
 	-- StatusBars background
 	if not ns.sb[i].bg then
 		ns.sb[i].bg = ns.sb[i]:CreateTexture(nil, "BACKGROUND")
@@ -269,7 +278,7 @@ for i=1, 5, 1 do
 		ns.sb[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 		ns.sb[i].bg:SetVertexColor(0.3, 0.3, 0.3)
 	end
-	
+
 	-- Create the FontStrings
 	if not ns.f[i].string1 then
 		-- #. Name
@@ -342,24 +351,32 @@ function ns.wham:UpdateLayout()
 	elseif ns.activeMode == "Interrupts" then
 		sort(ns.pos, ns.sortByinterrupts)
 	end
-	
+
 	-- ensure we're always getting fresh modedata
 	ns.switchMode(ns.activeMode)
-	
+
 	-- Gather Classes of watched players
 	for class in pairs(ns.watched) do
 		if class ~= nil then
 			ns.class[class] = select(2,UnitClass(class))
 		end
 	end
-	
+
 	for i=1, 5 do
 		if ns.modeData[ns.pos[i]] then
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
 		end
 	end
-	
+
+	if ns.modeData[ns.pos[i]] then
+		if ns.modeData then
+			ns.showTabs()
+		end
+	else
+		ns.hideTabs()
+	end
+
 	ns.wham:UpdateStatusBars()
 	ns.updateTabs()
 	ns.checkColor()
