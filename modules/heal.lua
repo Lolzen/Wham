@@ -12,6 +12,9 @@ ns.healFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.totalheal = 0
 ns.healData = {}
 
+ns.totaloverheal = 0
+ns.overhealData = {}
+
 function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
 	if not string.find(arg2, "_HEAL") then return end
 	
@@ -24,11 +27,14 @@ function ns.healFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, 
 		
 		if ns.watched[name] then
 			ns.healData[name] = (ns.healData[name] or 0) + heal - over
+			ns.overhealData[name] = (ns.overhealData[name] or 0) + over
 		end
 		
 		ns.totalheal = 0
+		ns.totaloverheal = 0
 		for _, name in pairs(ns.pos) do
 			ns.totalheal = (ns.totalheal or 0) + (ns.healData[name] or 0)
+			ns.totaloverheal = (ns.totaloverheal or 0) + (ns.overhealData[name] or 0)
 		end
 		
 		-- Send local data to other Wham users for syncing

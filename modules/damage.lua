@@ -12,6 +12,9 @@ ns.dmgFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.totaldmg = 0
 ns.dmgData = {}
 
+ns.totaloverdmg = 0
+ns.overdmgData = {}
+
 function ns.dmgFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
 	if not string.find(arg2, "_DAMAGE") then return end
 	
@@ -65,11 +68,14 @@ function ns.dmgFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4, a
 		-- Add dmgvalues of the players
 		if ns.watched[name] then
 			ns.dmgData[name] = (ns.dmgData[name] or 0) + dmg - over
+			ns.overdmgData[name] = (ns.overdmgData[name] or 0) + over
 		end
 	
 		ns.totaldmg = 0
+		ns.totaloverdmg = 0
 		for _, name in pairs(ns.pos) do
 			ns.totaldmg = (ns.totaldmg or 0) + (ns.dmgData[name] or 0)
+			ns.totaloverdmg = (ns.totaloverdmg or 0) + (ns.overdmgData[name] or 0)
 		end
 		
 		-- Send local data to other Wham users for syncing
