@@ -144,8 +144,7 @@ function ns.switchMode(selectedMode)
 	end
 end
 
--- A little helper to check if mode is set correct, if not do it
--- also color statusbars corresponding to mode
+-- A little helper to check colors corresponding to mode
 function ns.checkColor()
 	for i=1, 5, 1 do
 		if ns.activeMode == "Damage" then
@@ -175,6 +174,7 @@ function ns.updateTabs()
 				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
 			end
 			ns.tabs[k]:SetSize(60, 12)
+			ns.tabs[k]:SetAlpha(0.4)
 		end
 		-- Backgrond
 		if not ns.tabs[k].bg then
@@ -207,6 +207,7 @@ function ns.updateTabs()
 			ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 			ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
 			ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
+			ns.tabs[k].border:SetAlpha(1)
 		end
 		-- clickscript for switching
 		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
@@ -229,7 +230,7 @@ end
 
 function ns.showTabs()
 	for i=1, #ns.tabs do
-		ns.tabs[i]:SetAlpha(1)
+		ns.tabs[i]:SetAlpha(0.4)
 		ns.tabs[i].border:SetAlpha(1)
 	end
 end
@@ -369,10 +370,8 @@ function ns.wham:UpdateLayout()
 		end
 	end
 
-	if ns.modeData[ns.pos[i]] then
-		if ns.modeData then
-			ns.showTabs()
-		end
+	if ns.modeData then
+		ns.showTabs()
 	else
 		ns.hideTabs()
 	end
