@@ -82,8 +82,10 @@ else
 end
 if ns.healmodule == true then
 	ns.activatedModes["Heal"] = true
+	ns.activatedModes["OverHeal"] = true
 else
 	ns.activatedModes["Heal"] = false
+	ns.activatedModes["OverHeal"] = false
 end
 if ns.absorbModule == true then
 	ns.activatedModes["Absorb"] = true
@@ -110,6 +112,7 @@ end
 ns.modes = {
 	"Damage",
 	"Heal",
+	"OverHeal",
 	"Absorb",
 	"Deaths",
 	"Dispels",
@@ -129,6 +132,9 @@ function ns.switchMode(selectedMode)
 	elseif selectedMode == "Heal" then
 		ns.modeTotal = ns.totalheal
 		ns.modeData = ns.healData
+	elseif selectedMode == "OverHeal" then
+		ns.modeTotal = ns.totaloverheal
+		ns.modeData = ns.overhealData
 	elseif selectedMode == "Absorb" then
 		ns.modeTotal = ns.totalabsorb
 		ns.modeData = ns.absorbData
@@ -149,7 +155,7 @@ function ns.checkColor()
 	for i=1, 5, 1 do
 		if ns.activeMode == "Damage" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
-		elseif ns.activeMode == "Heal" then
+		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
 			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
 		elseif ns.activeMode == "Absorb" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
