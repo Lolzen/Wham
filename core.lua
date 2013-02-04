@@ -6,18 +6,16 @@
 local addon, ns = ...
 
 ns.wham = CreateFrame("Frame", "Wham", UIParent)
-ns.wham:SetPoint("LEFT", UIParent, 15, 0)
+ns.wham:SetPoint("LEFT", UIParent, 75, 0)
 ns.wham:SetSize(ns.width, ns.height)
 ns.wham:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.wham:RegisterEvent("GROUP_ROSTER_UPDATE")
 ns.wham:RegisterEvent("PLAYER_ENTERING_WORLD")
 ns.wham:RegisterEvent("UNIT_PET")
-
---[[====================================
-===		Gathering necessary Data	 ===
-====================================]]--
+ns.wham:RegisterEvent("CHAT_MSG_ADDON")
 
 -- Tables
+ns.users = {}
 ns.watched = {}
 ns.pos = {}
 ns.owners = {}
@@ -41,7 +39,7 @@ function ns.wham:UpdateWatchedPlayers()
 	-- Insert player name
 	local playerName = UnitName("player")
 	ns.watched[playerName] = true
-	
+
 	-- Insert playerpet name
 	local petName = UnitName("playerpet")
 	if petName then
@@ -58,7 +56,7 @@ function ns.wham:UpdateWatchedPlayers()
 			end
 		end
 	end
-	
+
 	-- Insert raid members & pets
 	local isInRaid = IsInRaid("player")
 	if isInRaid then
@@ -114,9 +112,23 @@ function ns.wham.COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function ns.wham.PLAYER_ENTERING_WORLD()
+	RegisterAddonMessagePrefix("Wham_TOKEN")
 	ns.wham:UpdateWatchedPlayers()
 	if ns.wham.UpdateLayout then
 		ns.wham:UpdateLayout()
+	end
+end
+
+-- Sending the token, so other's can identify us, like we can idetify them then
+if IsInGroup("player") then
+	local channel = IsInRaid("player") and "RAID" or "PARTY"
+	SendAddonMessage("Wham_TOKEN", nil, channel)
+end
+
+function ns.wham:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
+	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
+	if prefix == "Wham_TOKEN" then
+		tinsert(ns.users, sender)
 	end
 end
 
