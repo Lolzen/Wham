@@ -40,10 +40,10 @@ function ns.dispelFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 
 		-- Send local data to other Wham users for syncing
 		if ns.dispelData[name] then
-			if IsInGroup("player") then
-				local channel = IsInRaid("player") and "RAID" or "PARTY"
-				SendAddonMessage("Wham_DISPEL", name.." "..ns.dispelData[name].." "..ns.totaldispels, channel)
-				SendAddonMessage("Wham_UPDATE", nil, channel)
+			for _, userName in pairs(ns.users) do
+				if userName == UnitName("player") then return end
+				SendAddonMessage("Wham_DISPEL", name.." "..ns.dispelData[name].." "..ns.totaldispels, "WHISPER", userName)
+				SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)
 			end
 		end
 	end

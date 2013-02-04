@@ -9,9 +9,9 @@ if ns.versioncheckmodule == false then return end
 local localversion = GetAddOnMetadata("Wham", "Version")
 
 -- Send local version to other Wham users for version check
-if IsInGroup("player") then
-	local channel = IsInRaid("player") and "RAID" or "PARTY"
-	SendAddonMessage("Wham_VERSION", localversion, channel)
+for _, userName in pairs(ns.users) do
+	if userName == UnitName("player") then return end
+	SendAddonMessage("Wham_VERSION", localversion, "WHISPER", userName)
 end
 
 ns.verFrame = CreateFrame("Frame", "verFrame", UIParent)
