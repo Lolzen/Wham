@@ -84,7 +84,7 @@ function ns.layoutSpecificReset()
 end
 
 -- Initialize tabs for switching modes
-ns.activeMode = ns.initMode --activate mode chose in confic first
+ns.activeMode = ns.initMode --activate mode chosen in config first
 
 -- Check which modules are true in config.lua and pollute the activatedModes table
 ns.activatedModes = {}
@@ -131,37 +131,6 @@ ns.modes = {
 	"Dispels",
 	"Interrupts",
 }
-
--- Select recieved mode as activeMode
-function ns.switchMode(selectedMode)
-	ns.activeMode = selectedMode
-	-- Use the selected data
-	if selectedMode == "Damage" and ns.currentfightdatamodule == true then
-		ns.modeTotal = ns.curTotaldmg
-		ns.modeData = ns.curData
-	elseif selectedMode == "Damage" then
-		ns.modeTotal = ns.totaldmg
-		ns.modeData = ns.dmgData
-	elseif selectedMode == "Heal" then
-		ns.modeTotal = ns.totalheal
-		ns.modeData = ns.healData
-	elseif selectedMode == "OverHeal" then
-		ns.modeTotal = ns.totaloverheal
-		ns.modeData = ns.overhealData
-	elseif selectedMode == "Absorb" then
-		ns.modeTotal = ns.totalabsorb
-		ns.modeData = ns.absorbData
-	elseif selectedMode == "Deaths" then
-		ns.modeTotal = ns.totaldeaths
-		ns.modeData = ns.deathData
-	elseif selectedMode == "Dispels" then
-		ns.modeTotal = ns.totaldispels
-		ns.modeData = ns.dispelData
-	elseif selectedMode == "Interrupts" then
-		ns.modeTotal = ns.totalinterrupts
-		ns.modeData = ns.interruptData
-	end
-end
 
 -- A little helper to check colors corresponding to mode
 function ns.checkColor()
