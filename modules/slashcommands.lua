@@ -11,17 +11,24 @@ local channel, wname
 local paste = function(self)
 	SendChatMessage("Data from Wham:", channel, nil, wname)
 	for i=1, 5, 1 do
-		if i and ns.dmgData[ns.pos[i]] or ns.healData[ns.pos[i]] then
-			sort(ns.pos, ns.sortByDamage)
-			local damage = ns.dmgData[ns.pos[i]]
-			local heal = ns.healData[ns.pos[i]]
+		if i and ns.modeData[ns.pos[i]] then
+			if ns.activeMode == "Damage" then
+				sort(ns.pos, ns.sortByDamage)
+			elseif ns.activeMode == "Heal" then
+				sort(ns.pos, ns.sortByHeal)
+			elseif ns.activeMode == "Absorb" then
+				sort(ns.pos, ns.sortByAbsorb)
+			elseif ns.activeMode == "Deaths" then
+				sort(ns.pos, ns.sortByDeaths)
+			elseif ns.activeMode == "Dispels" then
+				sort(ns.pos, ns.sortByDispels)
+			elseif ns.activeMode == "Interrupts" then
+				sort(ns.pos, ns.sortByinterrupts)
+			end
+			local curModeVal = ns.modeData[ns.pos[i]] or 0
 			local class = UnitClass(ns.pos[i])
-			if ns.dmgData[ns.pos[i]] and ns.healData[ns.pos[i]] then
-				SendChatMessage(string.format("%d. %s - Damage: %d > (%.0f%%) Heal: %d > (%.0f%%) [%s]", i, ns.pos[i], damage, damage / ns.totaldmg * 100, heal, heal / ns.totalheal * 100, class), channel, nil, wname)
-			elseif ns.healData[ns.pos[i]] and not ns.dmgData[ns.pos[i]] then
-				SendChatMessage(string.format("%d. %s - Healing Done: %d (%.0f%%) [%s]", i, ns.pos[i], heal, heal / ns.totalheal * 100, class), channel, nil, wname)
-			elseif ns.dmgData[ns.pos[i]] and not ns.healData[ns.pos[i]] then
-				SendChatMessage(string.format("%d. %s - Damage Done: %d (%.0f%%) [%s]", i, ns.pos[i], damage, damage / ns.totaldmg * 100, class), channel, nil, wname)
+			if curModeVal then
+				SendChatMessage(string.format("%d. %s - %s Done: %d (%.0f%%) [%s]", i, ns.pos[i], ns.activeMode or ns.initMode, curModeVal, curModeVal / ns.modeTotal * 100, class), channel, nil, wname)
 			end
 		end
 	end
