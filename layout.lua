@@ -3,10 +3,6 @@
 ===========================]]--
 -- Sample layout: basic tabbed layout
 
---[[
-*extend view to 10 when in raid
-]]
-
 local addon, ns = ...
 
 ns.wham:EnableMouse(true)
@@ -36,6 +32,23 @@ ns.wham:SetScript("OnMouseUp", function()
 	ns.wham:StopMovingOrSizing()
 end)
 
+-- Script for fake-scrolling
+ns.viewrange = 1
+ns.wham:SetScript("OnMouseWheel", function(self, direction)
+	if IsAltKeyDown() then
+		if direction == 1 then -- "up"
+			if ns.viewrange > 1 then
+				ns.viewrange = ns.viewrange - 1
+			end
+		elseif direction == -1 then -- "down"
+			if ns.viewrange < 20 then
+				ns.viewrange = ns.viewrange + 1
+			end
+		end
+		ns.wham:UpdateLayout()
+	end
+end)
+
 -- Background
 ns.bg = ns.wham:CreateTexture("Background")
 ns.bg:SetTexture(0, 0, 0, 0.5)
@@ -54,7 +67,7 @@ ns.border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 ns.border:SetAlpha(0)
 
 function ns.layoutSpecificReset()
-	for i=1, 5, 1 do
+	for i=1, 25, 1 do
 		ns.sb[i]:SetValue(0)
 		ns.sb[i].bg:Hide()
 		ns.f[i].string1:SetText(nil)
@@ -152,7 +165,7 @@ end
 
 -- A little helper to check colors corresponding to mode
 function ns.checkColor()
-	for i=1, 5, 1 do
+	for i=1, 25, 1 do
 		if ns.activeMode == "Damage" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
 		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
@@ -246,7 +259,7 @@ ns.sb = {}
 ns.f = {}
 ns.class = {}
 
-for i=1, 5, 1 do
+for i=1, 25, 1 do
 	-- Create the frame all other bars will be attached to
 	ns.f[i] = CreateFrame("Frame", nil, ns.wham)
 	ns.f[i]:SetHeight(15)
@@ -301,44 +314,52 @@ for i=1, 5, 1 do
 	end
 end
 
-function ns.wham:UpdateStatusBars()
-	-- show the first 5 of our selected mode
+function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
 			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
-			if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.pos[ns.viewrange]] and ns.modeTotal > 0 then
+				--Statusbars
 				ns.sb[i]:SetAlpha(1)
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.pos[i]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange]] or 0)
+				-- Strings
+				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
+				local curModeVal = ns.modeData[ns.pos[ns.viewrange]] or 0
+				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange])
+				ns.f[i].border:Show()
+				ns.f[i].bg:Show()
 			else
 				ns.sb[i]:SetAlpha(0)
+				ns.f[i].string1:SetText(nil)
+				ns.f[i].string2:SetText(nil)
+				ns.f[i].border:Hide()
+				ns.f[i].bg:Hide()
 			end
 		else
 			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
-			if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.pos[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
+				-- Statusbars
 				ns.sb[i]:SetAlpha(1)
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.pos[i]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0)
+				-- Strings
+				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
+				local curModeVal = ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0
+				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange + i - 1])
+				ns.f[i].border:Show()
+				ns.f[i].bg:Show()
 			else
 				ns.sb[i]:SetAlpha(0)
+				ns.f[i].string1:SetText(nil)
+				ns.f[i].string2:SetText(nil)
+				ns.f[i].border:Hide()
+				ns.f[i].bg:Hide()
 			end
-		end
-
-		-- Strings
-		if ns.modeData[ns.pos[i]] and ns.modeTotal > 0 then
-			local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[i]]] or {r = 0.3, g = 0.3, b = 0.3}
-			local curModeVal = ns.modeData[ns.pos[i]] or 0
-			ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-			ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", i, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[i])
-			ns.f[i].border:Show()
-			ns.f[i].bg:Show()
-		else
-			ns.f[i].string1:SetText(nil)
-			ns.f[i].string2:SetText(nil)
-			ns.f[i].border:Hide()
-			ns.f[i].bg:Hide()
 		end
 	end
 end
@@ -369,7 +390,7 @@ function ns.wham:UpdateLayout()
 		end
 	end
 
-	for i=1, 5 do
+	for i=1, 25 do
 		if ns.modeData[ns.pos[i]] then
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
@@ -382,7 +403,7 @@ function ns.wham:UpdateLayout()
 		ns.hideTabs()
 	end
 
-	ns.wham:UpdateStatusBars()
+	ns.wham:UpdateDisplay()
 	ns.updateTabs()
 	ns.checkColor()
 end
