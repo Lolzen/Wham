@@ -127,6 +127,7 @@ ns.modes = {
 	"Heal",
 	"OverHeal",
 	"Absorb",
+	"Damage Taken",
 	"Deaths",
 	"Dispels",
 	"Interrupts",
@@ -337,8 +338,10 @@ function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
 		sort(ns.pos, ns.sortByDamage)
-	elseif ns.activeMode == "Heal" or "OverHeal" then
+	elseif ns.activeMode == "Heal" then
 		sort(ns.pos, ns.sortByHeal)
+	elseif ns.activeMode == "OverHeal" then
+		sort(ns.pos, ns.sortByOverHeal)
 	elseif ns.activeMode == "Absorb" then
 		sort(ns.pos, ns.sortByAbsorb)
 	elseif ns.activeMode == "Deaths" then
