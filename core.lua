@@ -6,7 +6,7 @@
 local addon, ns = ...
 
 ns.wham = CreateFrame("Frame", "Wham", UIParent)
-ns.wham:SetPoint("LEFT", UIParent, 75, 0)
+ns.wham:SetPoint("LEFT", UIParent, 95, 0)
 ns.wham:SetSize(ns.width, ns.height)
 ns.wham:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.wham:RegisterEvent("GROUP_ROSTER_UPDATE")

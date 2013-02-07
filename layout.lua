@@ -152,7 +152,7 @@ function ns.updateTabs()
 			else
 				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
 			end
-			ns.tabs[k]:SetSize(60, 12)
+			ns.tabs[k]:SetSize(80, 12)
 			ns.tabs[k]:SetAlpha(0.4)
 		end
 		-- Backgrond
