@@ -137,7 +137,7 @@ function ns.checkColor()
 	for i=1, 25, 1 do
 		if ns.activeMode == "Damage" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
-		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
+		elseif ns.activeMode == "Heal" or "OverHeal" then
 			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
 		elseif ns.activeMode == "Absorb" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
@@ -337,7 +337,7 @@ function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
 		sort(ns.pos, ns.sortByDamage)
-	elseif ns.activeMode == "Heal" then
+	elseif ns.activeMode == "Heal" or "OverHeal" then
 		sort(ns.pos, ns.sortByHeal)
 	elseif ns.activeMode == "Absorb" then
 		sort(ns.pos, ns.sortByAbsorb)
