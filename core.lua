@@ -181,6 +181,13 @@ function ns.sortByHeal(a, b)
 	end
 end
 
+-- Sortingfunction (OverHeal)
+function ns.sortByOverHeal(a, b)
+	if ns.overhealData then
+		return (ns.overhealData[a] or 0) > (ns.overhealData[b] or 0)
+	end
+end
+
 -- Sortingfunction (Absorb)
 function ns.sortByAbsorb(a, b)
 	if ns.absorbData then
