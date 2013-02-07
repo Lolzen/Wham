@@ -31,3 +31,6 @@ Changelog:
 *[WiP] Add combatTime module
 *Wham doesn't depend on a layout anymore
 *Init tabbed layout and ditch test layout
+
+[0.7 Alpha]
+*Changed sync channel to whisper (on to other detected wham users)
