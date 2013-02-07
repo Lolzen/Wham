@@ -90,40 +90,25 @@ ns.activeMode = ns.initMode --activate mode chosen in config first
 ns.activatedModes = {}
 if ns.damagemodule == true then
 	ns.activatedModes["Damage"] = true
-else
-	ns.activatedModes["Damage"] = false
 end
 if ns.damagetakenmodule == true then
 	ns.activatedModes["Damage Taken"] = true
-else
-	ns.activatedModes["Damage Taken"] = false
 end
 if ns.healmodule == true then
 	ns.activatedModes["Heal"] = true
 	ns.activatedModes["OverHeal"] = true
-else
-	ns.activatedModes["Heal"] = false
-	ns.activatedModes["OverHeal"] = false
 end
 if ns.absorbModule == true then
 	ns.activatedModes["Absorb"] = true
-else
-	ns.activatedModes["Absorb"] = false
 end
 if ns.deathtrackmodule == true then
 	ns.activatedModes["Deaths"] = true
-else
-	ns.activatedModes["Deaths"] = false
 end
 if ns.dispelmodule == true then
 	ns.activatedModes["Dispels"] = true
-else
-	ns.activatedModes["Dispels"] = false
 end
 if ns.interruptmodule == true then
 	ns.activatedModes["Interrupts"] = true
-else
-	ns.activatedModes["Interrupts"] = false
 end
 
 -- Modes available, used as tokens for creating our tabs
