@@ -12,6 +12,7 @@ modules\absorb.lua
 modules\combattime.lua
 modules\curdata.lua
 modules\damage.lua
+modules\damagetaken.lua
 modules\deathtrack.lua
 modules\dispel.lua
 modules\heal.lua

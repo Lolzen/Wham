@@ -11,6 +11,7 @@ local addon, ns = ...
 ns.absorbModule = true
 ns.currentfightdatamodule = false
 ns.damagemodule = true
+ns.damagetakenmodule = true
 ns.deathtrackmodule = true
 ns.dispelmodule = true
 ns.healmodule = true

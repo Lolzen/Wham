@@ -93,6 +93,11 @@ if ns.damagemodule == true then
 else
 	ns.activatedModes["Damage"] = false
 end
+if ns.damagetakenmodule == true then
+	ns.activatedModes["Damage Taken"] = true
+else
+	ns.activatedModes["Damage Taken"] = false
+end
 if ns.healmodule == true then
 	ns.activatedModes["Heal"] = true
 	ns.activatedModes["OverHeal"] = true
@@ -136,7 +141,7 @@ ns.modes = {
 -- A little helper to check colors corresponding to mode
 function ns.checkColor()
 	for i=1, 25, 1 do
-		if ns.activeMode == "Damage" then
+		if ns.activeMode == "Damage" or "Damage Taken" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
 		elseif ns.activeMode == "Heal" or "OverHeal" then
 			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
@@ -338,6 +343,8 @@ function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
 		sort(ns.pos, ns.sortByDamage)
+	elseif ns.activeMode == "Damage Taken" then
+		sort(ns.pos, ns.sortByDamageTaken)
 	elseif ns.activeMode == "Heal" then
 		sort(ns.pos, ns.sortByHeal)
 	elseif ns.activeMode == "OverHeal" then

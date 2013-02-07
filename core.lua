@@ -142,6 +142,9 @@ function ns.switchMode(selectedMode)
 	elseif selectedMode == "Damage" then
 		ns.modeTotal = ns.totaldmg
 		ns.modeData = ns.dmgData
+	elseif selectedMode == "Damage Taken" then
+		ns.modeTotal = ns.totaldmgtaken
+		ns.modeData = ns.dmgtakenData
 	elseif selectedMode == "Heal" then
 		ns.modeTotal = ns.totalheal
 		ns.modeData = ns.healData
@@ -171,6 +174,13 @@ function ns.sortByDamage(a, b)
 		if ns.dmgData then
 			return (ns.dmgData[a] or 0) > (ns.dmgData[b] or 0)
 		end
+	end
+end
+
+-- Sortingfunction (Damage Taken)
+function ns.sortByDamageTaken(a, b)
+	if ns.dmgtakenData then
+		return (ns.dmgtakenData[a] or 0) > (ns.dmgtakenData[b] or 0)
 	end
 end
 
