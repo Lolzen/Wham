@@ -34,3 +34,4 @@ Changelog:
 
 [0.7 Alpha]
 *Changed sync channel to whisper (on to other detected wham users)
+*Add Damage Taken module
