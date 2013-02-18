@@ -46,7 +46,7 @@ function ns.absorbFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, arg4
 	if ns.absorbData[name] then
 		for _, userName in pairs(ns.users) do
 			if userName == UnitName("player") then return end
-			SendAddonMessage("Wham_DMG", name.." "..ns.absorbData[name].." "..ns.totalabsorb, "WHISPER", userName)
+			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name].." "..ns.totalabsorb, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)
 		end
 	end

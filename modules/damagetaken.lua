@@ -57,7 +57,7 @@ function ns.dmgTakenFrame:COMBAT_LOG_EVENT_UNFILTERED(self, arg1, arg2, arg3, ar
 		if ns.dmgtakenData[dstname] then
 			for _, userName in pairs(ns.users) do
 				if userName == UnitName("player") then return end
-				SendAddonMessage("Wham_DMG", name.." "..ns.dmgtakenData[name].." "..ns.totaldmgtaken, "WHISPER", userName)
+				SendAddonMessage("Wham_DMGTAKEN", name.." "..ns.dmgtakenData[dstname].." "..ns.totaldmgtaken, "WHISPER", userName)
 				SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)
 			end
 		end
