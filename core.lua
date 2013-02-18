@@ -1,7 +1,7 @@
 --[[================
-===		Wham	 ===
+===		Core	 ===
 ================]]--
--- a simpleminded dmg meter
+-- Core functions
 
 local addon, ns = ...
 
@@ -231,24 +231,35 @@ function ns.resetData()
 	if ns.dmgData then
 		ns.dmgData = {}
 	end
+
+	if ns.dmgtakenData then
+		ns.dmgtankeData = {}
+	end
+
 	if ns.healData then
 		ns.healData = {}
 	end
+
 	if ns.absorbData then
 		ns.absorbData = {}
 	end
+
 	if ns.deathData then
 		ns.deathData = {}
 	end
+
 	if ns.dispelData then
 		ns.dispelData = {}
 	end
+
 	if ns.interruptData then
 		ns.interruptData = {}
 	end
+
 	if ns.combatTotalTime then
 		ns.combatTotalTime = 0
 	end
+
 	if ns.layoutSpecificReset then
 		ns.layoutSpecificReset()
 	end
