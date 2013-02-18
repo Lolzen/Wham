@@ -13,6 +13,7 @@ ns.syncFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 function ns.syncFrame:PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_DMG")
+	RegisterAddonMessagePrefix("Wham_DMGTAKEN")
 	RegisterAddonMessagePrefix("Wham_HEAL")
 	RegisterAddonMessagePrefix("Wham_ABSORB")
 	RegisterAddonMessagePrefix("Wham_DEATH")
