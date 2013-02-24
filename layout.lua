@@ -126,9 +126,9 @@ ns.modes = {
 -- A little helper to check colors corresponding to mode
 function ns.checkColor()
 	for i=1, 25, 1 do
-		if ns.activeMode == "Damage" or "Damage Taken" then
+		if ns.activeMode == "Damage" or ns.activeMode == "Damage Taken" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
-		elseif ns.activeMode == "Heal" or "OverHeal" then
+		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
 			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
 		elseif ns.activeMode == "Absorb" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
