@@ -240,6 +240,10 @@ function ns.resetData()
 		ns.healData = {}
 	end
 
+	if ns.overhealData then
+		ns.overhealData = {}
+	end
+
 	if ns.absorbData then
 		ns.absorbData = {}
 	end
