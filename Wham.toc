@@ -2,7 +2,7 @@
 ## Title: Wham
 ## Author: Lolzen
 ## Notes: A modular Dmg-Meter
-## Version: 0.7.1 Alpha
+## Version: 0.7.2 Alpha
 
 config.lua
 core.lua
