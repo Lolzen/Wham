@@ -28,12 +28,15 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if(string.find(arg2, "SWING")) then
 			missType, amount = arg12, arg14
 		end
+	
 		if(string.find(arg2, "RANGE")) then
 			missType, amount = arg15, arg17
 		end
+	
 		if(string.find(arg2, "SPELL")) then 
 			missType, amount = arg15, arg17
 		end
+	
 		if ns.absorbmodule == true then
 			ns.absorbFrame:Update()
 		end
@@ -51,18 +54,24 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if(string.find(arg2, "SWING")) then
 			dmg, overdmg = arg12, arg13
 		end
+	
 		if(string.find(arg2, "RANGE")) then
 			dmg, overdmg = arg15, arg16
 		end
+	
 		if(string.find(arg2, "SPELL")) then 
 			dmg, overdmg = arg15, arg16
+		end
+	
+		if(string.find(arg2, "ENVIRONMENTAL")) then
+			dmg, overdmg = arg13, arg14
 		end
 	
 		-- This fixes a bug with dmg calculation
 		if overdmg == -1 then
 			overdmg = 0
 		end
-		
+	
 		if ns.damagemodule == true then
 			ns.dmgFrame:Update()
 		end

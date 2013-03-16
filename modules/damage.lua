@@ -20,7 +20,7 @@ function ns.dmgFrame:Update()
 	local dmg = ns.getDamage()
 	local over = ns.getOverDamage()
 
-	if guid then
+	if guid and guid ~= "" then
 		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
 		local unitType = bit.band(firstDigits, 0x00f)
 

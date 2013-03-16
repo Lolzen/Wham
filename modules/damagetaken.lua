@@ -13,10 +13,11 @@ ns.dmgtakenData = {}
 
 function ns.dmgTakenFrame:Update()
 	local guid = ns.getGuid()
+	local name = ns.getName()
 	local dstname = ns.getDstName()
 	local dmg = ns.getDamage()
 
-	if guid then
+	if guid and guid ~= "" then
 		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
 		local unitType = bit.band(firstDigits, 0x00f)
 
