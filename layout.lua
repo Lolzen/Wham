@@ -9,7 +9,7 @@ ns.wham:EnableMouse(true)
 ns.wham:SetMovable(true)
 ns.wham:SetUserPlaced(true)
 
--- Script for moving the freame and resetting data
+-- Script for moving the frame and resetting data
 ns.wham:SetScript("OnMouseDown", function(self, button)
 	if IsAltKeyDown() then
 		ns.wham:ClearAllPoints()
