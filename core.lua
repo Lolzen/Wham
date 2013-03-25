@@ -29,11 +29,9 @@ function ns.wham:addUnit(unit)
 end
  
 function ns.wham:UpdateWatchedPlayers()
-	if ns.autoreset == true then
-		-- Delete old table
-		for k in pairs(ns.watched) do
-			ns.watched[k] = nil
-		end
+	-- Delete old table
+	for k in pairs(ns.watched) do
+		ns.watched[k] = nil
 	end
  
 	-- Insert player name
@@ -68,26 +66,24 @@ function ns.wham:UpdateWatchedPlayers()
 		end
 	end
  
-	if ns.autoreset == true then
-		-- Delete dmgData of "old" players
-		for name in pairs(ns.dmgData) do
-			if not ns.watched[name] then
-				ns.dmgData[name] = nil
-			end
+	-- Delete dmgData of "old" players
+	for name in pairs(ns.dmgData) do
+		if not ns.watched[name] then
+			ns.dmgData[name] = nil
 		end
+	end
 
-		-- Also for the healvalues
-		for name in pairs(ns.healData) do
-			if not ns.watched[name] then
-				ns.healData[name] = nil
-			end
+	-- Also for the healvalues
+	for name in pairs(ns.healData) do
+		if not ns.watched[name] then
+			ns.healData[name] = nil
 		end
+	end
 
-		-- Also for the absorbvalues
-		for name in pairs(ns.absorbData) do
-			if not ns.watched[name] then
-				ns.absorbData[name] = nil
-			end
+	-- Also for the absorbvalues
+	for name in pairs(ns.absorbData) do
+		if not ns.watched[name] then
+			ns.absorbData[name] = nil
 		end
 	end
 
