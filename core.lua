@@ -66,24 +66,68 @@ function ns.wham:UpdateWatchedPlayers()
 		end
 	end
  
-	-- Delete dmgData of "old" players
-	for name in pairs(ns.dmgData) do
-		if not ns.watched[name] then
-			ns.dmgData[name] = nil
+	-- Delete Data of "old" players
+	if ns.dmgData then
+		for name in pairs(ns.dmgData) do
+			if not ns.watched[name] then
+				ns.dmgData[name] = nil
+			end
 		end
 	end
 
-	-- Also for the healvalues
-	for name in pairs(ns.healData) do
-		if not ns.watched[name] then
-			ns.healData[name] = nil
+	if ns.dmgtakenData then
+		for name in pairs(ns.dmgtakenData) do
+			if not ns.watched[name] then
+				ns.dmgtakenData[name] = nil
+			end
 		end
 	end
 
-	-- Also for the absorbvalues
-	for name in pairs(ns.absorbData) do
-		if not ns.watched[name] then
-			ns.absorbData[name] = nil
+	if ns.healData then
+		for name in pairs(ns.healData) do
+			if not ns.watched[name] then
+				ns.healData[name] = nil
+			end
+		end
+	end
+
+	if ns.overhealData then
+		for name in pairs(ns.healData) do
+			if not ns.watched[name] then
+				ns.overhealData[name] = nil
+			end
+		end
+	end
+
+	if ns.absorbData then
+		for name in pairs(ns.absorbData) do
+			if not ns.watched[name] then
+				ns.absorbData[name] = nil
+			end
+		end
+	end
+
+	if ns.deathData then
+		for name in pairs(ns.ns.deathData) do
+			if not ns.watched[name] then
+				ns.ns.deathData[name] = nil
+			end
+		end
+	end
+
+	if ns.dispelData then
+		for name in pairs(ns.dispelData) do
+			if not ns.watched[name] then
+				ns.dispelData[name] = nil
+			end
+		end
+	end
+
+	if ns.interruptData then
+		for name in pairs(ns.interruptData) do
+			if not ns.watched[name] then
+				ns.interruptData[name] = nil
+			end
 		end
 	end
 
@@ -224,36 +268,52 @@ end
 
 -- Resettingfuinction (reset all collected data)
 function ns.resetData()
-	for k in pairs(ns.dmgData) do
-		ns.dmgData[k] = nil
+	if ns.dmgData then
+		for k in pairs(ns.dmgData) do
+			ns.dmgData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.dmgtakenData) do
-		ns.dmgtakenData[k] = nil
+	if ns.dmgtakenData then
+		for k in pairs(ns.dmgtakenData) do
+			ns.dmgtakenData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.healData) do
-		ns.healData[k] = nil
+	if ns.healData then
+		for k in pairs(ns.healData) do
+			ns.healData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.overhealData) do
-		ns.overhealData[k] = nil
+	if ns.overhealData then
+		for k in pairs(ns.overhealData) do
+			ns.overhealData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.absorbData) do
-		ns.absorbData[k] = nil
+	if ns.absorbData then
+		for k in pairs(ns.absorbData) do
+			ns.absorbData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.deathData) do
-		ns.deathData[k] = nil
+	if ns.deathData then
+		for k in pairs(ns.deathData) do
+			ns.deathData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.dispelData) do
-		ns.dispelData[k] = nil
+	if ns.dispelData then
+		for k in pairs(ns.dispelData) do
+			ns.dispelData[k] = nil
+		end
 	end
 
-	for k in pairs(ns.interruptData) do
-		ns.interruptData[k] = nil
+	if ns.interruptData then
+		for k in pairs(ns.interruptData) do
+			ns.interruptData[k] = nil
+		end
 	end
 
 	if ns.combatTotalTime then
