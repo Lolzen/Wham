@@ -196,20 +196,6 @@ function ns.updateTabs()
 	end
 end
 
-function ns.hideTabs()
-	for i=1, #ns.tabs do
-		ns.tabs[i]:SetAlpha(0)
-		ns.tabs[i].border:SetAlpha(0)
-	end
-end
-
-function ns.showTabs()
-	for i=1, #ns.tabs do
-		ns.tabs[i]:SetAlpha(0.4)
-		ns.tabs[i].border:SetAlpha(1)
-	end
-end
-
 -- Handle the Statusbars
 ns.sb = {}
 ns.f = {}
@@ -217,9 +203,11 @@ ns.class = {}
 
 for i=1, 25, 1 do
 	-- Create the frame all other bars will be attached to
-	ns.f[i] = CreateFrame("Frame", nil, ns.wham)
-	ns.f[i]:SetHeight(15)
-	ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
+	if not ns.f[i] then
+		ns.f[i] = CreateFrame("Frame", nil, ns.wham)
+		ns.f[i]:SetHeight(15)
+		ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
+	end
 
 	-- Border
 	if not ns.f[i].border then
@@ -242,10 +230,12 @@ for i=1, 25, 1 do
 	end
 
 	-- Create the StatusBars
-	ns.sb[i] = CreateFrame("StatusBar", "StatusBar"..i, ns.wham)
-	ns.sb[i]:SetHeight(15)
-	ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
-	ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+	if not ns.sb[i] then
+		ns.sb[i] = CreateFrame("StatusBar", "StatusBar"..i, ns.wham)
+		ns.sb[i]:SetHeight(15)
+		ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
+		ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+	end
 
 	-- StatusBars background
 	if not ns.sb[i].bg then
@@ -355,12 +345,6 @@ function ns.wham:UpdateLayout()
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
 		end
-	end
-
-	if ns.modeData then
-		ns.showTabs()
-	else
-		ns.hideTabs()
 	end
 
 	ns.wham:UpdateDisplay()
