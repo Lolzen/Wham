@@ -108,7 +108,7 @@ function ns.wham:UpdateWatchedPlayers()
 	end
 
 	if ns.deathData then
-		for name in pairs(ns.ns.deathData) do
+		for name in pairs(ns.deathData) do
 			if not ns.watched[name] then
 				ns.ns.deathData[name] = nil
 			end
