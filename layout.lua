@@ -75,10 +75,6 @@ function ns.layoutSpecificReset()
 		ns.f[i].border:Hide()
 		ns.f[i].bg:Hide()
 	end
-	for i=1, #ns.tabs do
-		ns.tabs[i]:SetAlpha(0)
-		ns.tabs[i].border:SetAlpha(0)
-	end
 	ns.bg:SetAlpha(0)
 	ns.border:SetAlpha(0)
 end
