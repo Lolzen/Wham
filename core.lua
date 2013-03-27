@@ -224,36 +224,36 @@ end
 
 -- Resettingfuinction (reset all collected data)
 function ns.resetData()
-	if ns.dmgData then
-		ns.dmgData = {}
+	for k in pairs(ns.dmgData) do
+		ns.dmgData[k] = nil
 	end
 
-	if ns.dmgtakenData then
-		ns.dmgtankeData = {}
+	for k in pairs(ns.dmgtakenData) do
+		ns.dmgtakenData[k] = nil
 	end
 
-	if ns.healData then
-		ns.healData = {}
+	for k in pairs(ns.healData) do
+		ns.healData[k] = nil
 	end
 
-	if ns.overhealData then
-		ns.overhealData = {}
+	for k in pairs(ns.overhealData) do
+		ns.overhealData[k] = nil
 	end
 
-	if ns.absorbData then
-		ns.absorbData = {}
+	for k in pairs(ns.absorbData) do
+		ns.absorbData[k] = nil
 	end
 
-	if ns.deathData then
-		ns.deathData = {}
+	for k in pairs(ns.deathData) do
+		ns.deathData[k] = nil
 	end
 
-	if ns.dispelData then
-		ns.dispelData = {}
+	for k in pairs(ns.dispelData) do
+		ns.dispelData[k] = nil
 	end
 
-	if ns.interruptData then
-		ns.interruptData = {}
+	for k in pairs(ns.interruptData) do
+		ns.interruptData[k] = nil
 	end
 
 	if ns.combatTotalTime then
