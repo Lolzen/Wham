@@ -23,7 +23,7 @@ ns.owners = {}
 -- Add players to watched list
 function ns.wham:addUnit(unit)
 	local name, realm = UnitName(unit)
-	if not name then return end
+	if not name or name == "Unknown" then return end
 	realm = realm and realm ~= "" and "-"..realm or ""
 	ns.watched[name..realm] = true
 end
