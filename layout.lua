@@ -138,61 +138,65 @@ end
 
 -- Create some clickable tabs
 ns.tabs = {}
+for k, v in pairs(ns.modes) do
+	-- Create the Tabs
+	if not ns.tabs[k] then
+		ns.tabs[k] = CreateFrame("Frame", v.."-Tab", ns.wham)
+		if k == 1 then
+			ns.tabs[k]:SetPoint("TOPRIGHT", ns.wham, "TOPLEFT", -4, -1)
+		else
+			ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
+		end
+		ns.tabs[k]:SetSize(80, 12)
+		ns.tabs[k]:SetAlpha(0.4)
+	end
+	-- Backgrond
+	if not ns.tabs[k].bg then
+		ns.tabs[k].bg = ns.tabs[k]:CreateTexture("Background")
+		ns.tabs[k].bg:SetAllPoints(ns.tabs[k])
+	end
+	-- Labels
+	if not ns.tabs[k].label then
+		ns.tabs[k].label = ns.tabs[k]:CreateFontString(nil, "OVERLAY")
+		ns.tabs[k].label:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.tabs[k].label:SetPoint("CENTER", ns.tabs[k], "CENTER", 0, 0)
+		if ns.activatedModes[v] == true then
+			ns.tabs[k].label:SetFormattedText("%s", v)
+		else
+			ns.tabs[k].label:SetFormattedText("|cff550000%s|r", v)
+		end
+	end
+	-- Border
+	if not ns.tabs[k].border then
+		ns.tabs[k].border = CreateFrame("Frame", nil, ns.wham)
+		ns.tabs[k].border:SetBackdrop({
+			edgeFile = "Interface\\AddOns\\Wham\\Textures\\border3", edgeSize = 8,
+			insets = {left = 4, right = 4, top = 4, bottom = 4},
+		})
+		ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
+		ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
+		ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
+		ns.tabs[k].border:SetAlpha(1)
+	end
+	-- clickscript for switching
+	ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
+		if ns.activatedModes[v] == true then
+			ns.switchMode(v)
+			ns.wham:UpdateLayout()
+		else
+			print("Module for "..v.." deactivated. Check your config.lua")
+		end
+	end)
+end
+
+
 function ns.updateTabs()
 	for k, v in pairs(ns.modes) do
-		-- Create the Tabs
-		if not ns.tabs[k] then
-			ns.tabs[k] = CreateFrame("Frame", v.."-Tab", ns.wham)
-			if k == 1 then
-				ns.tabs[k]:SetPoint("TOPRIGHT", ns.wham, "TOPLEFT", -4, -1)
-			else
-				ns.tabs[k]:SetPoint("TOP", ns.tabs[k-1], "BOTTOM", 0, -3)
-			end
-			ns.tabs[k]:SetSize(80, 12)
-			ns.tabs[k]:SetAlpha(0.4)
-		end
-		-- Backgrond
-		if not ns.tabs[k].bg then
-			ns.tabs[k].bg = ns.tabs[k]:CreateTexture("Background")
-			ns.tabs[k].bg:SetAllPoints(ns.tabs[k])
-		end
 		if v == ns.activeMode then
 			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
 		else
 			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
 		end
-		-- Labels
-		if not ns.tabs[k].label then
-			ns.tabs[k].label = ns.tabs[k]:CreateFontString(nil, "OVERLAY")
-			ns.tabs[k].label:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-			ns.tabs[k].label:SetPoint("CENTER", ns.tabs[k], "CENTER", 0, 0)
-			if ns.activatedModes[v] == true then
-				ns.tabs[k].label:SetFormattedText("%s", v)
-			else
-				ns.tabs[k].label:SetFormattedText("|cff550000%s|r", v)
-			end
-		end
-		-- Border
-		if not ns.tabs[k].border then
-			ns.tabs[k].border = CreateFrame("Frame", nil, ns.wham)
-			ns.tabs[k].border:SetBackdrop({
-				edgeFile = "Interface\\AddOns\\Wham\\Textures\\border3", edgeSize = 8,
-				insets = {left = 4, right = 4, top = 4, bottom = 4},
-			})
-			ns.tabs[k].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
-			ns.tabs[k].border:SetPoint("TOPLEFT", ns.tabs[k], -2, 1)
-			ns.tabs[k].border:SetPoint("BOTTOMRIGHT", ns.tabs[k], 2, -1)
-			ns.tabs[k].border:SetAlpha(1)
-		end
-		-- clickscript for switching
-		ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
-			if ns.activatedModes[v] == true then
-				ns.switchMode(v)
-				ns.wham:UpdateLayout()
-			else
-				print("Module for "..v.." deactivated. Check your config.lua")
-			end
-		end)
 	end
 end
 
