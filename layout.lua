@@ -211,6 +211,12 @@ for i=1, 25, 1 do
 		ns.f[i] = CreateFrame("Frame", nil, ns.wham)
 		ns.f[i]:SetHeight(15)
 		ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
+		if i == 1 then
+			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
+		elseif i >= 1 and i <= 5 then
+			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
+		end
+		
 	end
 
 	-- Border
@@ -239,6 +245,11 @@ for i=1, 25, 1 do
 		ns.sb[i]:SetHeight(15)
 		ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
 		ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
+		if i == 1 then
+			ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+		elseif i >= 1 and i <= 5 then
+			ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+		end
 	end
 
 	-- StatusBars background
@@ -267,12 +278,10 @@ end
 function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
-			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
 			if ns.modeData[ns.pos[ns.viewrange]] and ns.modeTotal > 0 then
 				--Statusbars
 				ns.sb[i]:SetAlpha(1)
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
-				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange]] or 0)
 				-- Strings
 				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
@@ -289,12 +298,10 @@ function ns.wham:UpdateDisplay()
 				ns.f[i].bg:Hide()
 			end
 		else
-			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
 			if ns.modeData[ns.pos[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
 				-- Statusbars
 				ns.sb[i]:SetAlpha(1)
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
-				ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0)
 				-- Strings
 				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
@@ -344,7 +351,7 @@ function ns.wham:UpdateLayout()
 		end
 	end
 
-	for i=1, 25 do
+	for i=1, 25, 1 do
 		if ns.modeData[ns.pos[i]] then
 			ns.bg:SetAlpha(1)
 			ns.border:SetAlpha(1)
