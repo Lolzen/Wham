@@ -22,6 +22,8 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	guid = arg4
 	name = arg5
 	dstname = arg9
+	
+	if not ns.watched[name] then return end
 
 	if string.find(arg2, "_MISSED") then
 		-- Swing, Spell & Range arguments are different
