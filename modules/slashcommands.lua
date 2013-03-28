@@ -9,13 +9,17 @@ if ns.slashcommandsmodule == false then return end
 
 local channel, wname
 local paste = function(self)
-	SendChatMessage("Data from Wham:", channel, nil, wname)
+	SendChatMessage("Data from Wham: ["..ns.activeMode.."-Mode]", channel, nil, wname)
 	for i=1, 5, 1 do
 		if i and ns.modeData[ns.pos[i]] then
 			if ns.activeMode == "Damage" then
 				sort(ns.pos, ns.sortByDamage)
+			elseif ns.activeMode == "Damage Taken" then
+				sort(ns.pos, ns.sortByDamageTaken)
 			elseif ns.activeMode == "Heal" then
 				sort(ns.pos, ns.sortByHeal)
+			elseif ns.activeMode == "OverHeal" then
+				sort(ns.pos, ns.sortByOverHeal)
 			elseif ns.activeMode == "Absorb" then
 				sort(ns.pos, ns.sortByAbsorb)
 			elseif ns.activeMode == "Deaths" then
