@@ -323,21 +323,21 @@ end
 
 function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
-	if ns.activeMode == "Damage" and ns.activeMode ~= "Damage" then
+	if ns.activeMode == "Damage" then
 		sort(ns.pos, ns.sortByDamage)
-	elseif ns.activeMode == "Damage Taken" and ns.activeMode ~= "Damage Taken" then
+	elseif ns.activeMode == "Damage Taken" then
 		sort(ns.pos, ns.sortByDamageTaken)
-	elseif ns.activeMode == "Heal" and ns.activeMode ~= "Heal" then
+	elseif ns.activeMode == "Heal" then
 		sort(ns.pos, ns.sortByHeal)
-	elseif ns.activeMode == "OverHeal" and ns.activeMode ~= "OverHeal" then
+	elseif ns.activeMode == "OverHeal" then
 		sort(ns.pos, ns.sortByOverHeal)
-	elseif ns.activeMode == "Absorb" and ns.activeMode ~= "Absorb" then
+	elseif ns.activeMode == "Absorb" then
 		sort(ns.pos, ns.sortByAbsorb)
-	elseif ns.activeMode == "Deaths" and ns.activeMode ~= "Deaths" then
+	elseif ns.activeMode == "Deaths" then
 		sort(ns.pos, ns.sortByDeaths)
-	elseif ns.activeMode == "Dispels" and ns.activeMode ~= "Dispels" then
+	elseif ns.activeMode == "Dispels" then
 		sort(ns.pos, ns.sortByDispels)
-	elseif ns.activeMode == "Interrupts" and ns.activeMode ~= "Interrupts" then
+	elseif ns.activeMode == "Interrupts" then
 		sort(ns.pos, ns.sortByinterrupts)
 	end
 
