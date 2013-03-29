@@ -147,15 +147,18 @@ ns.wham.UNIT_PET = ns.wham.UpdateWatchedPlayers
 function ns.wham.PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_TOKEN")
 	ns.wham:UpdateWatchedPlayers()
+	ns.wham:sendToken()
 	if ns.wham.UpdateLayout then
 		ns.wham:UpdateLayout()
 	end
 end
 
 -- Sending the token, so other's can identify us, like we can idetify them then
-if IsInGroup("player") then
-	local channel = IsInRaid("player") and "RAID" or "PARTY"
-	SendAddonMessage("Wham_TOKEN", nil, channel)
+function ns.wham:sendToken()
+	if IsInGroup("player") then
+		local channel = IsInRaid("player") and "RAID" or "PARTY"
+		SendAddonMessage("Wham_TOKEN", nil, channel)
+	end
 end
 
 function ns.wham:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
