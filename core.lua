@@ -200,6 +200,7 @@ function ns.switchMode(selectedMode)
 	if ns.switchModeEvent then
 		ns.switchModeEvent()
 	end
+	ns.checkColor()
 end
 
 -- Sortingfunction (Damage)
