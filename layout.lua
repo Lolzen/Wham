@@ -268,6 +268,7 @@ function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
 			if ns.modeData[ns.pos[ns.viewrange]] and ns.modeTotal > 0 then
+				local rcColor, curModeVal
 				--Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
@@ -275,8 +276,8 @@ function ns.wham:UpdateDisplay()
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange]] or 0)
 				-- Strings
-				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
-				local curModeVal = ns.modeData[ns.pos[ns.viewrange]] or 0
+				rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
+				curModeVal = ns.modeData[ns.pos[ns.viewrange]] or 0
 				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
 				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange])
 				ns.f[i].border:Show()
@@ -292,6 +293,7 @@ function ns.wham:UpdateDisplay()
 			end
 		else
 			if ns.modeData[ns.pos[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
+				local rcColor, curModeVal
 				-- Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
@@ -299,8 +301,8 @@ function ns.wham:UpdateDisplay()
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0)
 				-- Strings
-				local rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
-				local curModeVal = ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0
+				rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
+				curModeVal = ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0
 				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
 				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange + i - 1])
 				ns.f[i].border:Show()
