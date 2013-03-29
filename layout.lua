@@ -189,17 +189,6 @@ for k, v in pairs(ns.modes) do
 	end)
 end
 
-
-function ns.updateTabs()
-	for k, v in pairs(ns.modes) do
-		if v == ns.activeMode then
-			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
-		else
-			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
-		end
-	end
-end
-
 -- Handle the Statusbars
 ns.sb = {}
 ns.f = {}
@@ -330,8 +319,15 @@ function ns.wham:UpdateDisplay()
 end
 
 function ns.switchModeEvent()
-	ns.updateTabs()
+	for k, v in pairs(ns.modes) do
+		if v == ns.activeMode then
+			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
+		else
+			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
+		end
+	end
 end
+
 function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
