@@ -280,7 +280,9 @@ function ns.wham:UpdateDisplay()
 		if i == 1 then
 			if ns.modeData[ns.pos[ns.viewrange]] and ns.modeTotal > 0 then
 				--Statusbars
-				ns.sb[i]:SetAlpha(1)
+				if ns.sb[i]:GetAlpha() == 0 then
+					ns.sb[i]:SetAlpha(1)
+				end
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange]] or 0)
 				-- Strings
@@ -291,7 +293,9 @@ function ns.wham:UpdateDisplay()
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
 			else
-				ns.sb[i]:SetAlpha(0)
+				if ns.sb[i]:GetAlpha() == 1 then
+					ns.sb[i]:SetAlpha(0)
+				end
 				ns.f[i].string1:SetText(nil)
 				ns.f[i].string2:SetText(nil)
 				ns.f[i].border:Hide()
@@ -300,7 +304,9 @@ function ns.wham:UpdateDisplay()
 		else
 			if ns.modeData[ns.pos[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
 				-- Statusbars
-				ns.sb[i]:SetAlpha(1)
+				if ns.sb[i]:GetAlpha() == 0 then
+					ns.sb[i]:SetAlpha(1)
+				end
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0)
 				-- Strings
@@ -311,7 +317,9 @@ function ns.wham:UpdateDisplay()
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
 			else
-				ns.sb[i]:SetAlpha(0)
+				if ns.sb[i]:GetAlpha() == 1 then
+					ns.sb[i]:SetAlpha(0)
+				end
 				ns.f[i].string1:SetText(nil)
 				ns.f[i].string2:SetText(nil)
 				ns.f[i].border:Hide()
@@ -321,6 +329,9 @@ function ns.wham:UpdateDisplay()
 	end
 end
 
+function ns.switchModeEvent()
+	ns.updateTabs()
+end
 function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
@@ -359,6 +370,5 @@ function ns.wham:UpdateLayout()
 	end
 
 	ns.wham:UpdateDisplay()
-	ns.updateTabs()
 	ns.checkColor()
 end
