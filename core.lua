@@ -204,6 +204,9 @@ function ns.switchMode(selectedMode)
 		ns.modeTotal = ns.totalinterrupts
 		ns.modeData = ns.interruptData
 	end
+	if ns.switchModeEvent then
+		ns.switchModeEvent()
+	end
 end
 
 -- Sortingfunction (Damage)
