@@ -8,7 +8,6 @@ local addon, ns = ...
 ns.wham = CreateFrame("Frame", "Wham", UIParent)
 ns.wham:SetPoint("LEFT", UIParent, 95, 0)
 ns.wham:SetSize(ns.width, ns.height)
-ns.wham:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.wham:RegisterEvent("GROUP_ROSTER_UPDATE")
 ns.wham:RegisterEvent("PLAYER_ENTERING_WORLD")
 ns.wham:RegisterEvent("UNIT_PET")
@@ -144,12 +143,6 @@ end
 -- Upate on certain events
 ns.wham.GROUP_ROSTER_UPDATE = ns.wham.UpdateWatchedPlayers
 ns.wham.UNIT_PET = ns.wham.UpdateWatchedPlayers
-
-function ns.wham.COMBAT_LOG_EVENT_UNFILTERED()
-	if ns.wham.UpdateLayout then
-		ns.wham:UpdateLayout()
-	end
-end
 
 function ns.wham.PLAYER_ENTERING_WORLD()
 	RegisterAddonMessagePrefix("Wham_TOKEN")
