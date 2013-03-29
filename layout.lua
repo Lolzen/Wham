@@ -182,6 +182,7 @@ for k, v in pairs(ns.modes) do
 	ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
 		if ns.activatedModes[v] == true then
 			ns.switchMode(v)
+			ns.wham:UpdateLayout()
 		else
 			print("Module for "..v.." deactivated. Check your config.lua")
 		end
@@ -352,18 +353,21 @@ function ns.wham:UpdateLayout()
 
 	-- Gather Classes of watched players
 	for class in pairs(ns.watched) do
-		if class ~= nil then
+		if class ~= nil and ns.class[class] ~= class then
 			ns.class[class] = select(2,UnitClass(class))
 		end
 	end
 
 	for i=1, 25, 1 do
 		if ns.modeData[ns.pos[i]] then
-			ns.bg:SetAlpha(1)
-			ns.border:SetAlpha(1)
+			if ns.bg:GetAlpha() ~= 1 then
+				ns.bg:SetAlpha(1)
+			end
+			if ns.border:GetAlpha() ~=1 then
+				ns.border:SetAlpha(1)
+			end
 		end
 	end
 
 	ns.wham:UpdateDisplay()
-	ns.checkColor()
 end
