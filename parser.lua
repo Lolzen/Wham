@@ -42,12 +42,20 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if ns.absorbmodule == true then
 			ns.absorbFrame:Update()
 		end
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
+		end
 	end
 
 	if string.find(arg2, "_HEAL") then
 		if ns.healmodule == true then
 			heal, overheal = arg15, arg16
 			ns.healFrame:Update()
+		end
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
 		end
 	end
 
@@ -85,11 +93,19 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if ns.currentfightdatamodule == true then
 			ns.curFrame:Update()
 		end
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
+		end
 	end
 
 	if string.find(arg2, "UNIT_DIED") then
 		if ns.deathtrackmodule == true then
 			ns.deathFrame:Update()
+		end
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
 		end
 	end
 
@@ -98,6 +114,10 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			spellname = arg13
 			ns.dispelFrame:Update()
 		end
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
+		end
 	end
 
 	if string.find(arg2, "_INTERRUPT") then
@@ -105,10 +125,10 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			spellname = arg13
 			ns.interruptFrame:Update()
 		end
-	end
-
-	if ns.wham.UpdateLayout then
-		ns.wham:UpdateLayout()
+		
+		if ns.wham.UpdateLayout then
+			ns.wham:UpdateLayout()
+		end
 	end
 end
 
