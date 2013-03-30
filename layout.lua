@@ -352,6 +352,7 @@ function ns.wham:UpdateLayout()
 	-- ensure we're always getting fresh modedata
 	ns.switchMode(ns.activeMode)
 
+	-- Show background and border when data is stored
 	for i=1, 25, 1 do
 		if ns.modeData[ns.pos[i]] then
 			if ns.bg:GetAlpha() ~= 1 then
