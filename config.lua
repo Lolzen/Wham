@@ -24,6 +24,7 @@ ns.versioncheckmodule = true
 ns.initMode = "Damage"				-- Select which mode to display per standard [Damage, Heal, Absorb, Deaths, Dispels, Interrupts]
 ns.solo_hide = false				-- gathers no data, until in a group or raid [true/false]
 ns.autoAcceptExternalReset = true	-- !Depends on sync module! autoaccept resets from other people [true/false]
+ns.cleanOnGrpChange = false			-- Purge data gathered, from players left the raid/group [true/false]
 ns.width = 250
 ns.height = 90
 
