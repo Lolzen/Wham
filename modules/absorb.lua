@@ -17,19 +17,19 @@ function ns.absorbFrame:Update()
 	local amount = ns.getAbsorbAmount()
 
 	if missType == "ABSORB" then
-		if ns.watched[name] then
+		if ns.players.watched[name] then
 			ns.absorbData[name] = (ns.absorbData[name] or 0) + amount
 		end
 
 		ns.totalabsorb = 0
-		for _, name in pairs(ns.pos) do
+		for _, name in pairs(ns.players.rank) do
 			ns.totalabsorb = (ns.totalabsorb or 0) + (ns.absorbData[name] or 0)
 		end
 	end
 
 	-- Send local data to other Wham users for syncing
 	if ns.absorbData[name] then
-		for _, userName in pairs(ns.users) do
+		for _, userName in pairs(ns.players.whamUsers) do
 			if userName == UnitName("player") then return end
 			SendAddonMessage("Wham_ABSORB", name.." "..ns.absorbData[name].." "..ns.totalabsorb, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)

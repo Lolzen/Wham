@@ -13,41 +13,42 @@ ns.wham:RegisterEvent("PLAYER_ENTERING_WORLD")
 ns.wham:RegisterEvent("UNIT_PET")
 ns.wham:RegisterEvent("CHAT_MSG_ADDON")
 
--- Tables
-ns.users = {}
-ns.watched = {}
-ns.pos = {}
-ns.owners = {}
-ns.class = {}
+ns.players = {
+	whamUsers = {},
+	watched = {},
+	rank = {},
+	class = {},
+	pets = {},
+}
 
 -- Add players to watched list
 function ns.wham:addUnit(unit)
 	local name, realm = UnitName(unit)
 	if not name or name == "Unknown" then return end
 	realm = realm and realm ~= "" and "-"..realm or ""
-	if not ns.watched[name..realm] then
-		ns.watched[name..realm] = true
+	if not ns.players.watched[name..realm] then
+		ns.players.watched[name..realm] = true
 	end
 end
  
 function ns.wham:UpdateWatchedPlayers()
 	-- Delete old table
 	if ns.cleanOnGrpChange == true then	
-		for k in pairs(ns.watched) do
-			ns.watched[k] = nil
+		for k in pairs(ns.players.watched) do
+			ns.players.watched[k] = nil
 		end
 	end
  
 	-- Insert player name
 	local playerName = UnitName("player")
-	if not ns.watched[playerName] then
-		ns.watched[playerName] = true
+	if not ns.players.watched[playerName] then
+		ns.players.watched[playerName] = true
 	end
 
 	-- Insert playerpet name
 	local petName = UnitName("playerpet")
-	if petName and not ns.owners[playerName] then
-		ns.owners[playerName] = petName
+	if petName and not ns.players.pets[playerName] then
+		ns.players.pets[playerName] = petName
 	end
  
 	-- Insert party members & pets
@@ -56,7 +57,7 @@ function ns.wham:UpdateWatchedPlayers()
 		for i=1, GetNumSubgroupMembers() do
 			ns.wham:addUnit("party"..i)
 			if ("partypet"..i) then
-				ns.owners[UnitName("party"..i)] = UnitName("partypet"..i)
+				ns.players.pets[UnitName("party"..i)] = UnitName("partypet"..i)
 			end
 		end
 	end
@@ -67,22 +68,22 @@ function ns.wham:UpdateWatchedPlayers()
 		for i=1, GetNumGroupMembers() do
 			ns.wham:addUnit("raid"..i)
 			if ("raidpet"..i) then
-				ns.owners[UnitName("raid"..i)] = UnitName("raidpet"..i)
+				ns.players.pets[UnitName("raid"..i)] = UnitName("raidpet"..i)
 			end
 		end
 	end
 
 	-- Gather Classes of watched players
-	for name in pairs(ns.watched) do
-		if not ns.class[name] then
-			ns.class[name] = select(2,UnitClass(name))
+	for name in pairs(ns.players.watched) do
+		if not ns.players.class[name] then
+			ns.players.class[name] = select(2,UnitClass(name))
 		end
 	end
  
 	-- Delete Data of "old" players
 	if ns.dmgData then
 		for name in pairs(ns.dmgData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.dmgData[name] = nil
 			end
 		end
@@ -90,7 +91,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.dmgtakenData then
 		for name in pairs(ns.dmgtakenData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.dmgtakenData[name] = nil
 			end
 		end
@@ -98,7 +99,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.healData then
 		for name in pairs(ns.healData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.healData[name] = nil
 			end
 		end
@@ -106,7 +107,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.overhealData then
 		for name in pairs(ns.healData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.overhealData[name] = nil
 			end
 		end
@@ -114,7 +115,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.absorbData then
 		for name in pairs(ns.absorbData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.absorbData[name] = nil
 			end
 		end
@@ -122,7 +123,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.deathData then
 		for name in pairs(ns.deathData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.deathData[name] = nil
 			end
 		end
@@ -130,7 +131,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.dispelData then
 		for name in pairs(ns.dispelData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.dispelData[name] = nil
 			end
 		end
@@ -138,19 +139,20 @@ function ns.wham:UpdateWatchedPlayers()
 
 	if ns.interruptData then
 		for name in pairs(ns.interruptData) do
-			if not ns.watched[name] then
+			if not ns.players.watched[name] then
 				ns.interruptData[name] = nil
 			end
 		end
 	end
 
-	-- Clear pos-table
-	for k in ipairs(ns.pos) do ns.pos[k] = nil end
-	
+	-- Clear rank-table
+	for k in ipairs(ns.players.rank) do 
+		ns.players.rank[k] = nil 
+	end
  
-	-- Insert player names into pos-table
-	for name in pairs(ns.watched) do
-		ns.pos[#ns.pos+1] = name
+	-- Insert player names into rank-table
+	for name in pairs(ns.players.watched) do
+		ns.players.rank[#ns.players.rank+1] = name
 	end
 end
 
@@ -178,7 +180,7 @@ end
 function ns.wham:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
 	if prefix == "Wham_TOKEN" then
-		tinsert(ns.users, sender)
+		tinsert(ns.players.whamUsers, sender)
 	end
 end
 

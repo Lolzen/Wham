@@ -9,7 +9,7 @@ if ns.versioncheckmodule == false then return end
 local localversion = GetAddOnMetadata("Wham", "Version")
 
 -- Send local version to other Wham users for version check
-for _, userName in pairs(ns.users) do
+for _, userName in pairs(ns.players.whamUsers) do
 	if userName == UnitName("player") then return end
 	SendAddonMessage("Wham_VERSION", localversion, "WHISPER", userName)
 end

@@ -31,7 +31,7 @@ function ns.dmgFrame:Update()
 		if (unitType == 3 and ns.tempPets[name]) or unitType == 4 or unitType == 5 then
 			-- k is the first string in the table - owner
 			-- v is the second string attached to the first one - pet
-			for k, v in pairs(ns.owners) do
+			for k, v in pairs(ns.players.pets) do
 				if v == name then
 					ns.dmgData[k] = (ns.dmgData[k] or 0) + dmg - over
 				end
@@ -40,21 +40,21 @@ function ns.dmgFrame:Update()
 	end
 
 	-- Add dmgvalues of the players
-	if ns.watched[name] then
+	if ns.players.watched[name] then
 		ns.dmgData[name] = (ns.dmgData[name] or 0) + dmg - over
 		ns.overdmgData[name] = (ns.overdmgData[name] or 0) + over
 	end
 
 	ns.totaldmg = 0
 	ns.totaloverdmg = 0
-	for _, name in pairs(ns.pos) do
+	for _, name in pairs(ns.players.rank) do
 		ns.totaldmg = (ns.totaldmg or 0) + (ns.dmgData[name] or 0)
 		ns.totaloverdmg = (ns.totaloverdmg or 0) + (ns.overdmgData[name] or 0)
 	end
 
 	-- Send local data to other Wham users for syncing		
 	if ns.dmgData[name] then
-		for _, userName in pairs(ns.users) do
+		for _, userName in pairs(ns.players.whamUsers) do
 			if userName == UnitName("player") then return end
 			SendAddonMessage("Wham_DMG", name.." "..ns.dmgData[name].." "..ns.totaldmg, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)

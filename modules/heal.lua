@@ -19,21 +19,21 @@ function ns.healFrame:Update()
 	local heal = ns.getHeal()
 	local over = ns.getOverHeal()
 
-	if ns.watched[name] then
+	if ns.players.watched[name] then
 		ns.healData[name] = (ns.healData[name] or 0) + heal - over
 		ns.overhealData[name] = (ns.overhealData[name] or 0) + over
 	end
 
 	ns.totalheal = 0
 	ns.totaloverheal = 0
-	for _, name in pairs(ns.pos) do
+	for _, name in pairs(ns.players.rank) do
 		ns.totalheal = (ns.totalheal or 0) + (ns.healData[name] or 0)
 		ns.totaloverheal = (ns.totaloverheal or 0) + (ns.overhealData[name] or 0)
 	end
 
 	-- Send local data to other Wham users for syncing
 	if ns.healData[name] then
-		for _, userName in pairs(ns.users) do
+		for _, userName in pairs(ns.players.whamUsers) do
 			if userName == UnitName("player") then return end
 			SendAddonMessage("Wham_HEAL", name.." "..ns.healData[name].." "..ns.totalheal, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)

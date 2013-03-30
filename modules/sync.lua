@@ -57,7 +57,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDmg > localDmg then
-			if ns.watched[extDmgName] then
+			if ns.players.watched[extDmgName] then
 				ns.dmgData[extDmgName] = extDmg
 				ns.totaldmg = extTotalDmg
 				if ns.wham.UpdateLayout then
@@ -82,7 +82,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extHeal > localHeal then
-			if ns.watched[extHealName] then
+			if ns.players.watched[extHealName] then
 				ns.healData[extHealName] = extHeal
 				ns.totalheal = extTotalHeal
 				if ns.wham.UpdateLayout then
@@ -107,7 +107,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extAbsorb > localAbsorb then
-			if ns.watched[extAbsorbName] then
+			if ns.players.watched[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
 				ns.totalabsorb = extTotalAbsorb
 				if ns.wham.UpdateLayout then
@@ -132,7 +132,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDeaths > localDeaths then
-			if ns.watched[extDeathName] then
+			if ns.players.watched[extDeathName] then
 				ns.deathData[extDeathName] = extDeaths
 				ns.totaldeaths = extTotalDeaths
 				if ns.wham.UpdateLayout then
@@ -157,7 +157,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extInterrupts > localInterrupts then
-			if ns.watched[extInterruptName] then
+			if ns.players.watched[extInterruptName] then
 				ns.interruptData[extInterruptName] = extInterrupts
 				ns.totalinterrupts = extTotalInterrupts
 				if ns.wham.UpdateLayout then
@@ -182,7 +182,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDispels > localDispels then
-			if ns.watched[extDispelName] then
+			if ns.players.watched[extDispelName] then
 				ns.dispelData[extDispelName] = extDispells
 				ns.totaldispels = extTotalDispels
 				if ns.wham.UpdateLayout then

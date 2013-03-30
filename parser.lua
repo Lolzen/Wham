@@ -19,7 +19,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if GetNumSubgroupMembers() == 0 or GetNumGroupMembers() == 0 and GetNumSubgroupMembers() == 0 then return end
 	end
 	
-	if not ns.watched[arg5] then return end
+	if not ns.players.watched[arg5] then return end
 
 	guid = arg4
 	name = arg5

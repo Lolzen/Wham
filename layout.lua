@@ -236,19 +236,19 @@ end
 function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
-			if ns.modeData[ns.pos[ns.viewrange]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.players.rank[ns.viewrange]] and ns.modeTotal > 0 then
 				local rcColor, curModeVal
 				--Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
 				end
-				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange]] or 0)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange]] or 0)
 				-- Strings
-				rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
-				curModeVal = ns.modeData[ns.pos[ns.viewrange]] or 0
+				rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
+				curModeVal = ns.modeData[ns.players.rank[ns.viewrange]] or 0
 				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange])
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange])
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
 			else
@@ -261,19 +261,19 @@ function ns.wham:UpdateDisplay()
 				ns.f[i].bg:Hide()
 			end
 		else
-			if ns.modeData[ns.pos[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.players.rank[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
 				local rcColor, curModeVal
 				-- Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
 				end
-				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.pos[1]] or 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0)
 				-- Strings
-				rcColor = RAID_CLASS_COLORS[ns.class[ns.pos[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
-				curModeVal = ns.modeData[ns.pos[ns.viewrange + i - 1]] or 0
+				rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
+				curModeVal = ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0
 				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.pos[ns.viewrange + i - 1])
+				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange + i - 1])
 				ns.f[i].border:Show()
 				ns.f[i].bg:Show()
 			else
@@ -333,21 +333,21 @@ end
 function ns.wham:UpdateLayout()
 	-- Sort Statusbars by mode, so they aren't getting displayed funny
 	if ns.activeMode == "Damage" then
-		sort(ns.pos, ns.sortByDamage)
+		sort(ns.players.rank, ns.sortByDamage)
 	elseif ns.activeMode == "Damage Taken" then
-		sort(ns.pos, ns.sortByDamageTaken)
+		sort(ns.players.rank, ns.sortByDamageTaken)
 	elseif ns.activeMode == "Heal" then
-		sort(ns.pos, ns.sortByHeal)
+		sort(ns.players.rank, ns.sortByHeal)
 	elseif ns.activeMode == "OverHeal" then
-		sort(ns.pos, ns.sortByOverHeal)
+		sort(ns.players.rank, ns.sortByOverHeal)
 	elseif ns.activeMode == "Absorb" then
-		sort(ns.pos, ns.sortByAbsorb)
+		sort(ns.players.rank, ns.sortByAbsorb)
 	elseif ns.activeMode == "Deaths" then
-		sort(ns.pos, ns.sortByDeaths)
+		sort(nns.players.rank, ns.sortByDeaths)
 	elseif ns.activeMode == "Dispels" then
-		sort(ns.pos, ns.sortByDispels)
+		sort(ns.players.rank, ns.sortByDispels)
 	elseif ns.activeMode == "Interrupts" then
-		sort(ns.pos, ns.sortByinterrupts)
+		sort(ns.players.rank, ns.sortByinterrupts)
 	end
 
 	-- ensure we're always getting fresh modedata
@@ -355,7 +355,7 @@ function ns.wham:UpdateLayout()
 
 	-- Show background and border when data is stored
 	for i=1, 25, 1 do
-		if ns.modeData[ns.pos[i]] then
+		if ns.modeData[ns.players.rank[i]] then
 			if ns.bg:GetAlpha() ~= 1 then
 				ns.bg:SetAlpha(1)
 			end

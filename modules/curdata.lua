@@ -47,7 +47,7 @@ function ns.curFrame:Update()
 	end
 
 	ns.curTotaldmg = 0
-	for _, name in pairs(ns.pos) do
+	for _, name in pairs(ns.players.rank) do
 		ns.curTotaldmg = (ns.curTotaldmg or 0) + (ns.curData[name] or 0)
 	end
 end

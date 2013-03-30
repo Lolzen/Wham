@@ -17,18 +17,18 @@ function ns.interruptFrame:Update()
 	
 	-- Add interrupts of the players
 	-- [WIP] ToDo: divide into spells
-	if ns.watched[name] then
+	if ns.players.watched[name] then
 		ns.interruptData[name] = (ns.interruptData[name] or 0) + 1
 	end
 
 	ns.totalinterrupts = 0
-	for _, name in pairs(ns.pos) do
+	for _, name in pairs(ns.players.rank) do
 		ns.totalinterrupts = (ns.totalinterrupts or 0) + (ns.interruptData[name] or 0)
 	end
 
 	-- Send local data to other Wham users for syncing
 	if ns.interruptData[name] then
-		for _, userName in pairs(ns.users) do
+		for _, userName in pairs(ns.players.whamUsers) do
 			if userName == UnitName("player") then return end
 			SendAddonMessage("Wham_INTERRUPT", name.." "..ns.interruptData[name].." "..ns.totalinterrupts, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)
