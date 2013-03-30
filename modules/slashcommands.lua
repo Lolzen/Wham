@@ -32,7 +32,7 @@ local paste = function(self)
 			local curModeVal = ns.modeData[ns.players.rank[i]] or 0
 			local class = UnitClass(ns.players.rank[i]) or "Unknown"
 			if curModeVal then
-				SendChatMessage(string.format("%d. %s - %s Done: %d (%.0f%%) [%s]", i, ns.players.rank[i], ns.activeMode or ns.initMode, curModeVal, curModeVal / ns.modeTotal * 100, class), channel, nil, wname)
+				SendChatMessage(string.format("%d. %s: %d (%.0f%%) [%s]", i, ns.players.rank[i], curModeVal, curModeVal / ns.modeTotal * 100, class), channel, nil, wname)
 			end
 		end
 	end
