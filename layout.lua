@@ -192,7 +192,6 @@ end
 -- Handle the Statusbars
 ns.sb = {}
 ns.f = {}
-ns.class = {}
 
 for i=1, 25, 1 do
 	-- Create the frame all other bars will be attached to
@@ -352,13 +351,6 @@ function ns.wham:UpdateLayout()
 
 	-- ensure we're always getting fresh modedata
 	ns.switchMode(ns.activeMode)
-
-	-- Gather Classes of watched players
-	for class in pairs(ns.watched) do
-		if class ~= nil and ns.class[class] ~= class then
-			ns.class[class] = select(2,UnitClass(class))
-		end
-	end
 
 	for i=1, 25, 1 do
 		if ns.modeData[ns.pos[i]] then

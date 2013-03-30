@@ -18,6 +18,7 @@ ns.users = {}
 ns.watched = {}
 ns.pos = {}
 ns.owners = {}
+ns.class = {}
 
 -- Add players to watched list
 function ns.wham:addUnit(unit)
@@ -62,6 +63,13 @@ function ns.wham:UpdateWatchedPlayers()
 			if ("raidpet"..i) then
 				ns.owners[UnitName("raid"..i)] = UnitName("raidpet"..i)
 			end
+		end
+	end
+
+	-- Gather Classes of watched players
+	for name in pairs(ns.watched) do
+		if not ns.class[name] then
+			ns.class[name] = select(2,UnitClass(name))
 		end
 	end
  
