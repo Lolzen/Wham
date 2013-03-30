@@ -25,22 +25,28 @@ function ns.wham:addUnit(unit)
 	local name, realm = UnitName(unit)
 	if not name or name == "Unknown" then return end
 	realm = realm and realm ~= "" and "-"..realm or ""
-	ns.watched[name..realm] = true
+	if not ns.watched[name..realm] then
+		ns.watched[name..realm] = true
+	end
 end
  
 function ns.wham:UpdateWatchedPlayers()
 	-- Delete old table
-	for k in pairs(ns.watched) do
-		ns.watched[k] = nil
+	if ns.cleanOnGrpChange == true then	
+		for k in pairs(ns.watched) do
+			ns.watched[k] = nil
+		end
 	end
  
 	-- Insert player name
 	local playerName = UnitName("player")
-	ns.watched[playerName] = true
+	if not ns.watched[playerName] then
+		ns.watched[playerName] = true
+	end
 
 	-- Insert playerpet name
 	local petName = UnitName("playerpet")
-	if petName then
+	if petName and not ns.owners[playerName] then
 		ns.owners[playerName] = petName
 	end
  
