@@ -18,8 +18,27 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	if ns.solo_hide == true then
 		if GetNumSubgroupMembers() == 0 or GetNumGroupMembers() == 0 and GetNumSubgroupMembers() == 0 then return end
 	end
-	
-	if not ns.players.watched[arg5] then return end
+
+	-- Only parse for watched units and pets, otherwise do nothing
+	if arg4 and arg4 ~= "" then
+		local firstDigits = tonumber("0x"..strsub(arg4, 3,5))
+		local unitType = bit.band(firstDigits, 0x00f)
+		
+		-- Check if the unit is a NPC, Pet, Vehicle or Player
+		-- 3 = NPCs or Temporary pets, like Shadowfiend
+		-- 4 = "normal" Pets, like hunterpets
+		-- 5 = Vehicles
+		-- 8 = Players
+		if (unitType == 3 and ns.tempPets[name]) or unitType == 4 or unitType == 5 then
+			-- k is the first string in the table - owner
+			-- v is the second string attached to the first one - pet
+			for k, v in pairs(ns.players.pets) do
+				if v ~= arg5 then return end
+			end
+		elseif unitType == 8 then
+			if not ns.players.watched[arg5] then return end
+		end
+	end
 
 	guid = arg4
 	name = arg5

@@ -16,26 +16,13 @@ ns.overdmgData = {}
 
 function ns.dmgFrame:Update()
 	local name = ns.getName()
-	local guid = ns.getGuid()
 	local dmg = ns.getDamage()
 	local over = ns.getOverDamage()
 
-	if guid and guid ~= "" then
-		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
-		local unitType = bit.band(firstDigits, 0x00f)
-
-		-- Check if the unit is a NPC, Pet or Vehicle
-		-- 3 = NPCs or Temporary pets, like Shadowfiend
-		-- 4 = "normal" Pets, like hunterpets
-		-- 5 = Vehicles
-		if (unitType == 3 and ns.tempPets[name]) or unitType == 4 or unitType == 5 then
-			-- k is the first string in the table - owner
-			-- v is the second string attached to the first one - pet
-			for k, v in pairs(ns.players.pets) do
-				if v == name then
-					ns.dmgData[k] = (ns.dmgData[k] or 0) + dmg - over
-				end
-			end
+	-- Petdamage -> Ownerdamage
+	for k, v in pairs(ns.players.pets) do
+		if v == name then
+			ns.dmgData[k] = (ns.dmgData[k] or 0) + dmg - over
 		end
 	end
 
