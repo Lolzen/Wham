@@ -66,19 +66,6 @@ ns.border:SetPoint("BOTTOMRIGHT", ns.bg, 2, -1)
 ns.border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 ns.border:SetAlpha(0)
 
-function ns.layoutSpecificReset()
-	for i=1, 25, 1 do
-		ns.sb[i]:SetValue(0)
-		ns.sb[i].bg:Hide()
-		ns.f[i].string1:SetText(nil)
-		ns.f[i].string2:SetText(nil)
-		ns.f[i].border:Hide()
-		ns.f[i].bg:Hide()
-	end
-	ns.bg:SetAlpha(0)
-	ns.border:SetAlpha(0)
-end
-
 -- Initialize tabs for switching modes
 ns.activeMode = ns.initMode --activate mode chosen in config first
 
@@ -118,23 +105,6 @@ ns.modes = {
 	"Dispels",
 	"Interrupts",
 }
-
--- A little helper to check colors corresponding to mode
-function ns.checkColor()
-	for i=1, 25, 1 do
-		if ns.activeMode == "Damage" or ns.activeMode == "Damage Taken" then
-			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
-		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
-			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
-		elseif ns.activeMode == "Absorb" then
-			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
-		elseif ns.activeMode == "Deaths" then
-			ns.sb[i]:SetStatusBarColor(0.2, 0.2, 0.2)
-		else
-			ns.sb[i]:SetStatusBarColor(0.7, 0.7, 0.7)
-		end
-	end
-end
 
 -- Create some clickable tabs
 ns.tabs = {}
@@ -315,6 +285,37 @@ function ns.wham:UpdateDisplay()
 				ns.f[i].border:Hide()
 				ns.f[i].bg:Hide()
 			end
+		end
+	end
+end
+
+--###Functions called by core###--
+
+function ns.layoutSpecificReset()
+	for i=1, 25, 1 do
+		ns.sb[i]:SetValue(0)
+		ns.sb[i].bg:Hide()
+		ns.f[i].string1:SetText(nil)
+		ns.f[i].string2:SetText(nil)
+		ns.f[i].border:Hide()
+		ns.f[i].bg:Hide()
+	end
+	ns.bg:SetAlpha(0)
+	ns.border:SetAlpha(0)
+end
+
+function ns.checkColor()
+	for i=1, 25, 1 do
+		if ns.activeMode == "Damage" or ns.activeMode == "Damage Taken" then
+			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
+		elseif ns.activeMode == "Heal" or ns.activeMode == "OverHeal" then
+			ns.sb[i]:SetStatusBarColor(0, 0.8, 0)
+		elseif ns.activeMode == "Absorb" then
+			ns.sb[i]:SetStatusBarColor(0.8, 0.8, 0)
+		elseif ns.activeMode == "Deaths" then
+			ns.sb[i]:SetStatusBarColor(0.2, 0.2, 0.2)
+		else
+			ns.sb[i]:SetStatusBarColor(0.7, 0.7, 0.7)
 		end
 	end
 end
