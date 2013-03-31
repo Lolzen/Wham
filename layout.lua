@@ -161,42 +161,8 @@ end
 
 -- Handle the Statusbars
 ns.sb = {}
-ns.f = {}
 
 for i=1, 25, 1 do
-	-- Create the frame all other bars will be attached to
-	if not ns.f[i] then
-		ns.f[i] = CreateFrame("Frame", nil, ns.wham)
-		ns.f[i]:SetHeight(15)
-		ns.f[i]:SetWidth(ns.wham:GetWidth() -8)
-		if i == 1 then
-			ns.f[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
-		elseif i >= 1 and i <= 5 then
-			ns.f[i]:SetPoint("TOP", ns.f[i-1], "BOTTOM", 0, -2)
-		end
-		
-	end
-
-	-- Border
-	if not ns.f[i].border then
-		ns.f[i].border = CreateFrame("Frame", nil, ns.f[i])
-		ns.f[i].border:SetBackdrop({
-			edgeFile = "Interface\\AddOns\\Wham\\Textures\\border3", edgeSize = 8,
-			insets = {left = 4, right = 4, top = 4, bottom = 4},
-		})
-		ns.f[i].border:SetPoint("TOPLEFT", ns.f[i], -2, 1)
-		ns.f[i].border:SetPoint("BOTTOMRIGHT", ns.f[i], 2, -1)
-		ns.f[i].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
-	end
-
-	-- background
-	if not ns.f[i].bg then
-		ns.f[i].bg = ns.f[i]:CreateTexture(nil, "BACKGROUND")
-		ns.f[i].bg:SetAllPoints(ns.f[i])
-		ns.f[i].bg:SetTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
-		ns.f[i].bg:SetVertexColor(0, 0, 0)
-	end
-
 	-- Create the StatusBars
 	if not ns.sb[i] then
 		ns.sb[i] = CreateFrame("StatusBar", "StatusBar"..i, ns.wham)
@@ -204,10 +170,22 @@ for i=1, 25, 1 do
 		ns.sb[i]:SetWidth(ns.wham:GetWidth() -8)
 		ns.sb[i]:SetStatusBarTexture("Interface\\AddOns\\Wham\\Textures\\statusbar")
 		if i == 1 then
-			ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+			ns.sb[i]:SetPoint("TOPLEFT", ns.wham, 4, -4)
 		elseif i >= 1 and i <= 5 then
-			ns.sb[i]:SetPoint("BOTTOMLEFT", ns.f[i], 0, 0)
+			ns.sb[i]:SetPoint("TOP", ns.sb[i-1], "BOTTOM", 0, -2)
 		end
+	end
+	
+		-- Border
+	if not ns.sb[i].border then
+		ns.sb[i].border = CreateFrame("Frame", nil, ns.sb[i])
+		ns.sb[i].border:SetBackdrop({
+			edgeFile = "Interface\\AddOns\\Wham\\Textures\\border3", edgeSize = 8,
+			insets = {left = 4, right = 4, top = 4, bottom = 4},
+		})
+		ns.sb[i].border:SetPoint("TOPLEFT", ns.sb[i], -2, 1)
+		ns.sb[i].border:SetPoint("BOTTOMRIGHT", ns.sb[i], 2, -1)
+		ns.sb[i].border:SetBackdropBorderColor(0.2, 0.2, 0.2)
 	end
 
 	-- StatusBars background
@@ -219,17 +197,17 @@ for i=1, 25, 1 do
 	end
 
 	-- Create the FontStrings
-	if not ns.f[i].string1 then
+	if not ns.sb[i].string1 then
 		-- #. Name
-		ns.f[i].string1 = ns.f[i]:CreateFontString(nil, "OVERLAY")
-		ns.f[i].string1:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.f[i].string1:SetPoint("TOPLEFT", ns.f[i], "TOPLEFT", 2, -2)
+		ns.sb[i].string1 = ns.sb[i]:CreateFontString(nil, "OVERLAY")
+		ns.sb[i].string1:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.sb[i].string1:SetPoint("TOPLEFT", ns.sb[i], "TOPLEFT", 2, -2)
 	end
-	if not ns.f[i].string2 then
+	if not ns.sb[i].string2 then
 		-- mode (mode%)
-		ns.f[i].string2 = ns.f[i]:CreateFontString(nil, "OVERLAY")
-		ns.f[i].string2:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		ns.f[i].string2:SetPoint("TOPRIGHT", ns.f[i], "TOPRIGHT", -2, -2)
+		ns.sb[i].string2 = ns.sb[i]:CreateFontString(nil, "OVERLAY")
+		ns.sb[i].string2:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+		ns.sb[i].string2:SetPoint("TOPRIGHT", ns.sb[i], "TOPRIGHT", -2, -2)
 	end
 end
 
@@ -237,7 +215,6 @@ function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
 			if ns.modeData[ns.players.rank[ns.viewrange]] and ns.modeTotal > 0 then
-				local rcColor, curModeVal
 				--Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
@@ -245,24 +222,23 @@ function ns.wham:UpdateDisplay()
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange]] or 0)
 				-- Strings
-				rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
-				curModeVal = ns.modeData[ns.players.rank[ns.viewrange]] or 0
-				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange])
-				ns.f[i].border:Show()
-				ns.f[i].bg:Show()
+				local rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
+				local curModeVal = ns.modeData[ns.players.rank[ns.viewrange]] or 0
+				ns.sb[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
+				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange])
+				ns.sb[i].border:Show()
+				ns.sb[i].bg:Show()
 			else
 				if ns.sb[i]:GetAlpha() == 1 then
 					ns.sb[i]:SetAlpha(0)
 				end
-				ns.f[i].string1:SetText(nil)
-				ns.f[i].string2:SetText(nil)
-				ns.f[i].border:Hide()
-				ns.f[i].bg:Hide()
+				ns.sb[i].string1:SetText(nil)
+				ns.sb[i].string2:SetText(nil)
+				ns.sb[i].border:Hide()
+				ns.sb[i].bg:Hide()
 			end
 		else
 			if ns.modeData[ns.players.rank[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
-				local rcColor, curModeVal
 				-- Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
@@ -270,20 +246,20 @@ function ns.wham:UpdateDisplay()
 				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
 				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0)
 				-- Strings
-				rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
-				curModeVal = ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0
-				ns.f[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.f[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange + i - 1])
-				ns.f[i].border:Show()
-				ns.f[i].bg:Show()
+				local rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
+				local curModeVal = ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0
+				ns.sb[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
+				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange + i - 1])
+				ns.sb[i].border:Show()
+				ns.sb[i].bg:Show()
 			else
 				if ns.sb[i]:GetAlpha() == 1 then
 					ns.sb[i]:SetAlpha(0)
 				end
-				ns.f[i].string1:SetText(nil)
-				ns.f[i].string2:SetText(nil)
-				ns.f[i].border:Hide()
-				ns.f[i].bg:Hide()
+				ns.sb[i].string1:SetText(nil)
+				ns.sb[i].string2:SetText(nil)
+				ns.sb[i].border:Hide()
+				ns.sb[i].bg:Hide()
 			end
 		end
 	end
@@ -295,10 +271,10 @@ function ns.layoutSpecificReset()
 	for i=1, 25, 1 do
 		ns.sb[i]:SetValue(0)
 		ns.sb[i].bg:Hide()
-		ns.f[i].string1:SetText(nil)
-		ns.f[i].string2:SetText(nil)
-		ns.f[i].border:Hide()
-		ns.f[i].bg:Hide()
+		ns.sb[i].string1:SetText(nil)
+		ns.sb[i].string2:SetText(nil)
+		ns.sb[i].border:Hide()
+		ns.sb[i].bg:Hide()
 	end
 	ns.bg:SetAlpha(0)
 	ns.border:SetAlpha(0)
