@@ -43,5 +43,4 @@ ns.tempPets = {
 	["Spirit Wolf"] = true,
 	["Fire Elemental"] = true,
 	["Earth Elemental"] = true,
---	["Searing Totem"] = true, --test
 }
