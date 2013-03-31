@@ -35,3 +35,4 @@ Changelog:
 [0.7 Alpha]
 *Changed sync channel to whisper (on to other detected wham users)
 *Add Damage Taken module
+*Lot of changes, freeing up cpu-usage and fixing cpu-usage leaks
