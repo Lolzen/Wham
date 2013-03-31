@@ -81,7 +81,7 @@ if ns.healmodule == true then
 	ns.activatedModes["Heal"] = true
 	ns.activatedModes["OverHeal"] = true
 end
-if ns.absorbModule == true then
+if ns.absorbmodule == true then
 	ns.activatedModes["Absorb"] = true
 end
 if ns.deathtrackmodule == true then

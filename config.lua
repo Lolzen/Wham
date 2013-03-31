@@ -8,7 +8,7 @@ local addon, ns = ...
 --[Module control]--
 -- true = toggle module on
 -- false = toggle module off
-ns.absorbModule = true
+ns.absorbmodule = true
 ns.currentfightdatamodule = false
 ns.damagemodule = true
 ns.damagetakenmodule = true
