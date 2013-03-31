@@ -343,7 +343,7 @@ function ns.wham:UpdateLayout()
 	elseif ns.activeMode == "Absorb" then
 		sort(ns.players.rank, ns.sortByAbsorb)
 	elseif ns.activeMode == "Deaths" then
-		sort(nns.players.rank, ns.sortByDeaths)
+		sort(ns.players.rank, ns.sortByDeaths)
 	elseif ns.activeMode == "Dispels" then
 		sort(ns.players.rank, ns.sortByDispels)
 	elseif ns.activeMode == "Interrupts" then
