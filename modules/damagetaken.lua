@@ -25,12 +25,12 @@ function ns.dmgTakenFrame:Update()
 			for _, dstname in pairs(ns.players.rank) do
 				ns.dmgtakenData[dstname] = (ns.dmgtakenData[dstname] or 0) + dmg
 			end
+			
+			ns.totaldmgtaken = 0
+			for _, dstname in pairs(ns.players.rank) do
+				ns.totaldmgtaken = (ns.totaldmgtaken or 0) + (ns.dmgtakenData[dstname] or 0)
+			end
 		end
-	end
-
-	ns.totaldmgtaken = 0
-	for _, dstname in pairs(ns.players.rank) do
-		ns.totaldmgtaken = (ns.totaldmgtaken or 0) + (ns.dmgtakenData[dstname] or 0)
 	end
 
 	-- Send local data to other Wham users for syncing		
