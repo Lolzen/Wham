@@ -75,7 +75,7 @@ function ns.wham:UpdateWatchedPlayers()
 
 	-- Gather Classes of watched players
 	for name in pairs(ns.players.watched) do
-		if not ns.players.class[name] then
+		if not ns.players.class[name] and not ns.players.class[name] ~= "" then
 			ns.players.class[name] = select(2,UnitClass(name))
 		end
 	end
