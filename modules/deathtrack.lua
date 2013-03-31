@@ -12,7 +12,7 @@ ns.totaldeaths = 0
 ns.deathData = {}
 
 function ns.deathFrame:Update()
-	local name = ns.getDstName()
+	local name = ns.name
 	
 	-- Add deathvalues of the players
 	if ns.players.watched[name] then

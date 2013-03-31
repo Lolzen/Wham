@@ -18,10 +18,7 @@ function ns.curFrame:PLAYER_REGEN_ENABLED()
 end
 
 function ns.curFrame:Update()
-	local guid = ns.getGuid()
-	local name = ns.getName()
-	local dmg = ns.getDamage()
-	local over = ns.getOverDamage()
+	local name = ns.name
 
 	if guid then
 		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
@@ -31,19 +28,19 @@ function ns.curFrame:Update()
 		--3 = NPCs or Temporary pets, like Shadowfiend
 		--4 = "normal" Pets, like hunterpets
 		--5 = Vehicles
-		if (unitType == 3 and ns.tempPets[name]) or unitType == 4 or unitType == 5 then
+		if (ns.unitType == 3 and ns.tempPets[name]) or ns.unitType == 4 or ns.unitType == 5 then
 			--k is the first string in the table - owner
 			--v is the second string attached to the first one - pet
 			for k, v in pairs(ns.owners) do
 				if v == name then
-					ns.curData[k] = (ns.curData[k] or 0) + dmg - over
+					ns.curData[k] = (ns.curData[k] or 0) + ns.dmg - ns.overdmg
 				end
 			end
 		end
 	end
 
 	if ns.watched[name] then
-		ns.curData[name] = (ns.curData[name] or 0) + dmg - over
+		ns.curData[name] = (ns.curData[name] or 0) + ns.dmg - ns.overdmg
 	end
 
 	ns.curTotaldmg = 0

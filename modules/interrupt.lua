@@ -13,7 +13,7 @@ ns.totalinterrupts = 0
 ns.interruptData = {}
 
 function ns.interruptFrame:Update()
-	local name = ns.getName()
+	local name = ns.name
 	
 	-- Add interrupts of the players
 	-- [WIP] ToDo: divide into spells

@@ -12,13 +12,11 @@ ns.totalabsorb = 0
 ns.absorbData = {}
 
 function ns.absorbFrame:Update()
-	local name = ns.getDstName()
-	local missType = ns.getMissType()
-	local amount = ns.getAbsorbAmount()
+	local name = ns.dstname
 
-	if missType == "ABSORB" then
+	if ns.missType == "ABSORB" then
 		if ns.players.watched[name] then
-			ns.absorbData[name] = (ns.absorbData[name] or 0) + amount
+			ns.absorbData[name] = (ns.absorbData[name] or 0) + ns.amount
 		end
 
 		ns.totalabsorb = 0

@@ -15,13 +15,13 @@ ns.totaloverheal = 0
 ns.overhealData = {}
 
 function ns.healFrame:Update()
-	local name = ns.getName()
-	local heal = ns.getHeal()
-	local over = ns.getOverHeal()
+	local name = ns.name
+	--local heal = ns.getHeal()
+	--local over = ns.getOverHeal()
 
 	if ns.players.watched[name] then
-		ns.healData[name] = (ns.healData[name] or 0) + heal - over
-		ns.overhealData[name] = (ns.overhealData[name] or 0) + over
+		ns.healData[name] = (ns.healData[name] or 0) + ns.heal - ns.overheal
+		ns.overhealData[name] = (ns.overhealData[name] or 0) + ns.overheal
 	end
 
 	ns.totalheal = 0

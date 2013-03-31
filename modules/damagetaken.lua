@@ -12,24 +12,17 @@ ns.totaldmgtaken = 0
 ns.dmgtakenData = {}
 
 function ns.dmgTakenFrame:Update()
-	local guid = ns.getGuid()
-	local name = ns.getName()
-	local dstname = ns.getDstName()
-	local dmg = ns.getDamage()
+	local name = ns.name
+	local dstname = ns.dstname
 
-	if guid and guid ~= "" then
-		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
-		local unitType = bit.band(firstDigits, 0x00f)
-
-		if unitType == 3 then
-			for _, dstname in pairs(ns.players.rank) do
-				ns.dmgtakenData[dstname] = (ns.dmgtakenData[dstname] or 0) + dmg
-			end
-			
-			ns.totaldmgtaken = 0
-			for _, dstname in pairs(ns.players.rank) do
-				ns.totaldmgtaken = (ns.totaldmgtaken or 0) + (ns.dmgtakenData[dstname] or 0)
-			end
+	if ns.unitType == 3 then
+		for _, dstname in pairs(ns.players.rank) do
+			ns.dmgtakenData[dstname] = (ns.dmgtakenData[dstname] or 0) + ns.dmg
+		end
+	
+		ns.totaldmgtaken = 0
+		for _, dstname in pairs(ns.players.rank) do
+			ns.totaldmgtaken = (ns.totaldmgtaken or 0) + (ns.dmgtakenData[dstname] or 0)
 		end
 	end
 
@@ -37,7 +30,7 @@ function ns.dmgTakenFrame:Update()
 	if ns.dmgtakenData[dstname] then
 		for _, userName in pairs(ns.players.whamUsers) do
 			if userName == UnitName("player") then return end
-			SendAddonMessage("Wham_DMGTAKEN", name.." "..ns.dmgtakenData[dstname].." "..ns.totaldmgtaken, "WHISPER", userName)
+			SendAddonMessage("Wham_DMGTAKEN", ns.name.." "..ns.dmgtakenData[dstname].." "..ns.totaldmgtaken, "WHISPER", userName)
 			SendAddonMessage("Wham_UPDATE", nil, "WHISPER", userName)
 		end
 	end

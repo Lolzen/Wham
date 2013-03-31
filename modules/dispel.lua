@@ -12,7 +12,7 @@ ns.totaldispels = 0
 ns.dispelData = {}
 
 function ns.dispelFrame:Update()
-	local name = ns.getName()
+	local name = ns.name
 	
 	-- Add dispels of the players
 	-- [WIP] ToDo: divide into spells
