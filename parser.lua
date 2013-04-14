@@ -70,10 +70,10 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if ns.healmodule == true then
 			ns.heal, ns.overheal = arg15, arg16
 			ns.healFrame:Update()
-		end
 		
-		if ns.wham.UpdateLayout then
-			ns.wham:UpdateLayout()
+			if ns.wham.UpdateLayout then
+				ns.wham:UpdateLayout()
+			end
 		end
 	end
 
@@ -106,7 +106,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			ns.dmgFrame:Update()
 		end
 	
-		if ns.damagetakenmodule == true then
+		if ns.damagetakenmodule == true and ns.unitType == 3 then
 			ns.dmgTakenFrame:Update()
 		end
 	
@@ -122,32 +122,32 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	if string.find(arg2, "UNIT_DIED") then
 		if ns.deathtrackmodule == true then
 			ns.deathFrame:Update()
-		end
 		
-		if ns.wham.UpdateLayout then
-			ns.wham:UpdateLayout()
+			if ns.wham.UpdateLayout then
+				ns.wham:UpdateLayout()
+			end
 		end
 	end
 
 	if string.find(arg2, "_DISPEL") then
 		if ns.dispelmodule == true then
-			ns.spellname = arg13
+			--ns.spellname = arg13
 			ns.dispelFrame:Update()
-		end
 		
-		if ns.wham.UpdateLayout then
-			ns.wham:UpdateLayout()
+			if ns.wham.UpdateLayout then
+				ns.wham:UpdateLayout()
+			end
 		end
 	end
 
 	if string.find(arg2, "_INTERRUPT") then
 		if ns.interruptmodule == true then
-			ns.spellname = arg13
+			--ns.spellname = arg13
 			ns.interruptFrame:Update()
-		end
 		
-		if ns.wham.UpdateLayout then
-			ns.wham:UpdateLayout()
+			if ns.wham.UpdateLayout then
+				ns.wham:UpdateLayout()
+			end
 		end
 	end
 end
