@@ -60,7 +60,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			
 			ns.absorbFrame:Update()
 	
-			if ns.wham.UpdateLayout then
+			if ns.activeMode == "Absorb" and ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -71,7 +71,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			ns.heal, ns.overheal = arg15, arg16
 			ns.healFrame:Update()
 		
-			if ns.wham.UpdateLayout then
+			if ns.activeMode == "Heal" or ns.activeMode == "OverHeal" and ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -115,7 +115,9 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		end
 		
 		if ns.wham.UpdateLayout then
-			ns.wham:UpdateLayout()
+			if ns.activeMode == "Damage" or ns.activeMode == "Damage Taken" then
+				ns.wham:UpdateLayout()
+			end
 		end
 	end
 
@@ -123,7 +125,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 		if ns.deathtrackmodule == true then
 			ns.deathFrame:Update()
 		
-			if ns.wham.UpdateLayout then
+			if ns.activeMode == "Deaths" and ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -134,7 +136,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			--ns.spellname = arg13
 			ns.dispelFrame:Update()
 		
-			if ns.wham.UpdateLayout then
+			if ns.activeMode == "Dispels" and ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
 			end
 		end
@@ -145,7 +147,7 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 			--ns.spellname = arg13
 			ns.interruptFrame:Update()
 		
-			if ns.wham.UpdateLayout then
+			if ns.activeMode == "Inerrupts" and ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
 			end
 		end
