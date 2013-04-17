@@ -20,22 +20,10 @@ end
 function ns.curFrame:Update()
 	local name = ns.name
 
-	if guid then
-		local firstDigits = tonumber("0x"..strsub(guid, 3,5))
-		local unitType = bit.band(firstDigits, 0x00f)
-
-		--check if the unit is a NPC, Pet or Vehicle
-		--3 = NPCs or Temporary pets, like Shadowfiend
-		--4 = "normal" Pets, like hunterpets
-		--5 = Vehicles
-		if (ns.unitType == 3 and ns.tempPets[name]) or ns.unitType == 4 or ns.unitType == 5 then
-			--k is the first string in the table - owner
-			--v is the second string attached to the first one - pet
-			for k, v in pairs(ns.owners) do
-				if v == name then
-					ns.curData[k] = (ns.curData[k] or 0) + ns.dmg - ns.overdmg
-				end
-			end
+	-- Petdamage -> Ownerdamage
+	for k, v in pairs(ns.players.pets) do
+		if v == ns.name then
+			ns.dmgData[k] = (ns.dmgData[k] or 0) + ns.dmg - ns.overdmg
 		end
 	end
 
