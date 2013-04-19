@@ -14,20 +14,18 @@ ns.dmgData = {}
 ns.totaloverdmg = 0
 ns.overdmgData = {}
 
-function ns.dmgFrame:Update()
-	local name = ns.name
-
+function ns.dmgFrame:Update(name, dmg, overdmg)
 	-- Petdamage -> Ownerdamage
 	for k, v in pairs(ns.players.pets) do
-		if v == name then
-			ns.dmgData[k] = (ns.dmgData[k] or 0) + ns.dmg - ns.overdmg
+		if k == name then
+			ns.dmgData[v] = (ns.dmgData[v] or 0) + dmg - overdmg
 		end
 	end
 
 	-- Add dmgvalues of the players
 	if ns.players.watched[name] then
-		ns.dmgData[name] = (ns.dmgData[name] or 0) + ns.dmg - ns.overdmg
-		ns.overdmgData[name] = (ns.overdmgData[name] or 0) + ns.overdmg
+		ns.dmgData[name] = (ns.dmgData[name] or 0) + dmg - overdmg
+		ns.overdmgData[name] = (ns.overdmgData[name] or 0) + overdmg
 	end
 
 	ns.totaldmg = 0

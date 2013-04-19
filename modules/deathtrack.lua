@@ -11,9 +11,7 @@ ns.deathFrame = CreateFrame("Frame", "deathDataFrame", UIParent)
 ns.totaldeaths = 0
 ns.deathData = {}
 
-function ns.deathFrame:Update()
-	local name = ns.name
-	
+function ns.deathFrame:Update(name)
 	-- Add deathvalues of the players
 	if ns.players.watched[name] then
 		ns.deathData[name] = (ns.deathData[name] or 0) + 1

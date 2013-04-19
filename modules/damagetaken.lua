@@ -11,17 +11,11 @@ ns.dmgTakenFrame = CreateFrame("Frame", "damageTakenDataFrame", UIParent)
 ns.totaldmgtaken = 0
 ns.dmgtakenData = {}
 
-function ns.dmgTakenFrame:Update()
-	local name = ns.name
-	local dstname = ns.dstname
-
+function ns.dmgTakenFrame:Update(name, dstname, dmg)
 	if ns.unitType == 3 then
 		for _, dstname in pairs(ns.players.rank) do
-			ns.dmgtakenData[dstname] = (ns.dmgtakenData[dstname] or 0) + ns.dmg
-		end
-	
-		ns.totaldmgtaken = 0
-		for _, dstname in pairs(ns.players.rank) do
+			ns.totaldmgtaken = 0
+			ns.dmgtakenData[dstname] = (ns.dmgtakenData[dstname] or 0) + dmg
 			ns.totaldmgtaken = (ns.totaldmgtaken or 0) + (ns.dmgtakenData[dstname] or 0)
 		end
 	end

@@ -12,9 +12,7 @@ ns.interruptFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 ns.totalinterrupts = 0
 ns.interruptData = {}
 
-function ns.interruptFrame:Update()
-	local name = ns.name
-	
+function ns.interruptFrame:Update(name)
 	-- Add interrupts of the players
 	-- [WIP] ToDo: divide into spells
 	if ns.players.watched[name] then

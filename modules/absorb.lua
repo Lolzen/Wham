@@ -11,12 +11,10 @@ ns.absorbFrame = CreateFrame("Frame", "absorbDataFrame", UIParent)
 ns.totalabsorb = 0
 ns.absorbData = {}
 
-function ns.absorbFrame:Update()
-	local name = ns.dstname
-
-	if ns.missType == "ABSORB" then
+function ns.absorbFrame:Update(name, missType, absorb)
+	if missType == "ABSORB" then
 		if ns.players.watched[name] then
-			ns.absorbData[name] = (ns.absorbData[name] or 0) + ns.amount
+			ns.absorbData[name] = (ns.absorbData[name] or 0) + absorb
 		end
 
 		ns.totalabsorb = 0

@@ -11,9 +11,7 @@ ns.dispelFrame = CreateFrame("Frame", "dispelDataFrame", UIParent)
 ns.totaldispels = 0
 ns.dispelData = {}
 
-function ns.dispelFrame:Update()
-	local name = ns.name
-	
+function ns.dispelFrame:Update(name)
 	-- Add dispels of the players
 	-- [WIP] ToDo: divide into spells
 	if ns.players.watched[name] then
