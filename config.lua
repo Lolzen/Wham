@@ -38,6 +38,7 @@ ns.tempPets = {
 	["Water Elemental"] = true,
 	--Priest
 	["Shadowfiend"] = true,
+	["Mindbender"] = true,
 	["Shadowy Apartion"] = true, --WoW doesn't declare the owner so this is still bugged from client
 	--Shaman
 	["Spirit Wolf"] = true,
