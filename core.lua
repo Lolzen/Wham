@@ -47,8 +47,8 @@ function ns.wham:UpdateWatchedPlayers()
 
 	-- Insert playerpet name
 	local petName = UnitName("playerpet")
-	if petName and not ns.players.pets[playerName] then
-		ns.players.pets[playerName] = petName
+	if petName and not ns.players.pets[petName] then
+		ns.players.pets[petName] = playerName
 	end
  
 	-- Insert party members & pets
@@ -57,7 +57,9 @@ function ns.wham:UpdateWatchedPlayers()
 		for i=1, GetNumSubgroupMembers() do
 			ns.wham:addUnit("party"..i)
 			if ("partypet"..i) then
-				ns.players.pets[UnitName("party"..i)] = UnitName("partypet"..i)
+				if UnitName("partypet"..i) ~= nil then
+					ns.players.pets[UnitName("party"..i)] = UnitName("partypet"..i)
+				end
 			end
 		end
 	end
@@ -68,88 +70,23 @@ function ns.wham:UpdateWatchedPlayers()
 		for i=1, GetNumGroupMembers() do
 			ns.wham:addUnit("raid"..i)
 			if ("raidpet"..i) then
-				ns.players.pets[UnitName("raid"..i)] = UnitName("raidpet"..i)
+				if UnitName("raidpet"..i) ~= nil then
+					ns.players.pets[UnitName("raidpet"..i)] = UnitName("raid"..i)
+				end
 			end
 		end
 	end
 
 	-- Gather Classes of watched players
 	for name in pairs(ns.players.watched) do
-		if not ns.players.class[name] and not ns.players.class[name] ~= "" then
+		if not ns.players.class[name] and not ns.players.class[name] ~= nil then
 			ns.players.class[name] = select(2,UnitClass(name))
 		end
 	end
  
 	-- Delete Data of "old" players
-	if ns.dmgData then
-		for name in pairs(ns.dmgData) do
-			if not ns.players.watched[name] then
-				ns.dmgData[name] = nil
-			end
-		end
-	end
+	ns.resetData()
 
-	if ns.dmgtakenData then
-		for name in pairs(ns.dmgtakenData) do
-			if not ns.players.watched[name] then
-				ns.dmgtakenData[name] = nil
-			end
-		end
-	end
-
-	if ns.healData then
-		for name in pairs(ns.healData) do
-			if not ns.players.watched[name] then
-				ns.healData[name] = nil
-			end
-		end
-	end
-
-	if ns.overhealData then
-		for name in pairs(ns.healData) do
-			if not ns.players.watched[name] then
-				ns.overhealData[name] = nil
-			end
-		end
-	end
-
-	if ns.absorbData then
-		for name in pairs(ns.absorbData) do
-			if not ns.players.watched[name] then
-				ns.absorbData[name] = nil
-			end
-		end
-	end
-
-	if ns.deathData then
-		for name in pairs(ns.deathData) do
-			if not ns.players.watched[name] then
-				ns.deathData[name] = nil
-			end
-		end
-	end
-
-	if ns.dispelData then
-		for name in pairs(ns.dispelData) do
-			if not ns.players.watched[name] then
-				ns.dispelData[name] = nil
-			end
-		end
-	end
-
-	if ns.interruptData then
-		for name in pairs(ns.interruptData) do
-			if not ns.players.watched[name] then
-				ns.interruptData[name] = nil
-			end
-		end
-	end
-
-	-- Clear rank-table
-	for k in ipairs(ns.players.rank) do 
-		ns.players.rank[k] = nil 
-	end
- 
 	-- Insert player names into rank-table
 	for name in pairs(ns.players.watched) do
 		ns.players.rank[#ns.players.rank+1] = name
@@ -169,7 +106,7 @@ function ns.wham.PLAYER_ENTERING_WORLD()
 	end
 end
 
--- Sending the token, so other's can identify us, like we can idetify them then
+-- Sending the token, so other's can identify us, like we can idetify them as Wham-Users
 function ns.wham:sendToken()
 	if IsInGroup("player") then
 		local channel = IsInRaid("player") and "RAID" or "PARTY"
@@ -284,11 +221,23 @@ function ns.sortByInterrupts(a, b)
 	end
 end
 
--- Resettingfuinction (reset all collected data)
+-- Resettingfunction (reset all collected data)
 function ns.resetData()
+	if ns.curData then
+		for k in pairs(ns.curData) do
+			ns.curData[k] = nil
+		end
+	end
+	
 	if ns.dmgData then
 		for k in pairs(ns.dmgData) do
 			ns.dmgData[k] = nil
+		end
+	end
+
+	if ns.overdmgData then
+		for k in pairs(ns.overdmgData) do
+			ns.overdmgData[k] = nil
 		end
 	end
 
@@ -340,6 +289,11 @@ function ns.resetData()
 
 	if ns.layoutSpecificReset then
 		ns.layoutSpecificReset()
+	end
+	
+	-- Clear rank-table
+	for k in ipairs(ns.players.rank) do 
+		ns.players.rank[k] = nil 
 	end
 end
 
