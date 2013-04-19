@@ -58,7 +58,7 @@ function ns.wham:UpdateWatchedPlayers()
 			ns.wham:addUnit("party"..i)
 			if ("partypet"..i) then
 				if UnitName("partypet"..i) ~= nil then
-					ns.players.pets[UnitName("party"..i)] = UnitName("partypet"..i)
+					ns.players.pets[UnitName("partypet"..i)] = UnitName("party"..i)
 				end
 			end
 		end
