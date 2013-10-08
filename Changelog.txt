@@ -36,3 +36,7 @@ Changelog:
 *Changed sync channel to whisper (on to other detected wham users)
 *Add Damage Taken module
 *Lot of changes, freeing up cpu-usage and fixing cpu-usage leaks
+
+[0.8 Alpha]
+*More code optimizations
+*Rewrite of the player and pet DB (GUID driven)
