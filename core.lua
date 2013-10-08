@@ -13,53 +13,67 @@ ns.wham:RegisterEvent("PLAYER_ENTERING_WORLD")
 ns.wham:RegisterEvent("UNIT_PET")
 ns.wham:RegisterEvent("CHAT_MSG_ADDON")
 
-ns.players = {
-	whamUsers = {},
-	watched = {},
-	rank = {},
-	class = {},
+-- In the guidDB is stored all player and pet information
+ns.guidDB = {
+	players = {},
 	pets = {},
+	rank = {},
+	whamUsers = {},
 }
 
--- Add players to watched list
-function ns.wham:addUnit(unit)
+function ns.wham:addUnitToDB(unit, owner)
+	local guid = UnitGUID(unit)
+	if not guid or guid == "" then return end
+	local unitType = bit.band(tonumber("0x"..strsub(guid, 3,5)), 0x00f)
 	local name, realm = UnitName(unit)
 	if not name or name == "Unknown" then return end
-	realm = realm and realm ~= "" and "-"..realm or ""
-	if not ns.players.watched[name..realm] then
-		ns.players.watched[name..realm] = true
+	
+	-- Players
+	if unitType == 8 then
+		local realm = realm and realm ~= "" and "-"..realm or ""
+		local _, class, race, _, _ = GetPlayerInfoByGUID(guid)
+		
+		if not ns.guidDB.players[guid] then
+			ns.guidDB.players[guid] = {
+				["name"] = name..realm, 
+				["class"] = class,
+				["classcolor"] = RAID_CLASS_COLORS[class],
+			}
+		end
+	-- Pets or Vehicles
+	elseif unitType == 4 or unitType == 3 then
+		if not ns.guidDB.pets[guid] then
+			ns.guidDB.pets[guid] = {
+				["name"] = name, 
+				["owner"] = owner,
+			}
+		end
 	end
 end
  
 function ns.wham:UpdateWatchedPlayers()
 	-- Delete old table
 	if ns.cleanOnGrpChange == true then	
-		for k in pairs(ns.players.watched) do
-			ns.players.watched[k] = nil
+		for k in pairs(ns.guidDB) do
+			ns.guidDB[k] = nil
 		end
 	end
  
 	-- Insert player name
-	local playerName = UnitName("player")
-	if not ns.players.watched[playerName] then
-		ns.players.watched[playerName] = true
-	end
+	ns.wham:addUnitToDB("player")
 
 	-- Insert playerpet name
-	local petName = UnitName("playerpet")
-	if petName and not ns.players.pets[petName] then
-		ns.players.pets[petName] = playerName
+	if UnitExists("playerpet") then
+		ns.wham:addUnitToDB("playerpet", UnitName("player"))
 	end
  
 	-- Insert party members & pets
 	local isInGroup = IsInGroup("player")
 	if isInGroup then
 		for i=1, GetNumSubgroupMembers() do
-			ns.wham:addUnit("party"..i)
-			if ("partypet"..i) then
-				if UnitName("partypet"..i) ~= nil then
-					ns.players.pets[UnitName("partypet"..i)] = UnitName("party"..i)
-				end
+			ns.wham:addUnitToDB("party"..i)
+			if UnitExists("partypet"..i) then
+				ns.wham:addUnitToDB(("partypet"..i), UnitName("party"..i))
 			end
 		end
 	end
@@ -68,19 +82,10 @@ function ns.wham:UpdateWatchedPlayers()
 	local isInRaid = IsInRaid("player")
 	if isInRaid then
 		for i=1, GetNumGroupMembers() do
-			ns.wham:addUnit("raid"..i)
-			if ("raidpet"..i) then
-				if UnitName("raidpet"..i) ~= nil then
-					ns.players.pets[UnitName("raidpet"..i)] = UnitName("raid"..i)
-				end
+			ns.wham:addUnitToDB("raid"..i)
+			if UnitExists("raidpet"..i) then
+				ns.wham:addUnitToDB(("raidpet"..i), UnitName("raid"..i))
 			end
-		end
-	end
-
-	-- Gather Classes of watched players
-	for name in pairs(ns.players.watched) do
-		if not ns.players.class[name] and not ns.players.class[name] ~= nil then
-			ns.players.class[name] = select(2,UnitClass(name))
 		end
 	end
  
@@ -88,8 +93,8 @@ function ns.wham:UpdateWatchedPlayers()
 	ns.resetData()
 
 	-- Insert player names into rank-table
-	for name in pairs(ns.players.watched) do
-		ns.players.rank[#ns.players.rank+1] = name
+	for _, guid in pairs(ns.guidDB.players) do
+		ns.guidDB.rank[#ns.guidDB.rank+1] = guid.name
 	end
 end
 
@@ -117,7 +122,7 @@ end
 function ns.wham:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 	local prefix, msg, channel, sender = arg1, arg2, arg3, arg4
 	if prefix == "Wham_TOKEN" then
-		tinsert(ns.players.whamUsers, sender)
+		tinsert(ns.guidDB.whamUsers, sender)
 	end
 end
 
@@ -125,7 +130,7 @@ end
 function ns.switchMode(selectedMode)
 	ns.activeMode = selectedMode
 	-- Use the selected data
-	if selectedMode == "Damage" and ns.currentfightdatamodule == true then
+	if selectedMode == "Damage" and ns.activatedModules["Current Fight Data"] == true then
 		ns.modeTotal = ns.curTotaldmg
 		ns.modeData = ns.curData
 	elseif selectedMode == "Damage" then
@@ -153,17 +158,15 @@ function ns.switchMode(selectedMode)
 		ns.modeTotal = ns.totalinterrupts
 		ns.modeData = ns.interruptData
 	end
+	
 	if ns.switchModeEvent then
 		ns.switchModeEvent()
-	end
-	if ns.checkColor then
-		ns.checkColor()
 	end
 end
 
 -- Sortingfunction (Damage)
 function ns.sortByDamage(a, b)
-	if currentfightdatamodule == true and ns.curData then
+	if ns.activatedModules["Current Fight Data"] == true and ns.curData then
 		return (ns.curData[a] or 0) > (ns.curData[b] or 0)
 	else
 		if ns.dmgData then
@@ -292,8 +295,8 @@ function ns.resetData()
 	end
 	
 	-- Clear rank-table
-	for k in ipairs(ns.players.rank) do 
-		ns.players.rank[k] = nil 
+	for k in ipairs(ns.guidDB.rank) do 
+		ns.guidDB.rank[k] = nil 
 	end
 end
 
