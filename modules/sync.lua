@@ -4,7 +4,7 @@
 -- sync module
 
 local addon, ns = ...
-if ns.syncmodule == false then return end
+if ns.activatedModules["Sync"] == false then return end
 
 ns.syncFrame = CreateFrame("Frame", "syncFrame", UIParent)
 ns.syncFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -49,7 +49,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extDmg = tonumber(extDmg_raw, A)
 		local extTotalDmg = tonumber(extTotalDmg_raw, A)
 		-- Add to watched list
-		ns.wham:addUnit(extDmgName)
+		ns.wham:addUnitToDB(extDmgName)
 
 		-- v = dmg
 		for extDmgName, v in pairs(ns.dmgData) do
@@ -57,7 +57,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDmg > localDmg then
-			if ns.players.watched[extDmgName] then
+			if ns.guidDB.rank[extDmgName] then
 				ns.dmgData[extDmgName] = extDmg
 				ns.totaldmg = extTotalDmg
 				if ns.wham.UpdateLayout then
@@ -74,7 +74,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extHeal = tonumber(extHeal_raw, A)
 		local extTotalheal = tonumber(extTotalHeal_raw, A)
 		-- Add to watchd list
-		ns.wham:addUnit(extHealName)
+		ns.wham:addUnitToDB(extHealName)
 
 		-- v = heal
 		for extHealName, v in pairs(ns.healData) do
@@ -82,7 +82,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extHeal > localHeal then
-			if ns.players.watched[extHealName] then
+			if ns.guidDB.rank[extHealName] then
 				ns.healData[extHealName] = extHeal
 				ns.totalheal = extTotalHeal
 				if ns.wham.UpdateLayout then
@@ -99,7 +99,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extAbsorb = tonumber(extAbsorb_raw, A)
 		local extTotalAbsorb = tonumber(extTotalAbsorb_raw, A)
 		-- Add to watched list
-		ns.wham:addUnit(extAbsorbName)
+		ns.wham:addUnitToDB(extAbsorbName)
 
 		-- v = absorb
 		for extAbsorbName, v in pairs(ns.absorbData) do
@@ -107,7 +107,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extAbsorb > localAbsorb then
-			if ns.players.watched[extAbsorbName] then
+			if ns.guidDB.rank[extAbsorbName] then
 				ns.absorbData[extAbsorbName] = extAbsorb
 				ns.totalabsorb = extTotalAbsorb
 				if ns.wham.UpdateLayout then
@@ -124,7 +124,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extDeaths = tonumber(extDeaths_raw, A)
 		local extTotalDeaths = tonumber(extTotalDeaths_raw, A)
 		-- Add to watched list
-		ns.wham:addUnit(extDeathName)
+		ns.wham:addUnitToDB(extDeathName)
 
 		-- v = deaths
 		for extDeathName, v in pairs(ns.deathData) do
@@ -132,7 +132,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDeaths > localDeaths then
-			if ns.players.watched[extDeathName] then
+			if ns.guidDB.rank[extDeathName] then
 				ns.deathData[extDeathName] = extDeaths
 				ns.totaldeaths = extTotalDeaths
 				if ns.wham.UpdateLayout then
@@ -149,7 +149,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extInterrupts = tonumber(extInterrupts_raw, A)
 		local extTotalInterrupts = tonumber(extTotalInterrupts_raw, A)
 		-- Add to watched list
-		ns.wham:addUnit(extInterruptName)
+		ns.wham:addUnitToDB(extInterruptName)
 
 		-- v = interrupts
 		for extInterruptName, v in pairs(ns.interruptData) do
@@ -157,7 +157,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extInterrupts > localInterrupts then
-			if ns.players.watched[extInterruptName] then
+			if ns.guidDB.rank[extInterruptName] then
 				ns.interruptData[extInterruptName] = extInterrupts
 				ns.totalinterrupts = extTotalInterrupts
 				if ns.wham.UpdateLayout then
@@ -174,7 +174,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		local extDispels = tonumber(extDispels_raw, A)
 		local extTotalDispels = tonumber(extTotalDispels_raw, A)
 		-- Add to watched list
-		ns.wham:addUnit(extDispelName)
+		ns.wham:addUnitToDB(extDispelName)
 
 		-- v = dispels
 		for extDispelName, v in pairs(ns.dispelData) do
@@ -182,7 +182,7 @@ function ns.syncFrame:CHAT_MSG_ADDON(self, arg1, arg2, arg3, arg4)
 		end
 
 		if extDispels > localDispels then
-			if ns.players.watched[extDispelName] then
+			if ns.guidDB.rank[extDispelName] then
 				ns.dispelData[extDispelName] = extDispells
 				ns.totaldispels = extTotalDispels
 				if ns.wham.UpdateLayout then

@@ -5,34 +5,34 @@
 -- provides executable slashcommands; type /wham for help
 
 local addon, ns = ...
-if ns.slashcommandsmodule == false then return end
+if ns.activatedModules["Slashcommands"] == false then return end
 
 local channel, wname
 local paste = function(self)
 	SendChatMessage("Data from Wham: ["..ns.activeMode.."-Mode]", channel, nil, wname)
 	for i=1, 5, 1 do
-		if i and ns.modeData[ns.players.rank[i]] then
+		if i and ns.modeData[ns.guidDB.rank[i]] then
 			if ns.activeMode == "Damage" then
-				sort(ns.players.rank, ns.sortByDamage)
+				sort(ns.guidDB.rank, ns.sortByDamage)
 			elseif ns.activeMode == "Damage Taken" then
-				sort(ns.players.rank, ns.sortByDamageTaken)
+				sort(ns.guidDB.rank, ns.sortByDamageTaken)
 			elseif ns.activeMode == "Heal" then
-				sort(ns.players.rank, ns.sortByHeal)
+				sort(ns.guidDB.rank, ns.sortByHeal)
 			elseif ns.activeMode == "OverHeal" then
-				sort(ns.players.rank, ns.sortByOverHeal)
+				sort(ns.guidDB.rank, ns.sortByOverHeal)
 			elseif ns.activeMode == "Absorb" then
-				sort(ns.players.rank, ns.sortByAbsorb)
+				sort(ns.guidDB.rank, ns.sortByAbsorb)
 			elseif ns.activeMode == "Deaths" then
-				sort(ns.players.rank, ns.sortByDeaths)
+				sort(ns.guidDB.rank, ns.sortByDeaths)
 			elseif ns.activeMode == "Dispels" then
-				sort(ns.players.rank, ns.sortByDispels)
+				sort(ns.guidDB.rank, ns.sortByDispels)
 			elseif ns.activeMode == "Interrupts" then
-				sort(ns.players.rank, ns.sortByinterrupts)
+				sort(ns.guidDB.rank, ns.sortByinterrupts)
 			end
-			local curModeVal = ns.modeData[ns.players.rank[i]] or 0
-			local class = UnitClass(ns.players.rank[i]) or "Unknown"
+			local curModeVal = ns.modeData[ns.guidDB.rank[i]] or 0
+			local class = UnitClass(ns.guidDB.rank[i]) or "Unknown"
 			if curModeVal then
-				SendChatMessage(string.format("%d. %s: %d (%.0f%%) [%s]", i, ns.players.rank[i], curModeVal, curModeVal / ns.modeTotal * 100, class), channel, nil, wname)
+				SendChatMessage(string.format("%d. %s: %d (%.0f%%) [%s]", i, ns.guidDB.rank[i], curModeVal, curModeVal / ns.modeTotal * 100, class), channel, nil, wname)
 			end
 		end
 	end
