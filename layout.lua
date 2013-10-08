@@ -69,31 +69,6 @@ ns.border:SetAlpha(0)
 -- Initialize tabs for switching modes
 ns.activeMode = ns.initMode --activate mode chosen in config first
 
--- Check which modules are true in config.lua and pollute the activatedModes table
-ns.activatedModes = {}
-if ns.damagemodule == true then
-	ns.activatedModes["Damage"] = true
-end
-if ns.damagetakenmodule == true then
-	ns.activatedModes["Damage Taken"] = true
-end
-if ns.healmodule == true then
-	ns.activatedModes["Heal"] = true
-	ns.activatedModes["OverHeal"] = true
-end
-if ns.absorbmodule == true then
-	ns.activatedModes["Absorb"] = true
-end
-if ns.deathtrackmodule == true then
-	ns.activatedModes["Deaths"] = true
-end
-if ns.dispelmodule == true then
-	ns.activatedModes["Dispels"] = true
-end
-if ns.interruptmodule == true then
-	ns.activatedModes["Interrupts"] = true
-end
-
 -- Modes available, used as tokens for creating our tabs
 ns.modes = {
 	"Damage",
@@ -130,7 +105,7 @@ for k, v in pairs(ns.modes) do
 		ns.tabs[k].label = ns.tabs[k]:CreateFontString(nil, "OVERLAY")
 		ns.tabs[k].label:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 		ns.tabs[k].label:SetPoint("CENTER", ns.tabs[k], "CENTER", 0, 0)
-		if ns.activatedModes[v] == true then
+		if ns.activatedModules[v] == true then
 			ns.tabs[k].label:SetFormattedText("%s", v)
 		else
 			ns.tabs[k].label:SetFormattedText("|cff550000%s|r", v)
@@ -150,7 +125,7 @@ for k, v in pairs(ns.modes) do
 	end
 	-- clickscript for switching
 	ns.tabs[k]:SetScript("OnMouseDown", function(self, button)
-		if ns.activatedModes[v] == true then
+		if ns.activatedModules[v] == true then
 			ns.switchMode(v)
 			ns.wham:UpdateLayout()
 		else
@@ -214,18 +189,21 @@ end
 function ns.wham:UpdateDisplay()
 	for i=1, 5, 1 do
 		if i == 1 then
-			if ns.modeData[ns.players.rank[ns.viewrange]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.guidDB.rank[ns.viewrange]] and ns.modeTotal > 0 then
 				--Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
 				end
-				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange]] or 0)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.guidDB.rank[1]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.guidDB.rank[ns.viewrange]] or 0)
 				-- Strings
-				local rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange]]] or {r = 0.3, g = 0.3, b = 0.3}
-				local curModeVal = ns.modeData[ns.players.rank[ns.viewrange]] or 0
+				local rcColor
+				for _, guid in pairs(ns.guidDB.players) do
+					rcColor = guid.classcolor or {r = 0.3, g = 0.3, b = 0.3}
+				end
+				local curModeVal = ns.modeData[ns.guidDB.rank[ns.viewrange]] or 0
 				ns.sb[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange])
+				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.guidDB.rank[ns.viewrange])
 				ns.sb[i].border:Show()
 				ns.sb[i].bg:Show()
 			else
@@ -238,18 +216,21 @@ function ns.wham:UpdateDisplay()
 				ns.sb[i].bg:Hide()
 			end
 		else
-			if ns.modeData[ns.players.rank[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
+			if ns.modeData[ns.guidDB.rank[ns.viewrange + i - 1]] and ns.modeTotal > 0 then
 				-- Statusbars
 				if ns.sb[i]:GetAlpha() == 0 then
 					ns.sb[i]:SetAlpha(1)
 				end
-				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.players.rank[1]] or 0)
-				ns.sb[i]:SetValue(ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0)
+				ns.sb[i]:SetMinMaxValues(0, ns.modeData[ns.guidDB.rank[1]] or 0)
+				ns.sb[i]:SetValue(ns.modeData[ns.guidDB.rank[ns.viewrange + i - 1]] or 0)
 				-- Strings
-				local rcColor = RAID_CLASS_COLORS[ns.players.class[ns.players.rank[ns.viewrange + i - 1]]] or {r = 0.3, g = 0.3, b = 0.3}
-				local curModeVal = ns.modeData[ns.players.rank[ns.viewrange + i - 1]] or 0
+				local rcColor 
+				for _, guid in pairs(ns.guidDB.players) do
+					rcColor = guid.classcolor  or {r = 0.3, g = 0.3, b = 0.3}
+				end
+				local curModeVal = ns.modeData[ns.guidDB.rank[ns.viewrange + i - 1]] or 0
 				ns.sb[i].string2:SetFormattedText("%d (%.0f%%)", curModeVal, curModeVal / ns.modeTotal * 100)
-				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.players.rank[ns.viewrange + i - 1])
+				ns.sb[i].string1:SetFormattedText("%d.  |cff%02x%02x%02x%s|r", ns.viewrange + i - 1, rcColor.r*255, rcColor.g*255, rcColor.b*255, ns.guidDB.rank[ns.viewrange + i - 1])
 				ns.sb[i].border:Show()
 				ns.sb[i].bg:Show()
 			else
@@ -280,7 +261,34 @@ function ns.layoutSpecificReset()
 	ns.border:SetAlpha(0)
 end
 
-function ns.checkColor()
+function ns.switchModeEvent()
+	for k, v in pairs(ns.modes) do
+		if v == ns.activeMode then
+			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
+		else
+			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
+		end
+	end
+	
+	-- Sort Statusbars by mode, so they aren't getting displayed funny
+	if ns.activeMode == "Damage" then
+		sort(ns.guidDB.rank, ns.sortByDamage)
+	elseif ns.activeMode == "Damage Taken" then
+		sort(ns.guidDB.rank, ns.sortByDamageTaken)
+	elseif ns.activeMode == "Heal" then
+		sort(ns.guidDB.rank, ns.sortByHeal)
+	elseif ns.activeMode == "OverHeal" then
+		sort(ns.guidDB.rank, ns.sortByOverHeal)
+	elseif ns.activeMode == "Absorb" then
+		sort(ns.guidDB.rank, ns.sortByAbsorb)
+	elseif ns.activeMode == "Deaths" then
+		sort(ns.guidDB.rank, ns.sortByDeaths)
+	elseif ns.activeMode == "Dispels" then
+		sort(ns.guidDB.rank, ns.sortByDispels)
+	elseif ns.activeMode == "Interrupts" then
+		sort(ns.guidDB.rank, ns.sortByinterrupts)
+	end
+	
 	for i=1, 25, 1 do
 		if ns.activeMode == "Damage" or ns.activeMode == "Damage Taken" then
 			ns.sb[i]:SetStatusBarColor(0.8, 0, 0)
@@ -296,42 +304,13 @@ function ns.checkColor()
 	end
 end
 
-function ns.switchModeEvent()
-	for k, v in pairs(ns.modes) do
-		if v == ns.activeMode then
-			ns.tabs[k].bg:SetTexture(0.5, 0, 0, 0.5)
-		else
-			ns.tabs[k].bg:SetTexture(0, 0, 0, 0.5)
-		end
-	end
-end
-
 function ns.wham:UpdateLayout()
-	-- Sort Statusbars by mode, so they aren't getting displayed funny
-	if ns.activeMode == "Damage" then
-		sort(ns.players.rank, ns.sortByDamage)
-	elseif ns.activeMode == "Damage Taken" then
-		sort(ns.players.rank, ns.sortByDamageTaken)
-	elseif ns.activeMode == "Heal" then
-		sort(ns.players.rank, ns.sortByHeal)
-	elseif ns.activeMode == "OverHeal" then
-		sort(ns.players.rank, ns.sortByOverHeal)
-	elseif ns.activeMode == "Absorb" then
-		sort(ns.players.rank, ns.sortByAbsorb)
-	elseif ns.activeMode == "Deaths" then
-		sort(ns.players.rank, ns.sortByDeaths)
-	elseif ns.activeMode == "Dispels" then
-		sort(ns.players.rank, ns.sortByDispels)
-	elseif ns.activeMode == "Interrupts" then
-		sort(ns.players.rank, ns.sortByinterrupts)
-	end
-
 	-- ensure we're always getting fresh modedata
 	ns.switchMode(ns.activeMode)
 
 	-- Show background and border when data is stored
 	for i=1, 25, 1 do
-		if ns.modeData[ns.players.rank[i]] then
+		if ns.modeData[ns.guidDB.rank[i]] then
 			if ns.bg:GetAlpha() ~= 1 then
 				ns.bg:SetAlpha(1)
 			end
