@@ -8,18 +8,18 @@ local addon, ns = ...
 ns.parser = CreateFrame("Frame", "Parser", UIParent)
 ns.parser:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
-local function checkIfWatchedUnit(guid, unit)
+local function checkIfWatchedUnit(guid)
 	local unitType
 	if guid and guid ~= "" then
 		unitType = bit.band(tonumber("0x"..strsub(guid, 3,5)), 0x00f)
 	end
 
 	if unitType == 8 then
-		if not ns.players.watched[unit] then
+		if not ns.guidDB.players[guid] then
 			return false
 		end
-	elseif unitType == 4 then
-		if not ns.players.pets[unit] then
+	elseif unitType == 4 or unitType == 3 then
+		if not ns.guidDB.pets[guid] then
 			return false
 		end
 	else
@@ -41,25 +41,25 @@ local function checkIfSolo()
 	end
 end
 
-function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
+function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
 	--==Exeptions==--	
 	-- Only parse for watched units and pets
 	-- Do not parse in PvP-Zones
 	-- Optional: Disable parsing when no pet, or group/raidmembers are existant
-	if checkIfWatchedUnit(arg4, arg5) == false or checkForPvPZone() == false or checkIfSolo() == false then return end
-
+	if checkIfWatchedUnit(arg4) == false or checkForPvPZone() == false or checkIfSolo() == false then return end
+	
 	if string.find(arg2, "_MISSED") then
-		if ns.absorbmodule == true then
+		if ns.activatedModules["Absorb"] == true then
 			if(string.find(arg2, "SWING")) then
-				ns.absorbFrame:Update(arg5, arg12, arg14)
+				ns.absorbFrame:Update(arg4, arg5, arg12, arg14)
 			end
 	
 			if(string.find(arg2, "RANGE")) then
-				ns.absorbFrame:Update(arg5, arg15, arg17)
+				ns.absorbFrame:Update(arg4, arg5, arg15, arg17)
 			end
 	
 			if(string.find(arg2, "SPELL")) then 
-				ns.absorbFrame:Update(arg5, arg15, arg17)
+				ns.absorbFrame:Update(arg4, arg5, arg15, arg17)
 			end
 	
 			if ns.wham.UpdateLayout then
@@ -69,8 +69,8 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	end
 
 	if string.find(arg2, "_HEAL") then
-		if ns.healmodule == true then
-			ns.healFrame:Update(arg5, arg15, arg16)
+		if ns.activatedModules["Heal"] == true then
+			ns.healFrame:Update(arg4, arg5, arg15, arg16)
 		
 			if ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
@@ -83,14 +83,14 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 				if arg13 == -1 then
 					arg13 = 0
 				end
-				if ns.currentfightdatamodule == true then
-					ns.curFrame:Update(arg5, arg12, arg13)
+				if ns.activatedModules["Current Fight Data"] == true then
+					ns.curFrame:Update(arg4, arg5, arg12, arg13)
 				end
-				if ns.damagemodule == true then
-					ns.dmgFrame:Update(arg5, arg12, arg13)
+				if ns.activatedModules["Damage"] == true then
+					ns.dmgFrame:Update(arg4, arg5, arg12, arg13)
 				end
-				if ns.damagetakenmodule == true then
-					ns.dmgTakenFrame:Update(arg5, arg9, arg12)
+				if ns.activatedModules["Damage Taken"] == true then
+					ns.dmgTakenFrame:Update(arg4, arg5, arg9, arg12)
 				end
 			end
 	
@@ -98,14 +98,14 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 				if arg16 == -1 then
 					arg16 = 0
 				end
-				if ns.currentfightdatamodule == true then
-					ns.curFrame:Update(arg5, arg15, arg16)
+				if ns.activatedModules["Current Fight Data"] == true then
+					ns.curFrame:Update(arg4, arg5, arg15, arg16)
 				end
-				if ns.damagemodule == true then
-					ns.dmgFrame:Update(arg5, arg15, arg16)
+				if ns.activatedModules["Damage"] == true then
+					ns.dmgFrame:Update(arg4, arg5, arg15, arg16)
 				end
-				if ns.damagetakenmodule == true then
-					ns.dmgTakenFrame:Update(arg5, arg9, arg15)
+				if ns.activatedModules["Damage Taken"] == true then
+					ns.dmgTakenFrame:Update(arg4, arg5, arg9, arg15)
 				end
 			end
 	
@@ -113,20 +113,20 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 				if arg16 == -1 then
 					arg16 = 0
 				end
-				if ns.currentfightdatamodule == true then
-					ns.curFrame:Update(arg5, arg15, arg16)
+				if ns.activatedModules["Current Fight Data"] == true then
+					ns.curFrame:Update(arg4, arg5, arg15, arg16)
 				end
-				if ns.damagemodule == true then
-					ns.dmgFrame:Update(arg5, arg15, arg16)
+				if ns.activatedModules["Damage"] == true then
+					ns.dmgFrame:Update(arg4, arg5, arg15, arg16)
 				end
-				if ns.damagetakenmodule == true then
-					ns.dmgTakenFrame:Update(arg5, arg9, arg15)
+				if ns.activatedModules["Damage Taken"] == true then
+					ns.dmgTakenFrame:Update(arg4, arg5, arg9, arg15)
 				end
 			end
 	
 			if(string.find(arg2, "ENVIRONMENTAL")) then
-				if ns.damagetakenmodule == true then
-					ns.dmgTakenFrame:Update(arg5, arg9, arg13)
+				if ns.activatedModules["Damage Taken"] == true then
+					ns.dmgTakenFrame:Update(arg4, arg5, arg9, arg13)
 				end
 			end
 		
@@ -138,8 +138,8 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	end
 
 	if string.find(arg2, "UNIT_DIED") then
-		if ns.deathtrackmodule == true then
-			ns.deathFrame:Update(arg5)
+		if ns.activatedModules["Deaths"] == true then
+			ns.deathFrame:Update(arg4, arg5)
 		
 			if ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
@@ -148,9 +148,9 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	end
 
 	if string.find(arg2, "_DISPEL") then
-		if ns.dispelmodule == true then
+		if ns.activatedModules["Dispels"] == true then
 			--ns.spellname = arg13
-			ns.dispelFrame:Update(arg5)
+			ns.dispelFrame:Update(arg4, arg5)
 		
 			if ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
@@ -159,9 +159,9 @@ function ns.parser.COMBAT_LOG_EVENT_UNFILTERED(self, event, arg1, arg2, arg3, ar
 	end
 
 	if string.find(arg2, "_INTERRUPT") then
-		if ns.interruptmodule == true then
+		if ns.activatedModules["Interrputs"] == true then
 			--ns.spellname = arg13
-			ns.interruptFrame:Update(arg5)
+			ns.interruptFrame:Update(arg4, arg5)
 		
 			if ns.wham.UpdateLayout then
 				ns.wham:UpdateLayout()
