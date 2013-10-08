@@ -8,17 +8,20 @@ local addon, ns = ...
 --[Module control]--
 -- true = toggle module on
 -- false = toggle module off
-ns.absorbmodule = true
-ns.currentfightdatamodule = false
-ns.damagemodule = true
-ns.damagetakenmodule = true
-ns.deathtrackmodule = true
-ns.dispelmodule = true
-ns.healmodule = true
-ns.interruptmodule = true
-ns.slashcommandsmodule = true
-ns.syncmodule = true
-ns.versioncheckmodule = true
+ns.activatedModules = {
+	["Absorb"] = true,
+	["Current Fight Data"] = false,
+	["Damage"] = true,
+	["Damage Taken"] = true,
+	["Deaths"] = true,
+	["Dispels"] = true,
+	["Heal"] = true,
+	["OverHeal"] = true,
+	["Interrupts"] = true,
+	["Slashcommands"] = true,
+	["Sync"] = true,
+	["Versioncheck"] = true,
+}
 
 --[Settings]--
 ns.initMode = "Damage"				-- Select which mode to display per standard [Damage, Heal, Absorb, Deaths, Dispels, Interrupts]
